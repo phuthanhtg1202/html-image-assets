@@ -3,26 +3,2276 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=monster-review-lab/">
   <title>Monster Review Lab</title>
-  <link rel="canonical" href="monster-review-lab/">
   <style>
+    :root {
+      --ink: #161616;
+      --paper: #fffdf7;
+      --blue: #1475c9;
+      --green: #23a73e;
+      --pink: #ef4f91;
+      --orange: #f47c16;
+      --purple: #7a4ac7;
+      --yellow: #ffc629;
+      --red: #e84135;
+      --soft-blue: #eaf6ff;
+      --soft-green: #effbe9;
+      --soft-pink: #fff0f7;
+      --soft-yellow: #fff8d8;
+      --shadow: 0 14px 0 rgba(0, 0, 0, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
-      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 198, 41, .18) 0 80px, transparent 82px),
+        radial-gradient(circle at 90% 10%, rgba(20, 117, 201, .14) 0 100px, transparent 102px),
+        radial-gradient(circle at 60% 90%, rgba(239, 79, 145, .12) 0 130px, transparent 132px),
+        linear-gradient(90deg, rgba(22,22,22,.035) 1px, transparent 1px),
+        linear-gradient(rgba(22,22,22,.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, auto, auto, 28px 28px, 28px 28px, auto;
+      font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    .page {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 18px 0 48px;
+    }
+
+    .hero {
+      min-height: 88vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr);
+      align-items: center;
+      gap: 26px;
+      padding-bottom: 20px;
+    }
+
+    .hero-copy { position: relative; z-index: 2; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 2px dashed var(--purple);
+      border-radius: 8px;
+      background: #ffffffd9;
+      color: var(--purple);
+      font-weight: 900;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      max-width: 760px;
+      color: var(--ink);
+      font-size: clamp(48px, 8vw, 92px);
+      line-height: .92;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      text-shadow: 4px 4px 0 #fff, 8px 8px 0 rgba(20, 117, 201, .16);
+    }
+
+    .rainbow span:nth-child(1) { color: var(--red); }
+    .rainbow span:nth-child(2) { color: var(--orange); }
+    .rainbow span:nth-child(3) { color: var(--green); }
+    .rainbow span:nth-child(4) { color: var(--blue); }
+    .rainbow span:nth-child(5) { color: var(--purple); }
+    .rainbow span:nth-child(6) { color: var(--pink); }
+
+    .lead {
+      max-width: 620px;
+      margin: 0 0 20px;
+      font-size: clamp(20px, 2.6vw, 30px);
+      line-height: 1.22;
+      font-weight: 800;
+    }
+
+    .hero-actions,
+    .tabs,
+    .filter-row,
+    .choice-row,
+    .scene-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      min-height: 44px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      padding: 8px 14px;
+      background: white;
+      color: var(--ink);
+      box-shadow: 0 5px 0 var(--ink);
+      cursor: pointer;
+      font-weight: 900;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+
+    .btn:hover,
+    .btn:focus-visible {
+      transform: translateY(-2px) rotate(-1deg);
+      box-shadow: 0 7px 0 var(--ink);
+      outline: 3px solid rgba(20, 117, 201, .28);
+      outline-offset: 2px;
+    }
+
+    .btn:active,
+    .btn.active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 var(--ink);
+    }
+
+    .btn.primary { background: var(--yellow); }
+    .btn.blue { background: #d8efff; }
+    .btn.green { background: #e1f7d9; }
+    .btn.pink { background: #ffe0ef; }
+    .btn.orange { background: #ffe3c8; }
+    .btn.purple { background: #eee4ff; }
+    .btn.red { background: #ffd9d4; }
+
+    .voice-control {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      max-width: 620px;
+      margin-top: 14px;
+      padding: 10px;
+      border: 3px dashed rgba(22,22,22,.4);
+      border-radius: 8px;
+      background: rgba(255,255,255,.78);
+      font-weight: 900;
+    }
+
+    .voice-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: 6px 10px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: #fff;
+      font-weight: 900;
+    }
+
+    .hero-board {
+      position: relative;
+      min-height: 520px;
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: #fffefc;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-board::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 2px dashed rgba(22,22,22,.18);
+      border-radius: 8px;
+      pointer-events: none;
+    }
+
+    .hero-monster {
+      position: absolute;
+      width: 45%;
+      min-width: 150px;
+      filter: drop-shadow(8px 8px 0 rgba(0,0,0,.08));
+    }
+
+    .hero-monster.one { left: 8%; top: 16%; transform: rotate(-7deg); }
+    .hero-monster.two { right: 6%; top: 8%; transform: rotate(6deg); }
+    .hero-monster.three { left: 25%; bottom: 8%; transform: rotate(2deg); }
+
+    .hero-monster .monster-img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .doodle-note {
+      position: absolute;
+      right: 26px;
+      bottom: 28px;
+      width: 190px;
+      padding: 14px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: var(--soft-yellow);
+      transform: rotate(-3deg);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .tabs {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: 6px 0 24px;
+      padding: 10px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, .94);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 0 rgba(0,0,0,.08);
+    }
+
+    .tab {
+      flex: 1 1 130px;
+      min-width: 0;
+      min-height: 44px;
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .tab.active { background: var(--ink); color: white; }
+
+    section {
+      margin: 0 0 26px;
+      padding: 22px;
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: rgba(255,255,255,.86);
+      box-shadow: var(--shadow);
+    }
+
+    section[hidden] { display: none; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .score-pill {
+      min-width: 130px;
+      padding: 8px 12px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: var(--soft-green);
+      text-align: center;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .ref-card {
+      overflow: hidden;
+      border: 3px dashed rgba(22,22,22,.35);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .ref-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+    }
+
+    .ref-card b {
+      display: block;
+      padding: 8px 10px;
+      font-size: 18px;
+    }
+
+    .gallery-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .gallery-tab {
+      padding: 10px 18px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: white;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--ink);
+    }
+
+    .gallery-tab.active {
+      background: var(--yellow);
+    }
+
+    .gallery-stage {
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: #fffefb;
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .gallery-pane {
+      display: none;
+    }
+
+    .gallery-pane.active {
+      display: block;
+    }
+
+    .gallery-pane img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .practice-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .practice-card {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .practice-card .practice-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin-bottom: 8px;
+      border-radius: 999px;
+      background: var(--soft-yellow);
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .practice-card .practice-question {
+      margin: 0 0 8px;
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.4;
+    }
+
+    .practice-card .practice-answer {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.4;
+      color: #2c6e2f;
+    }
+
+    .word-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .word-card {
+      position: relative;
+      min-height: 220px;
+      padding: 12px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+      box-shadow: 0 7px 0 rgba(0,0,0,.14);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .word-card:nth-child(4n+1) { background: var(--soft-pink); }
+    .word-card:nth-child(4n+2) { background: var(--soft-blue); }
+    .word-card:nth-child(4n+3) { background: var(--soft-green); }
+    .word-card:nth-child(4n+4) { background: var(--soft-yellow); }
+
+    .word-card:hover,
+    .word-card:focus-visible {
+      outline: 4px solid rgba(244,124,22,.35);
+      transform: rotate(-1deg);
+    }
+
+    .word-card .monster-img { display: block; width: 100%; height: 118px; }
+
+    .word-card .word {
+      display: block;
+      font-size: 28px;
+      font-weight: 900;
+      text-align: center;
+      color: var(--blue);
+    }
+
+    .word-card .phrase {
+      display: block;
+      min-height: 44px;
+      margin-top: 6px;
+      padding: 7px;
+      border: 2px dashed rgba(22,22,22,.28);
+      border-radius: 8px;
+      background: rgba(255,255,255,.7);
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .quiz-stage,
+    .builder-grid,
+    .hospital-grid,
+    .sense-grid,
+    .role-grid {
+      display: grid;
+      grid-template-columns: minmax(240px, .8fr) minmax(0, 1.2fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .prompt-box {
+      min-height: 260px;
+      padding: 16px;
+      border: 3px dashed var(--ink);
+      border-radius: 8px;
+      background: #fff;
       display: grid;
       place-items: center;
-      font-family: Arial, sans-serif;
-      background: #fffdf7;
-      color: #161616;
+      text-align: center;
     }
-    a {
-      color: #1475c9;
-      font-weight: 700;
+
+    .prompt-box .big {
+      font-size: clamp(30px, 5vw, 56px);
+      line-height: 1.05;
+      font-weight: 900;
+    }
+
+    .feedback {
+      min-height: 38px;
+      margin-top: 14px;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .mini-choice {
+      min-height: 160px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      box-shadow: 0 6px 0 rgba(0,0,0,.14);
+    }
+
+    .mini-choice .monster-img {
+      width: 100%;
+      height: 100px;
+      display: block;
+    }
+
+    .mini-choice b {
+      display: block;
+      padding: 0 8px 10px;
+      font-size: 21px;
+    }
+
+    .mini-choice.correct {
+      animation: pop .42s ease;
+      background: #dcffd8;
+    }
+
+    .mini-choice.wrong {
+      animation: wiggle .3s ease;
+      background: #ffe1e1;
+    }
+
+    .grammar-panel {
+      padding: 14px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .grammar-panel h3 {
+      margin: 0 0 10px;
+      color: var(--purple);
+      font-size: 25px;
+    }
+
+    .selected-line {
+      min-height: 76px;
+      margin: 12px 0;
+      padding: 12px;
+      border: 3px dashed rgba(22,22,22,.3);
+      border-radius: 8px;
+      background: var(--soft-blue);
+      font-size: clamp(24px, 3vw, 38px);
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .body-card,
+    .sense-card {
+      min-height: 190px;
+      padding: 12px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+      text-align: center;
+      box-shadow: 0 6px 0 rgba(0,0,0,.14);
+    }
+
+    .body-card .monster-img,
+    .sense-card .monster-img {
+      width: 100%;
+      height: 110px;
+      display: block;
+    }
+
+    .body-card button,
+    .sense-card button {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .answer-input {
+      width: min(360px, 100%);
+      min-height: 52px;
+      margin: 12px auto 0;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      padding: 8px 12px;
+      background: #fffdf7;
+      font-size: 24px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .drop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .drop-zone,
+    .object-tile {
+      min-height: 96px;
+      border: 3px dashed var(--ink);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      font-size: 22px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .drop-zone.filled { background: #e8ffe0; border-style: solid; }
+    .object-tile {
+      cursor: grab;
+      border-style: solid;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .object-tile .monster-img {
+      display: block;
+      width: 100%;
+      max-width: 150px;
+      height: 112px;
+    }
+
+    .object-tile span {
+      display: block;
+      line-height: 1.05;
+    }
+
+    .object-tile.selected { outline: 5px solid rgba(239,79,145,.32); }
+
+    .scene-card {
+      min-height: 455px;
+      padding: 14px;
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: #fffefb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scene-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .scene-title {
+      font-size: clamp(26px, 4vw, 44px);
+      font-weight: 900;
+      color: var(--orange);
+    }
+
+    .bubble {
+      position: relative;
+      margin: 10px 0;
+      padding: 12px 14px;
+      border: 3px solid var(--blue);
+      border-radius: 18px;
+      background: white;
+      font-size: clamp(20px, 2.3vw, 28px);
+      font-weight: 900;
+    }
+
+    .bubble.answer { border-color: var(--red); margin-left: 12%; }
+    .bubble.small { font-size: 20px; }
+
+    .scene-art {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .scene-art .monster-img { width: 100%; height: 170px; }
+
+    .monster-img {
+      object-fit: contain;
+      object-position: center;
+      filter: drop-shadow(6px 6px 0 rgba(0,0,0,.08));
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .teacher-note {
+      margin-top: 12px;
+      padding: 12px;
+      border: 3px dashed rgba(22,22,22,.38);
+      border-radius: 8px;
+      background: var(--soft-yellow);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .game-layout {
+      display: grid;
+      grid-template-columns: minmax(520px, 1.3fr) minmax(280px, .7fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .game-board-wrap {
+      position: relative;
+      padding: 12px;
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: #fffefb;
+      overflow: auto;
+    }
+
+    .game-board {
+      position: relative;
+      display: block;
+      aspect-ratio: 1 / 1;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      overflow: hidden;
+      background: white;
+    }
+
+    .game-board-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .board-token {
+      position: absolute;
+      z-index: 20;
+      width: 12.5%;
+      height: auto;
+      transform: translate(-50%, -78%);
+      transition: left .42s cubic-bezier(.34,1.4,.64,1), top .42s cubic-bezier(.34,1.4,.64,1), opacity .2s ease, scale .2s ease;
+      filter: drop-shadow(5px 7px 0 rgba(0,0,0,.2));
+    }
+
+    .board-token.hidden { opacity: 0; scale: .6; }
+
+    .board-token.hopping {
+      animation: tokenHop .42s ease-in-out;
+    }
+
+    @keyframes tokenHop {
+      0% { transform: translate(-50%, -78%) scale(1); }
+      40% { transform: translate(-50%, -120%) scale(1.08); }
+      100% { transform: translate(-50%, -78%) scale(1); }
+    }
+
+    .game-cell {
+      position: relative;
+      min-width: 0;
+      border: 1px dashed rgba(22,22,22,.28);
+      padding: 4px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .game-cell:nth-child(4n+1) { background: #fff1f7; }
+    .game-cell:nth-child(4n+2) { background: #edf8ff; }
+    .game-cell:nth-child(4n+3) { background: #f0ffe9; }
+    .game-cell:nth-child(4n+4) { background: #fff8d8; }
+    .game-cell.boost { background: #e4ffe4; border: 2px solid var(--green); }
+    .game-cell.trap { background: #ffe7e3; border: 2px solid var(--red); }
+    .game-cell.question { background: #eee4ff; }
+    .game-cell.finish { background: #ffe17a; }
+
+    .cell-number {
+      position: relative;
+      z-index: 2;
+      display: inline-grid;
+      place-items: center;
+      min-width: 24px;
+      min-height: 24px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: white;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .cell-task {
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      bottom: 4px;
+      z-index: 2;
+      padding: 2px 3px;
+      border-radius: 5px;
+      background: rgba(255,255,255,.78);
+      font-size: clamp(10px, 1.25vw, 14px);
+      line-height: 1;
+      font-weight: 900;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .cell-art {
+      position: absolute;
+      inset: 21% 12% 20%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      opacity: .88;
+      filter: drop-shadow(3px 3px 0 rgba(0,0,0,.1));
+    }
+
+    .cell-special {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      z-index: 3;
+      padding: 2px 5px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      background: white;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .game-piece {
+      position: absolute;
+      z-index: 5;
+      top: 30px;
+      width: 18px;
+      height: 18px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      box-shadow: 0 2px 0 rgba(0,0,0,.22);
+    }
+
+    .game-piece.a { left: 28px; background: var(--blue); }
+    .game-piece.b { left: 50px; background: var(--pink); }
+
+    .game-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .dice-card,
+    .challenge-card,
+    .instructions-card {
+      padding: 18px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .dice-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .dice-face {
+      width: 86px;
+      height: 86px;
+      perspective: 420px;
+    }
+
+    .dice-cube {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 1.05s cubic-bezier(.2,.85,.25,1);
+      transform: rotateX(-22deg) rotateY(35deg);
+    }
+
+    .dice-cube .face {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.05);
+    }
+
+    .dice-cube .face img {
+      display: block;
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .dice-cube .face.front  { transform: translateZ(43px); }
+    .dice-cube .face.back   { transform: translateZ(-43px) rotateY(180deg); }
+    .dice-cube .face.right  { transform: rotateY(90deg) translateZ(43px); }
+    .dice-cube .face.left   { transform: rotateY(-90deg) translateZ(43px); }
+    .dice-cube .face.top    { transform: rotateX(90deg) translateZ(43px); }
+    .dice-cube .face.bottom { transform: rotateX(-90deg) translateZ(43px); }
+
+    .dice-face.rolling .dice-cube {
+      transition: transform .9s cubic-bezier(.34,1.4,.34,1);
+    }
+
+    .game-status,
+    .challenge-type {
+      color: var(--purple);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .challenge-word {
+      margin: 8px 0;
+      color: var(--blue);
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .challenge-card p,
+    .instructions-card p {
+      margin: 11px 0;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .challenge-card p + p {
+      padding-top: 6px;
+      border-top: 2px dashed rgba(22,22,22,.18);
+    }
+
+    .answer-options {
+      display: grid;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .answer-options .btn {
+      width: 100%;
+      padding: 12px 14px;
+      text-align: left;
+      line-height: 1.3;
+      box-shadow: 0 4px 0 var(--ink);
+    }
+
+    .answer-options .correct {
+      background: #dcffd8;
+    }
+
+    .answer-options .wrong {
+      background: #ffe1e1;
+    }
+
+    .instruction-list {
+      margin: 8px 0 0;
+      padding-left: 22px;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .hidden { display: none !important; }
+
+    .confetti {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      overflow: hidden;
+    }
+
+    .confetti i {
+      position: absolute;
+      width: 12px;
+      height: 18px;
+      border: 2px solid rgba(22,22,22,.35);
+      animation: fall 900ms ease-out forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(.92) rotate(-2deg); }
+      70% { transform: scale(1.05) rotate(2deg); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    @keyframes fall {
+      from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      to { transform: translateY(100vh) rotate(240deg); opacity: 0; }
+    }
+
+    @media (max-width: 860px) {
+      .hero,
+      .quiz-stage,
+      .builder-grid,
+      .hospital-grid,
+      .sense-grid,
+      .role-grid,
+      .game-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .hero { min-height: auto; padding-top: 24px; }
+      .hero-board { min-height: 440px; }
+      .reference-grid { grid-template-columns: 1fr; }
+      .section-head { align-items: start; flex-direction: column; }
+    }
+
+    @media (max-width: 520px) {
+      .page { width: min(100% - 16px, 1180px); }
+      section { padding: 14px; }
+      .tabs { position: static; }
+      .tab { flex-basis: 45%; font-size: 15px; }
+      .word-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .word-card { min-height: 194px; padding: 8px; }
+      .word-card .word { font-size: 22px; }
+      .word-card .phrase { font-size: 15px; }
+      .doodle-note { width: 150px; font-size: 17px; }
+      .mini-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .mini-choice b { font-size: 18px; }
+      .game-board-wrap { padding: 7px; }
+      .game-board { min-width: 620px; }
+      .cell-number { min-width: 19px; min-height: 19px; font-size: 11px; border-width: 1px; }
+      .cell-special { font-size: 9px; padding: 1px 3px; border-width: 1px; }
+      .cell-task { font-size: 9px; }
+      .game-piece { width: 14px; height: 14px; border-width: 2px; top: 24px; }
+      .game-piece.a { left: 22px; }
+      .game-piece.b { left: 38px; }
+    }
+
+    @media print {
+      body { background: white; }
+      .hero,
+      .tabs,
+      .reference-grid,
+      .confetti { display: none !important; }
+      .page { width: 100%; padding: 0; }
+      section { display: none !important; box-shadow: none; }
+      #game {
+        display: block !important;
+        margin: 0;
+        padding: 12px;
+        border: 0;
+        box-shadow: none;
+      }
+      #game .section-head,
+      #game .game-layout { break-inside: avoid; }
+      .game-layout { grid-template-columns: 1fr .72fr; }
+      .game-board-wrap,
+      .dice-card,
+      .challenge-card,
+      .instructions-card { box-shadow: none; }
+      .btn { display: none !important; }
     }
   </style>
 </head>
 <body>
-  <p>Opening <a href="monster-review-lab/">Monster Review Lab</a>...</p>
+  <div class="confetti" id="confetti"></div>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Everybody Up 2 Review</div>
+        <h1 class="rainbow" aria-label="Monster Review Lab">
+          <span>Monster</span><br>
+          <span>Review</span>
+          <span>Lab</span>
+        </h1>
+        <p class="lead">Feelings, body parts, senses, questions, and mini conversations with doodle monsters.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#words">Start Review</a>
+          <a class="btn blue" href="#roleplay">Roleplay</a>
+        </div>
+        <div class="voice-control" id="voiceControl">
+          <span>Voice</span>
+          <span class="voice-badge">Neural MP3: Jenny</span>
+          <button class="btn green" type="button" id="testVoice">Test Voice</button>
+        </div>
+      </div>
+      <div class="hero-board" aria-label="Doodle monster board">
+        <div class="hero-monster one" id="heroMonsterOne"></div>
+        <div class="hero-monster two" id="heroMonsterTwo"></div>
+        <div class="hero-monster three" id="heroMonsterThree"></div>
+        <div class="doodle-note">Say it. Click it. Match it. Act it.</div>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Review activities">
+      <button class="tab active" data-tab="words">Words</button>
+      <button class="tab" data-tab="quiz">Find</button>
+      <button class="tab" data-tab="grammar">Questions</button>
+      <button class="tab" data-tab="hospital">Hospital</button>
+      <button class="tab" data-tab="senses">Senses</button>
+      <button class="tab" data-tab="game">Game</button>
+      <button class="tab" data-tab="roleplay">Roleplay</button>
+      <button class="tab" data-tab="gallery">Gallery</button>
+      <button class="tab" data-tab="practice">Practice</button>
+    </nav>
+
+    <section id="words" data-panel>
+      <div class="section-head">
+        <div>
+          <h2>Monster Word Wall</h2>
+          <div class="feedback" id="wordFeedback">Pick a monster card.</div>
+        </div>
+        <div class="score-pill" id="wordCount">20 words</div>
+      </div>
+      <div class="filter-row" aria-label="Word filters">
+        <button class="btn active" data-filter="all">All</button>
+        <button class="btn pink" data-filter="feeling">Feelings</button>
+        <button class="btn orange" data-filter="body">Body</button>
+        <button class="btn green" data-filter="sense">Senses</button>
+        <button class="btn purple" data-filter="grammar">Grammar</button>
+      </div>
+      <div class="word-grid" id="wordGrid"></div>
+    </section>
+
+    <section id="quiz" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Find the Monster</h2>
+          <div class="feedback" id="quizFeedback">Ready?</div>
+        </div>
+        <div class="score-pill" id="quizScore">Score 0</div>
+      </div>
+      <div class="quiz-stage">
+        <div class="prompt-box">
+          <div>
+            <div class="big" id="quizPrompt">I am happy.</div>
+            <button class="btn primary" id="newQuiz">New</button>
+            <button class="btn blue" id="speakQuiz">Say</button>
+          </div>
+        </div>
+        <div class="mini-grid" id="quizChoices"></div>
+      </div>
+    </section>
+
+    <section id="grammar" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Question Builder</h2>
+          <div class="feedback" id="grammarFeedback">Choose a monster word.</div>
+        </div>
+        <div class="score-pill" id="grammarScore">Stars 0</div>
+      </div>
+      <div class="builder-grid">
+        <div class="grammar-panel">
+          <h3>Feelings</h3>
+          <div class="mini-grid" id="feelingChoices"></div>
+        </div>
+        <div class="grammar-panel">
+          <h3>Build</h3>
+          <div class="choice-row">
+            <button class="btn blue active" data-pronoun="you">you</button>
+            <button class="btn green" data-pronoun="he">he</button>
+            <button class="btn pink" data-pronoun="she">she</button>
+          </div>
+          <div class="selected-line" id="questionLine">Are you happy?</div>
+          <div class="choice-row" id="answerButtons"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="hospital" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Monster Hospital</h2>
+          <div class="feedback" id="hospitalFeedback">Help the doctor.</div>
+        </div>
+        <div class="score-pill" id="hospitalScore">Checks 0</div>
+      </div>
+      <div class="hospital-grid">
+        <div class="prompt-box">
+          <div>
+            <div class="big">What's wrong?</div>
+            <div class="selected-line" id="hurtLine">My ___ hurts.</div>
+            <input class="answer-input" id="hurtInput" autocomplete="off" placeholder="type the word">
+            <button class="btn primary" id="checkHurt">Check</button>
+          </div>
+        </div>
+        <div class="mini-grid" id="bodyChoices"></div>
+      </div>
+    </section>
+
+    <section id="senses" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Senses Match</h2>
+          <div class="feedback" id="senseFeedback">Match each sense to a thing.</div>
+        </div>
+        <div class="score-pill" id="senseScore">Matches 0</div>
+      </div>
+      <div class="sense-grid">
+        <div class="grammar-panel">
+          <h3>Things</h3>
+          <div class="drop-grid" id="objectTiles"></div>
+        </div>
+        <div class="grammar-panel">
+          <h3>Sentences</h3>
+          <div class="drop-grid" id="dropZones"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="game" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Monster Ladders</h2>
+          <div class="feedback" id="gameFeedback">Roll, move, and speak before the next team plays.</div>
+        </div>
+        <div class="scene-actions">
+          <button class="btn primary" id="rollDice">Roll Dice</button>
+          <button class="btn orange" id="resetGame">Reset</button>
+          <button class="btn blue" id="printGame">Print</button>
+        </div>
+      </div>
+      <div class="game-layout">
+        <div class="game-board-wrap">
+          <div class="game-board" id="gameBoard" aria-label="Monster ladders game board">
+            <img class="game-board-img" src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/board-100.png" alt="100-square monster snakes and ladders board">
+            <img class="board-token hidden" id="tokenA" src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/token-a.png" alt="Team A token">
+            <img class="board-token hidden" id="tokenB" src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/token-b.png" alt="Team B token">
+          </div>
+        </div>
+        <div class="game-panel">
+          <div class="dice-card">
+            <div class="dice-row">
+              <div class="dice-face" id="diceFace">
+                <div class="dice-cube" id="diceCube">
+                  <div class="face front"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-1.png" alt="dice one"></div>
+                  <div class="face back"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-6.png" alt="dice six"></div>
+                  <div class="face right"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-2.png" alt="dice two"></div>
+                  <div class="face left"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-5.png" alt="dice five"></div>
+                  <div class="face top"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-3.png" alt="dice three"></div>
+                  <div class="face bottom"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-4.png" alt="dice four"></div>
+                </div>
+              </div>
+              <div>
+                <div class="game-status" id="teamTurn">Team A's turn</div>
+                <p>Team A: blue token<br>Team B: pink token</p>
+              </div>
+            </div>
+          </div>
+          <div class="challenge-card" id="challengeCard">
+            <div class="challenge-type">Start</div>
+            <div class="challenge-word">Ready?</div>
+            <p>Roll the dice. Move your token. Do the speaking challenge on your square.</p>
+          </div>
+          <div class="instructions-card">
+            <h3>Board Rules</h3>
+            <ol class="instruction-list">
+              <li>Read the word or question aloud.</li>
+              <li>Translate the word into Vietnamese.</li>
+              <li>Use the word in a full sentence.</li>
+              <li>Choose the correct option before the next team rolls.</li>
+              <li>Answer grammar questions with the correct pattern.</li>
+              <li>Boost climbs up. Trap slides down. First team to 100 wins.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="roleplay" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Monster Check-Up</h2>
+          <div class="feedback" id="roleFeedback">Act with a partner.</div>
+        </div>
+        <div class="scene-actions">
+          <button class="btn primary" id="newScene">New Scene</button>
+          <button class="btn blue" id="printPage">Print</button>
+        </div>
+      </div>
+      <div class="role-grid">
+        <div class="scene-card" id="sceneCard"></div>
+        <div class="grammar-panel">
+          <h3>Quick Practice</h3>
+          <div class="bubble small">A: What's wrong?</div>
+          <div class="bubble answer small">B: My <span id="quickBody">leg</span> hurts.</div>
+          <div class="bubble small">A: Are you <span id="quickFeeling">tired</span>?</div>
+          <div class="bubble answer small">B: Yes, I am. / No, I'm not.</div>
+          <div class="bubble small">A: What can he/she <span id="quickSense">see</span>?</div>
+          <div class="bubble answer small">B: He/She can <span id="quickSenseLine">see a star</span>.</div>
+          <button class="btn orange" id="shuffleQuick">Shuffle Lines</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Picture Gallery</h2>
+          <div class="feedback" id="galleryFeedback">Vocabulary, grammar, and conversation reference sheets - shown full size.</div>
+        </div>
+      </div>
+      <div class="gallery-tabs" role="tablist" aria-label="Gallery pictures">
+        <button class="gallery-tab active" data-gallery="vocab" type="button">Vocabulary</button>
+        <button class="gallery-tab" data-gallery="grammar" type="button">Grammar</button>
+        <button class="gallery-tab" data-gallery="conversation" type="button">Conversation</button>
+      </div>
+      <div class="gallery-stage">
+        <div class="gallery-pane active" data-gallery-pane="vocab">
+          <img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/vocab.png" alt="Vocabulary reference, full size">
+        </div>
+        <div class="gallery-pane" data-gallery-pane="grammar">
+          <img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/grammar.png" alt="Grammar reference, full size">
+        </div>
+        <div class="gallery-pane" data-gallery-pane="conversation">
+          <img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/conversation.png" alt="Conversation reference, full size">
+        </div>
+      </div>
+    </section>
+
+    <section id="practice" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Board Question Practice</h2>
+          <div class="feedback" id="practiceFeedback">Every question style that appears on the Monster Ladders board, in one list.</div>
+        </div>
+        <div class="score-pill" id="practiceCount">0 questions</div>
+      </div>
+      <div class="filter-row practice-filter-row" aria-label="Practice filters">
+        <button class="btn active" data-practice-filter="all">All</button>
+        <button class="btn pink" data-practice-filter="Vocabulary">Vocabulary</button>
+        <button class="btn purple" data-practice-filter="Grammar">Grammar</button>
+        <button class="btn orange" data-practice-filter="Hospital">Hospital</button>
+        <button class="btn green" data-practice-filter="Senses Question">Senses</button>
+        <button class="btn blue" data-practice-filter="Boost">Boost</button>
+        <button class="btn red" data-practice-filter="Trap">Trap</button>
+      </div>
+      <div class="practice-list" id="practiceList"></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/audio/manifest.js"></script>
+  <script>
+    const words = [
+      {word:"hot", type:"feeling", phrase:"I am hot.", color:"#f04b38", prop:"sun"},
+      {word:"cold", type:"feeling", phrase:"I am cold.", color:"#35a8ee", prop:"snow"},
+      {word:"hungry", type:"feeling", phrase:"I am hungry.", color:"#7ac943", prop:"burger"},
+      {word:"thirsty", type:"feeling", phrase:"I am thirsty.", color:"#168de2", prop:"water"},
+      {word:"sad", type:"feeling", phrase:"I am sad.", color:"#9a62c8", prop:"rain"},
+      {word:"happy", type:"feeling", phrase:"I am happy.", color:"#ffd33d", prop:"stars"},
+      {word:"sick", type:"feeling", phrase:"I am sick.", color:"#7bd66d", prop:"thermometer"},
+      {word:"tired", type:"feeling", phrase:"I am tired.", color:"#9c6aca", prop:"sleep"},
+      {word:"bored", type:"feeling", phrase:"I am bored.", color:"#ff922e", prop:"book"},
+      {word:"excited", type:"feeling", phrase:"I am excited.", color:"#ff65a3", prop:"party"},
+      {word:"finger", type:"body", phrase:"This is my finger.", color:"#7fd957", prop:"finger"},
+      {word:"hand", type:"body", phrase:"This is my hand.", color:"#45b7e8", prop:"hand"},
+      {word:"leg", type:"body", phrase:"This is my leg.", color:"#9c6aca", prop:"leg"},
+      {word:"hear", type:"sense", phrase:"I can hear music.", color:"#ff65a3", prop:"music", object:"music"},
+      {word:"see", type:"sense", phrase:"I can see a star.", color:"#7fd957", prop:"telescope", object:"a star"},
+      {word:"smell", type:"sense", phrase:"I can smell a flower.", color:"#ffd33d", prop:"flower", object:"a flower"},
+      {word:"taste", type:"sense", phrase:"I can taste ice cream.", color:"#45b7e8", prop:"icecream", object:"ice cream"},
+      {word:"touch", type:"sense", phrase:"I can touch a cactus.", color:"#ff65a3", prop:"cactus", object:"a cactus"},
+      {word:"Are you ___?", type:"grammar", phrase:"Yes, I am. / No, I'm not.", color:"#45b7e8", prop:"question"},
+      {word:"Is he/she ___?", type:"grammar", phrase:"Yes, he is. / No, she isn't.", color:"#7fd957", prop:"question"}
+    ];
+
+    const feelings = words.filter(item => item.type === "feeling");
+    const bodies = words.filter(item => item.type === "body");
+    const senses = words.filter(item => item.type === "sense");
+    let quizAnswer = "happy";
+    let quizScore = 0;
+    let grammarStars = 0;
+    let hospitalChecks = 0;
+    let senseMatches = 0;
+    let selectedFeeling = feelings[5];
+    let selectedPronoun = "you";
+    let selectedBody = bodies[2];
+    let selectedObject = null;
+    let currentAudio = null;
+    let practiceQuestions = [];
+    const gameState = {
+      currentTeam: "a",
+      positions: {a: 0, b: 0},
+      lastRoll: 1,
+      rolling: false
+    };
+    const gameBoosts = {4:14, 9:31, 21:42, 28:76, 36:44, 51:67, 71:91, 80:99};
+    const gameTraps = {17:7, 34:12, 48:30, 62:19, 87:57, 95:75, 98:79};
+    const gameTranslations = {
+      hot: "nóng",
+      cold: "lạnh",
+      hungry: "đói",
+      thirsty: "khát",
+      sad: "buồn",
+      happy: "vui",
+      sick: "ốm",
+      tired: "mệt",
+      bored: "chán",
+      excited: "hào hứng",
+      finger: "ngón tay",
+      hand: "bàn tay",
+      leg: "chân",
+      hear: "nghe",
+      see: "nhìn thấy",
+      smell: "ngửi",
+      taste: "nếm",
+      touch: "chạm"
+    };
+
+    const $ = selector => document.querySelector(selector);
+    const $$ = selector => Array.from(document.querySelectorAll(selector));
+
+    function monsterSvg(item, options = {}) {
+      const color = item.color || "#7fd957";
+      const mood = item.word || "monster";
+      const prop = item.prop || "stars";
+      const sleepy = mood === "tired";
+      const sad = ["sad", "sick", "bored", "cold", "thirsty", "hot"].includes(mood);
+      const mouth = sleepy ? "M66 102 C82 122 104 122 120 102" : sad ? "M70 112 C84 98 102 98 116 112" : "M68 100 C78 122 110 122 122 100";
+      const eyeY = sleepy ? 65 : 58;
+      const armLeft = prop === "touch" || prop === "cactus" ? "M45 104 C20 98 16 74 30 60" : "M45 105 C20 113 18 132 34 140";
+      const armRight = prop === "hand" || prop === "party" ? "M139 105 C162 78 168 58 154 46" : "M139 106 C164 112 168 132 152 140";
+      const spots = options.tiny ? "" : `
+        <circle cx="60" cy="78" r="5" fill="#5f3ca8" opacity=".55"/>
+        <circle cx="125" cy="82" r="6" fill="#25a64a" opacity=".55"/>
+        <circle cx="77" cy="128" r="7" fill="#ef4f91" opacity=".45"/>
+        <circle cx="116" cy="132" r="5" fill="#1475c9" opacity=".45"/>`;
+      return `
+      <svg viewBox="0 0 190 170" role="img" aria-label="${mood} monster">
+        <path d="M54 42 C28 56 22 100 36 132 C50 162 136 162 151 132 C166 101 158 58 132 42 C110 26 76 27 54 42Z" fill="${color}" stroke="#161616" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M57 40 C51 20 37 12 28 22 C31 41 42 50 57 40Z" fill="#ffc629" stroke="#161616" stroke-width="4"/>
+        <path d="M131 40 C137 20 151 12 160 22 C157 41 146 50 131 40Z" fill="#ffc629" stroke="#161616" stroke-width="4"/>
+        <path d="M30 128 C18 143 35 154 51 141" fill="${color}" stroke="#161616" stroke-width="4"/>
+        <path d="M140 141 C158 154 173 143 159 128" fill="${color}" stroke="#161616" stroke-width="4"/>
+        <path d="${armLeft}" fill="none" stroke="#161616" stroke-width="6" stroke-linecap="round"/>
+        <path d="${armRight}" fill="none" stroke="#161616" stroke-width="6" stroke-linecap="round"/>
+        ${spots}
+        <circle cx="94" cy="${eyeY}" r="26" fill="#fff" stroke="#161616" stroke-width="4"/>
+        <circle cx="96" cy="${eyeY + 2}" r="10" fill="#111"/>
+        <circle cx="91" cy="${eyeY - 4}" r="4" fill="#fff"/>
+        <path d="${mouth}" fill="${sad ? "none" : "#111"}" stroke="#161616" stroke-width="5" stroke-linecap="round"/>
+        ${propSvg(prop)}
+        <path d="M47 48 C75 30 111 28 139 48" fill="none" stroke="#fff" stroke-width="3" opacity=".55"/>
+        <path d="M42 145 C72 156 118 157 148 145" fill="none" stroke="#161616" stroke-width="2" opacity=".25"/>
+      </svg>`;
+    }
+
+    function propSvg(prop) {
+      const props = {
+        sun: '<circle cx="161" cy="32" r="15" fill="#ff7a1a" stroke="#161616" stroke-width="3"/><path d="M161 5v14M161 45v16M134 32h15M173 32h15M142 13l9 10M179 13l-9 10" stroke="#ff7a1a" stroke-width="4" stroke-linecap="round"/>',
+        snow: '<path d="M25 35v30M10 50h30M15 39l20 22M35 39L15 61" stroke="#35a8ee" stroke-width="4" stroke-linecap="round"/><path d="M158 60v25M146 72h25M150 63l18 18M168 63l-18 18" stroke="#35a8ee" stroke-width="3" stroke-linecap="round"/>',
+        burger: '<ellipse cx="158" cy="82" rx="22" ry="10" fill="#f9a51a" stroke="#161616" stroke-width="3"/><rect x="137" y="82" width="42" height="12" rx="4" fill="#7ac943" stroke="#161616" stroke-width="3"/><ellipse cx="158" cy="98" rx="23" ry="9" fill="#f9a51a" stroke="#161616" stroke-width="3"/>',
+        water: '<rect x="142" y="74" width="22" height="52" rx="5" fill="#d8efff" stroke="#161616" stroke-width="3"/><path d="M145 99h16v20h-16z" fill="#35a8ee" opacity=".7"/><path d="M147 69h14" stroke="#161616" stroke-width="3"/>',
+        rain: '<path d="M144 28 C158 14 180 28 171 48 C184 51 178 68 160 65 L131 65 C116 64 115 44 132 42 C133 34 137 30 144 28Z" fill="#777" stroke="#161616" stroke-width="3"/><path d="M139 80l-7 14M160 79l-7 15M177 77l-7 14" stroke="#35a8ee" stroke-width="4" stroke-linecap="round"/>',
+        stars: '<path d="M30 30l6 12 13 1-10 8 3 13-12-7-12 7 3-13-10-8 13-1z" fill="#ffc629" stroke="#161616" stroke-width="3"/><path d="M150 28l5 10 11 1-8 7 2 11-10-6-10 6 2-11-8-7 11-1z" fill="#ffc629" stroke="#161616" stroke-width="3"/>',
+        thermometer: '<rect x="133" y="54" width="14" height="56" rx="7" fill="#fff" stroke="#161616" stroke-width="3"/><circle cx="140" cy="116" r="11" fill="#ef4f91" stroke="#161616" stroke-width="3"/><path d="M140 100v-28" stroke="#ef4f91" stroke-width="5" stroke-linecap="round"/>',
+        sleep: '<text x="137" y="34" font-size="22" font-weight="900" fill="#161616">Z</text><text x="157" y="54" font-size="18" font-weight="900" fill="#161616">Z</text><text x="175" y="72" font-size="14" font-weight="900" fill="#161616">Z</text>',
+        book: '<path d="M128 105 C145 96 160 100 172 111 L172 144 C156 137 143 139 128 149Z" fill="#fff" stroke="#161616" stroke-width="3"/><path d="M128 105 C111 96 96 100 84 111 L84 144 C100 137 113 139 128 149Z" fill="#fff" stroke="#161616" stroke-width="3"/><path d="M128 105v44" stroke="#161616" stroke-width="3"/><path d="M96 120h22M96 130h20M139 120h22M139 130h18" stroke="#1475c9" stroke-width="2"/>',
+        party: '<path d="M90 5 L120 55 L62 55Z" fill="#2d88d8" stroke="#161616" stroke-width="4"/><circle cx="89" cy="29" r="5" fill="#ffc629"/><circle cx="105" cy="42" r="4" fill="#ef4f91"/><path d="M25 34 C10 24 18 14 32 22M158 26 C179 19 178 40 162 38M146 12 C152 24 137 26 144 39" fill="none" stroke="#f47c16" stroke-width="4" stroke-linecap="round"/>',
+        finger: '<path d="M153 70v50" stroke="#161616" stroke-width="9" stroke-linecap="round"/><path d="M146 67 C155 55 166 67 157 77" fill="#ffe0bd" stroke="#161616" stroke-width="3"/><path d="M162 62l12-12M171 77l15-2M146 52l-2-15" stroke="#e84135" stroke-width="4" stroke-linecap="round"/>',
+        hand: '<path d="M145 109 C134 91 144 73 156 77 C158 59 174 62 169 82 C182 75 188 89 174 99 C188 101 185 117 169 113 C162 128 149 125 145 109Z" fill="#45b7e8" stroke="#161616" stroke-width="3"/>',
+        leg: '<path d="M143 113 C150 132 144 150 128 150 L115 150 C113 139 123 133 131 132 L124 114Z" fill="#9c6aca" stroke="#161616" stroke-width="4"/><path d="M160 114l20-7M164 125l20 2" stroke="#e84135" stroke-width="4" stroke-linecap="round"/>',
+        music: '<path d="M148 38v51" stroke="#1475c9" stroke-width="5"/><path d="M148 38l28 8v15l-28-8z" fill="#1475c9"/><circle cx="137" cy="91" r="10" fill="#1475c9"/><path d="M36 32v36M36 32l22 6v12l-22-6z" stroke="#7a4ac7" stroke-width="4" fill="none"/><circle cx="27" cy="70" r="8" fill="#7a4ac7"/>',
+        telescope: '<path d="M125 75l48-22 8 19-52 17z" fill="#35a8ee" stroke="#161616" stroke-width="4"/><path d="M139 85l-10 51M158 79l13 52" stroke="#161616" stroke-width="4" stroke-linecap="round"/><path d="M174 53l8-4 8 19-9 4" fill="#d8efff" stroke="#161616" stroke-width="3"/>',
+        flower: '<circle cx="160" cy="68" r="8" fill="#ffc629" stroke="#161616" stroke-width="2"/><circle cx="160" cy="51" r="10" fill="#ef4f91" stroke="#161616" stroke-width="2"/><circle cx="177" cy="68" r="10" fill="#ef4f91" stroke="#161616" stroke-width="2"/><circle cx="160" cy="85" r="10" fill="#ef4f91" stroke="#161616" stroke-width="2"/><circle cx="143" cy="68" r="10" fill="#ef4f91" stroke="#161616" stroke-width="2"/><path d="M160 78v62M160 112c-18-6-21-21-18-28M161 122c18-5 23-18 21-27" stroke="#23a73e" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M126 57c12-10 19-1 10 10M183 45c12 10 3 19-8 11" stroke="#23a73e" stroke-width="3" fill="none"/>',
+        icecream: '<path d="M150 92l18 48 18-48z" fill="#f5ba63" stroke="#161616" stroke-width="3"/><circle cx="168" cy="78" r="21" fill="#ffa6c9" stroke="#161616" stroke-width="3"/><path d="M155 83c8 8 18 6 26-3" fill="none" stroke="#ef4f91" stroke-width="3"/>',
+        cactus: '<path d="M154 56 C166 56 166 72 166 98 L180 98 C188 98 188 83 180 83 M154 83 L144 83 C136 83 136 68 144 68 M154 56 C142 56 142 72 142 124 L166 124 C166 72 166 56 154 56Z" fill="#67c94f" stroke="#161616" stroke-width="3"/><rect x="134" y="123" width="43" height="20" fill="#c97932" stroke="#161616" stroke-width="3"/><path d="M153 66v45M160 69v44M146 92h-12M166 101h15" stroke="#fff" stroke-width="2"/>',
+        question: '<circle cx="158" cy="52" r="27" fill="#fff" stroke="#161616" stroke-width="3"/><text x="150" y="64" font-size="34" font-weight="900" fill="#161616">?</text>'
+      };
+      return props[prop] || props.stars;
+    }
+
+    function assetKeyFor(item) {
+      const direct = (item.word || "").toLowerCase();
+      const prop = (item.prop || "").toLowerCase();
+      const byProp = {
+        burger: "hungry",
+        water: "thirsty",
+        rain: "sad",
+        stars: "see",
+        thermometer: "sick",
+        sleep: "tired",
+        book: "bored",
+        party: "excited",
+        music: "hear",
+        telescope: "see",
+        flower: "smell",
+        icecream: "taste",
+        cactus: "touch",
+        question: "question"
+      };
+      const known = new Set([
+        "hot", "cold", "hungry", "thirsty", "sad", "happy", "sick", "tired", "bored", "excited",
+        "finger", "hand", "leg", "hear", "see", "smell", "taste", "touch", "doctor", "question"
+      ]);
+      if (known.has(direct)) return direct;
+      return byProp[prop] || "question";
+    }
+
+    function monsterImage(item, options = {}) {
+      const key = assetKeyFor(item);
+      const label = (item.word || key).replace(/"/g, "");
+      return `<img class="monster-img" src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/generated/${key}.png" alt="${label} picture" loading="eager">`;
+    }
+
+    function doctorImage() {
+      return `<img class="monster-img" src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/generated/doctor.png" alt="doctor picture" loading="eager">`;
+    }
+
+    async function speak(text) {
+      const naturalText = text.replace("He/She can", "He or she can");
+      const audioUrl = window.MONSTER_TTS?.[text] || window.MONSTER_TTS?.[naturalText];
+      if (audioUrl) {
+        if (currentAudio) currentAudio.pause();
+        currentAudio = new Audio(audioUrl);
+        await currentAudio.play();
+        return;
+      }
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        utterance.rate = .9;
+        utterance.pitch = 1.05;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    async function speakParts(parts) {
+      if (currentAudio) currentAudio.pause();
+      for (const part of parts) {
+        const naturalText = part.replace("He/She can", "He or she can");
+        const audioUrl = window.MONSTER_TTS?.[part] || window.MONSTER_TTS?.[naturalText];
+        if (!audioUrl) {
+          await speak(part);
+          continue;
+        }
+        await new Promise(resolve => {
+          currentAudio = new Audio(audioUrl);
+          currentAudio.addEventListener("ended", resolve, {once:true});
+          currentAudio.addEventListener("error", resolve, {once:true});
+          currentAudio.play().catch(resolve);
+        });
+        await new Promise(resolve => setTimeout(resolve, 120));
+      }
+    }
+
+    function celebrate() {
+      const confetti = $("#confetti");
+      confetti.innerHTML = "";
+      const colors = ["#e84135", "#f47c16", "#ffc629", "#23a73e", "#1475c9", "#7a4ac7", "#ef4f91"];
+      for (let i = 0; i < 34; i++) {
+        const bit = document.createElement("i");
+        bit.style.left = Math.random() * 100 + "vw";
+        bit.style.background = colors[i % colors.length];
+        bit.style.animationDelay = Math.random() * 160 + "ms";
+        bit.style.transform = `rotate(${Math.random() * 80}deg)`;
+        confetti.appendChild(bit);
+      }
+      setTimeout(() => confetti.innerHTML = "", 1200);
+    }
+
+    function renderWords(filter = "all") {
+      const grid = $("#wordGrid");
+      grid.innerHTML = "";
+      const list = filter === "all" ? words : words.filter(item => item.type === filter);
+      $("#wordCount").textContent = `${list.length} words`;
+      list.forEach(item => {
+        const card = document.createElement("button");
+        card.className = "word-card";
+        card.type = "button";
+        card.innerHTML = `${monsterImage(item)}<span class="word">${item.word}</span><span class="phrase">${item.phrase}</span>`;
+        card.addEventListener("click", () => {
+          $("#wordFeedback").textContent = item.phrase;
+          speak(item.phrase);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function newQuizRound() {
+      const pool = [...feelings, ...bodies, ...senses];
+      const answer = pool[Math.floor(Math.random() * pool.length)];
+      quizAnswer = answer.word;
+      $("#quizPrompt").textContent = answer.phrase;
+      $("#quizFeedback").textContent = "Find the matching monster.";
+      const choices = [answer];
+      while (choices.length < 6) {
+        const pick = pool[Math.floor(Math.random() * pool.length)];
+        if (!choices.some(item => item.word === pick.word)) choices.push(pick);
+      }
+      choices.sort(() => Math.random() - .5);
+      const box = $("#quizChoices");
+      box.innerHTML = "";
+      choices.forEach(item => {
+        const button = document.createElement("button");
+        button.className = "mini-choice";
+        button.type = "button";
+        button.innerHTML = `${monsterImage(item)}<b>${item.word}</b>`;
+        button.addEventListener("click", () => {
+          if (item.word === quizAnswer) {
+            button.classList.add("correct");
+            quizScore += 1;
+            $("#quizScore").textContent = `Score ${quizScore}`;
+            $("#quizFeedback").textContent = `Yes! ${answer.phrase}`;
+            speak(answer.phrase);
+            celebrate();
+            setTimeout(newQuizRound, 850);
+          } else {
+            button.classList.add("wrong");
+            $("#quizFeedback").textContent = "Try again.";
+            setTimeout(() => button.classList.remove("wrong"), 350);
+          }
+        });
+        box.appendChild(button);
+      });
+    }
+
+    function renderFeelingChoices() {
+      const box = $("#feelingChoices");
+      box.innerHTML = "";
+      feelings.forEach(item => {
+        const button = document.createElement("button");
+        button.className = "mini-choice";
+        button.type = "button";
+        button.innerHTML = `${monsterImage(item)}<b>${item.word}</b>`;
+        button.addEventListener("click", () => {
+          selectedFeeling = item;
+          updateQuestionLine();
+        });
+        box.appendChild(button);
+      });
+    }
+
+    function updateQuestionLine(announce = true) {
+      const word = selectedFeeling.word;
+      const question = selectedPronoun === "you" ? `Are you ${word}?` : `Is ${selectedPronoun} ${word}?`;
+      $("#questionLine").textContent = question;
+      $("#grammarFeedback").textContent = "Choose the answer.";
+      renderAnswerButtons();
+      if (announce) speak(question);
+    }
+
+    function renderAnswerButtons() {
+      const box = $("#answerButtons");
+      const answers = selectedPronoun === "you"
+        ? ["Yes, I am.", "No, I'm not."]
+        : selectedPronoun === "he"
+          ? ["Yes, he is.", "No, he isn't."]
+          : ["Yes, she is.", "No, she isn't."];
+      box.innerHTML = "";
+      answers.forEach(answer => {
+        const button = document.createElement("button");
+        button.className = "btn green";
+        button.textContent = answer;
+        button.addEventListener("click", () => {
+          grammarStars += 1;
+          $("#grammarScore").textContent = `Stars ${grammarStars}`;
+          $("#grammarFeedback").textContent = answer;
+          speak(answer);
+          celebrate();
+        });
+        box.appendChild(button);
+      });
+    }
+
+    function renderBodyChoices() {
+      const box = $("#bodyChoices");
+      box.innerHTML = "";
+      bodies.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "body-card";
+        card.innerHTML = `${monsterImage({...item, prop:item.word})}<button class="btn orange">${item.word}</button>`;
+        card.querySelector("button").addEventListener("click", () => {
+          selectedBody = item;
+          $("#hurtLine").textContent = `My ${item.word} hurts.`;
+          $("#hurtInput").value = "";
+          $("#hurtInput").focus();
+          speak(`My ${item.word} hurts.`);
+        });
+        box.appendChild(card);
+      });
+    }
+
+    function checkHurt() {
+      const value = $("#hurtInput").value.trim().toLowerCase();
+      if (value === selectedBody.word) {
+        hospitalChecks += 1;
+        $("#hospitalScore").textContent = `Checks ${hospitalChecks}`;
+        $("#hospitalFeedback").textContent = `Good job. My ${selectedBody.word} hurts.`;
+        speak(`My ${selectedBody.word} hurts.`);
+        celebrate();
+      } else {
+        $("#hospitalFeedback").textContent = "Look again and type the body word.";
+      }
+    }
+
+    function renderSenses() {
+      senseMatches = 0;
+      $("#senseScore").textContent = "Matches 0";
+      selectedObject = null;
+      const objects = [
+        {sense:"see", label:"a star", prop:"stars", color:"#ffd33d"},
+        {sense:"hear", label:"music", prop:"music", color:"#bba1ff"},
+        {sense:"smell", label:"a flower", prop:"flower", color:"#ff9ac7"},
+        {sense:"taste", label:"ice cream", prop:"icecream", color:"#89d6ff"},
+        {sense:"touch", label:"a cactus", prop:"cactus", color:"#8bdd76"}
+      ].sort(() => Math.random() - .5);
+      const tiles = $("#objectTiles");
+      tiles.innerHTML = "";
+      objects.forEach(item => {
+        const tile = document.createElement("button");
+        tile.className = "object-tile";
+        tile.type = "button";
+        tile.draggable = true;
+        tile.dataset.sense = item.sense;
+        tile.dataset.label = item.label;
+        tile.innerHTML = `${monsterImage({word:item.label, color:item.color, prop:item.prop})}<span>${item.label}</span>`;
+        tile.addEventListener("dragstart", event => {
+          event.dataTransfer.setData("text/plain", JSON.stringify(item));
+        });
+        tile.addEventListener("click", () => {
+          selectedObject = item;
+          $$(".object-tile").forEach(x => x.classList.remove("selected"));
+          tile.classList.add("selected");
+        });
+        tiles.appendChild(tile);
+      });
+      const drops = $("#dropZones");
+      drops.innerHTML = "";
+      senses.forEach(item => {
+        const zone = document.createElement("div");
+        zone.className = "drop-zone";
+        zone.dataset.sense = item.word;
+        zone.textContent = `He/She can ${item.word} ___.`;
+        zone.addEventListener("dragover", event => event.preventDefault());
+        zone.addEventListener("drop", event => {
+          event.preventDefault();
+          const data = JSON.parse(event.dataTransfer.getData("text/plain"));
+          handleSenseDrop(zone, data);
+        });
+        zone.addEventListener("click", () => {
+          if (selectedObject) handleSenseDrop(zone, selectedObject);
+        });
+        drops.appendChild(zone);
+      });
+    }
+
+    function handleSenseDrop(zone, data) {
+      if (zone.classList.contains("filled")) return;
+      if (zone.dataset.sense === data.sense) {
+        zone.classList.add("filled");
+        zone.textContent = `He/She can ${data.sense} ${data.label}.`;
+        senseMatches += 1;
+        $("#senseScore").textContent = `Matches ${senseMatches}`;
+        $("#senseFeedback").textContent = zone.textContent;
+        speak(zone.textContent);
+        if (senseMatches === 5) celebrate();
+      } else {
+        $("#senseFeedback").textContent = "Try another sentence.";
+      }
+    }
+
+    function randomFrom(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function boardNumbers() {
+      const numbers = [];
+      for (let displayRow = 0; displayRow < 10; displayRow++) {
+        const rowFromBottom = 9 - displayRow;
+        const start = rowFromBottom * 10 + 1;
+        const row = Array.from({length: 10}, (_, index) => start + index);
+        if (rowFromBottom % 2 === 1) row.reverse();
+        numbers.push(...row);
+      }
+      return numbers;
+    }
+
+    function gameChallenge(number) {
+      const vocab = words.filter(item => item.type !== "grammar");
+      const item = vocab[(number - 1) % vocab.length];
+      const feeling = feelings[(number + 3) % feelings.length];
+      const body = bodies[number % bodies.length];
+      const sense = senses[number % senses.length];
+      const pronoun = number % 2 === 0 ? "he" : "she";
+
+      if (number === 100) {
+        return {
+          type: "Finish",
+          label: "WIN",
+          word: "Monster Champion!",
+          image: "excited",
+          prompt: "Say three review sentences. Then cheer for the other team.",
+          answer: "I am excited. I can see a star. My hand hurts.",
+          audioParts: ["I am excited.", "I can see a star.", "My hand hurts."]
+        };
+      }
+
+      if (gameBoosts[number]) {
+        return {
+          type: "Boost",
+          label: `UP ${gameBoosts[number]}`,
+          word: item.word,
+          image: item.word,
+          prompt: `Read "${item.word}" aloud, translate it, and use it in a sentence. Then climb to ${gameBoosts[number]}.`,
+          answer: item.phrase,
+          audioParts: [item.phrase]
+        };
+      }
+
+      if (gameTraps[number]) {
+        return {
+          type: "Trap",
+          label: `DOWN ${gameTraps[number]}`,
+          word: "Oh no!",
+          image: "sad",
+          prompt: `Answer: Are you ${feeling.word}? Use Yes, I am or No, I'm not. Then slide to ${gameTraps[number]}.`,
+          answer: `Are you ${feeling.word}? Yes, I am. / No, I'm not.`,
+          audioParts: [`Are you ${feeling.word}?`, "Yes, I am.", "No, I'm not."]
+        };
+      }
+
+      if (number % 9 === 0) {
+        return {
+          type: "Senses Question",
+          label: "SENSE",
+          word: `What can ${pronoun} ${sense.word}?`,
+          image: sense.word,
+          prompt: `Answer with: ${pronoun === "he" ? "He" : "She"} can ${sense.word} ${sense.object}.`,
+          answer: `${pronoun === "he" ? "He" : "She"} can ${sense.word} ${sense.object}.`,
+          audioParts: [`${pronoun === "he" ? "He" : "She"} can ${sense.word} ${sense.object}.`]
+        };
+      }
+
+      if (number % 7 === 0) {
+        return {
+          type: "Hospital",
+          label: "HURTS",
+          word: "What's wrong?",
+          image: body.word,
+          prompt: `Answer with a body part: My ${body.word} hurts.`,
+          answer: `My ${body.word} hurts.`,
+          audioParts: ["What's wrong?", `My ${body.word} hurts.`]
+        };
+      }
+
+      if (number % 5 === 0) {
+        const question = pronoun === "he" ? `Is he ${feeling.word}?` : `Is she ${feeling.word}?`;
+        const yes = pronoun === "he" ? "Yes, he is." : "Yes, she is.";
+        const no = pronoun === "he" ? "No, he isn't." : "No, she isn't.";
+        return {
+          type: "Grammar",
+          label: "ASK",
+          word: question,
+          image: feeling.word,
+          prompt: `Answer with correct grammar: ${yes} / ${no}`,
+          answer: `${question} ${yes} / ${no}`,
+          audioParts: [question, yes, no]
+        };
+      }
+
+      return {
+        type: "Vocabulary",
+        label: "READ",
+        word: item.word,
+        image: item.word,
+        prompt: `Read "${item.word}" aloud. Translate it into Vietnamese. Use it in a sentence.`,
+        answer: item.phrase,
+        audioParts: [item.phrase]
+      };
+    }
+
+    function renderGameBoard() {
+      positionTokens();
+    }
+
+    function squarePoint(number, team = "a") {
+      if (number <= 0) return {x: team === "a" ? 5 : 9, y: 96, hidden: true};
+      const rowFromBottom = Math.floor((number - 1) / 10);
+      const colInRow = (number - 1) % 10;
+      const col = rowFromBottom % 2 === 0 ? colInRow : 9 - colInRow;
+      const row = 9 - rowFromBottom;
+      const teamOffset = team === "a" ? -3 : 3;
+      return {
+        x: (col + .5) * 10 + teamOffset,
+        y: (row + .58) * 10,
+        hidden: false
+      };
+    }
+
+    function placeToken(team, position) {
+      const token = team === "a" ? $("#tokenA") : $("#tokenB");
+      const point = squarePoint(position, team);
+      token.style.left = `${point.x}%`;
+      token.style.top = `${point.y}%`;
+      token.classList.toggle("hidden", point.hidden);
+    }
+
+    async function stepMoveToken(team, from, to) {
+      const token = team === "a" ? $("#tokenA") : $("#tokenB");
+      const step = to > from ? 1 : -1;
+      let pos = from;
+      while (pos !== to) {
+        pos += step;
+        placeToken(team, pos);
+        token.classList.remove("hopping");
+        // eslint-disable-next-line no-unused-expressions
+        token.offsetWidth; // restart the hop animation on every square
+        token.classList.add("hopping");
+        await delay(260);
+      }
+      gameState.positions[team] = pos;
+    }
+
+    function positionTokens() {
+      placeToken("a", gameState.positions.a);
+      placeToken("b", gameState.positions.b);
+    }
+
+    function delay(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function shuffleOptions(options) {
+      return [...options].sort(() => Math.random() - .5);
+    }
+
+    function challengeOptions(challenge) {
+      const vocabKeys = Object.keys(gameTranslations);
+      const imageKey = assetKeyFor({word: challenge.image, prop: challenge.image});
+      if (["Vocabulary", "Boost"].includes(challenge.type) && gameTranslations[challenge.word]) {
+        const correct = gameTranslations[challenge.word];
+        const wrong = vocabKeys.filter(key => key !== challenge.word).map(key => gameTranslations[key]);
+        return {
+          question: `"${challenge.word}" là gì?`,
+          correct,
+          options: shuffleOptions([correct, ...shuffleOptions(wrong).slice(0, 2)])
+        };
+      }
+      if (challenge.type === "Grammar") {
+        const correct = challenge.audioParts[1];
+        const wrong = challenge.word.includes(" he ") || challenge.word.startsWith("Is he")
+          ? ["Yes, I am.", "Yes, she is."]
+          : ["Yes, I am.", "Yes, he is."];
+        return {question: challenge.word, correct, options: shuffleOptions([correct, ...wrong])};
+      }
+      if (challenge.type === "Trap") {
+        const correct = "Yes, I am.";
+        return {question: challenge.audioParts[0], correct, options: shuffleOptions([correct, "Yes, he is.", "No, she isn't."])};
+      }
+      if (challenge.type === "Hospital") {
+        const correct = challenge.audioParts[1];
+        return {question: "What's wrong?", correct, options: shuffleOptions([correct, `I am ${imageKey}.`, `My ${imageKey} is.`])};
+      }
+      if (challenge.type === "Senses Question") {
+        const correct = challenge.answer;
+        const wrongSense = imageKey === "see" ? "hear" : "see";
+        const subject = correct.startsWith("He") ? "He" : "She";
+        return {question: challenge.word, correct, options: shuffleOptions([correct, `${subject} can ${wrongSense} music.`, `${subject} is ${imageKey}.`])};
+      }
+      return {
+        question: "Say three sentences.",
+        correct: challenge.audioParts?.[0] || challenge.answer,
+        options: shuffleOptions(["I am excited.", "He am excited.", "My excited hurts."])
+      };
+    }
+
+    function renderGameChallenge(number, movedFrom = null, challengeNumber = number) {
+      const challenge = gameChallenge(number);
+      const choiceData = challengeOptions(challenge);
+      const extra = movedFrom ? `<p><b>Move:</b> ${challengeNumber} to ${movedFrom}</p>` : "";
+      $("#challengeCard").innerHTML = `
+        <div class="challenge-type">${challenge.type} - Square ${challengeNumber}</div>
+        <div class="challenge-word">${challenge.word}</div>
+        <p>${challenge.prompt}</p>
+        <p><b>Question:</b> ${choiceData.question}</p>
+        <div class="answer-options" id="gameOptions">
+          ${choiceData.options.map(option => `<button class="btn blue" type="button" data-answer="${option.replace(/"/g, "&quot;")}">${option}</button>`).join("")}
+        </div>
+        <p><b>Model:</b> ${challenge.answer}</p>
+        ${extra}
+        <p id="gameAnswerFeedback"></p>`;
+      $$("#gameOptions .btn").forEach(button => {
+        button.addEventListener("click", () => {
+          const isCorrect = button.dataset.answer === choiceData.correct;
+          button.classList.toggle("correct", isCorrect);
+          button.classList.toggle("wrong", !isCorrect);
+          $("#gameAnswerFeedback").textContent = isCorrect ? "Correct! Now read, translate, and say your sentence." : "Try again. Check the grammar pattern.";
+          if (isCorrect) {
+            speakParts(challenge.audioParts || [challenge.answer]);
+            celebrate();
+          }
+        });
+      });
+      if (challenge.audioParts) speakParts(challenge.audioParts);
+      else speak(challenge.answer);
+    }
+
+    // Face -> base rotation (deg) needed to bring that face to the front.
+    const diceFaceRotation = {
+      1: {x: 0, y: 0},
+      2: {x: 0, y: -90},
+      3: {x: -90, y: 0},
+      4: {x: 90, y: 0},
+      5: {x: 0, y: 90},
+      6: {x: 0, y: 180}
+    };
+
+    async function animateDice(finalRoll) {
+      const face = $("#diceFace");
+      const cube = $("#diceCube");
+      const target = diceFaceRotation[finalRoll];
+      const spinsX = 2 + Math.floor(Math.random() * 2);
+      const spinsY = 3 + Math.floor(Math.random() * 2);
+      face.classList.add("rolling");
+      const finalX = target.x - 360 * spinsX;
+      const finalY = target.y + 360 * spinsY;
+      cube.style.transform = `rotateX(${finalX}deg) rotateY(${finalY}deg)`;
+      await delay(900);
+      face.classList.remove("rolling");
+      // Settle on the clean, un-spun angle so the next roll's math stays simple.
+      cube.style.transition = "none";
+      cube.style.transform = `rotateX(${target.x}deg) rotateY(${target.y}deg)`;
+      cube.offsetHeight; // force reflow before restoring the transition
+      cube.style.transition = "";
+    }
+
+    async function rollGameDice() {
+      if (gameState.rolling) return;
+      gameState.rolling = true;
+      const roll = Math.floor(Math.random() * 6) + 1;
+      const team = gameState.currentTeam;
+      const teamName = team === "a" ? "Team A" : "Team B";
+      gameState.lastRoll = roll;
+      await animateDice(roll);
+      const start = gameState.positions[team];
+      let landed = Math.min(100, start + roll);
+      let finalPosition = landed;
+      if (gameBoosts[landed]) finalPosition = gameBoosts[landed];
+      if (gameTraps[landed]) finalPosition = gameTraps[landed];
+      await stepMoveToken(team, start, landed);
+      await delay(300);
+      if (finalPosition !== landed) {
+        await stepMoveToken(team, landed, finalPosition);
+        await delay(300);
+      }
+      renderGameChallenge(landed, finalPosition !== landed ? finalPosition : null, landed);
+      if (finalPosition === 100) {
+        gameState.positions[team] = finalPosition;
+        positionTokens();
+        $("#gameFeedback").textContent = `${teamName} wins!`;
+        $("#teamTurn").textContent = `${teamName} wins!`;
+        celebrate();
+        gameState.rolling = false;
+        return;
+      }
+      gameState.currentTeam = team === "a" ? "b" : "a";
+      $("#gameFeedback").textContent = `${teamName} rolled ${roll} and moved to ${finalPosition}.`;
+      $("#teamTurn").textContent = `${gameState.currentTeam === "a" ? "Team A" : "Team B"}'s turn`;
+      gameState.rolling = false;
+    }
+
+    function resetGameBoard() {
+      gameState.currentTeam = "a";
+      gameState.positions = {a: 0, b: 0};
+      gameState.lastRoll = 1;
+      gameState.rolling = false;
+      const cube = $("#diceCube");
+      cube.style.transition = "none";
+      cube.style.transform = "rotateX(0deg) rotateY(0deg)";
+      cube.offsetHeight;
+      cube.style.transition = "";
+      $("#diceFace").classList.remove("rolling");
+      $("#tokenA").classList.remove("hopping");
+      $("#tokenB").classList.remove("hopping");
+      $("#teamTurn").textContent = "Team A's turn";
+      $("#gameFeedback").textContent = "Roll, move, and speak before the next team plays.";
+      $("#challengeCard").innerHTML = `
+        <div class="challenge-type">Start</div>
+        <div class="challenge-word">Ready?</div>
+        <p>Roll the dice. Move your token. Do the speaking challenge on your square.</p>`;
+      positionTokens();
+    }
+
+    function renderScene() {
+      const feeling = randomFrom(feelings);
+      const body = randomFrom(bodies);
+      const sense = randomFrom(senses);
+      const pronoun = Math.random() > .5 ? "he" : "she";
+      const yes = pronoun === "he" ? "Yes, he is." : "Yes, she is.";
+      const no = pronoun === "he" ? "No, he isn't." : "No, she isn't.";
+      const answer = Math.random() > .45 ? yes : no;
+      const scene = $("#sceneCard");
+      scene.innerHTML = `
+        <div class="scene-top">
+          <div class="scene-title">${feeling.word[0].toUpperCase() + feeling.word.slice(1)} Monster</div>
+          <button class="btn purple" type="button" id="sayScene">Say</button>
+        </div>
+        <div class="scene-art">
+          ${doctorImage()}
+          ${monsterImage(feeling)}
+        </div>
+        <div class="bubble">Doctor: What's wrong?</div>
+        <div class="bubble answer">Monster: My ${body.word} hurts.</div>
+        <div class="bubble">Doctor: ${pronoun === "he" ? "Is he" : "Is she"} ${feeling.word}?</div>
+        <div class="bubble answer">Student: ${answer}</div>
+        <div class="bubble">Doctor: What can ${pronoun} ${sense.word}?</div>
+        <div class="bubble answer">Student: ${pronoun === "he" ? "He" : "She"} can ${sense.word} ${sense.object}.</div>
+        <div class="teacher-note">Partner A is the doctor. Partner B is the monster. Switch voices after one scene.</div>`;
+      $("#sayScene").addEventListener("click", () => {
+        speakParts([
+          "What's wrong?",
+          `My ${body.word} hurts.`,
+          `Is ${pronoun} ${feeling.word}?`,
+          answer,
+          `${pronoun === "he" ? "He" : "She"} can ${sense.word} ${sense.object}.`
+        ]);
+      });
+      $("#roleFeedback").textContent = `${feeling.word}, ${body.word}, ${sense.word}`;
+    }
+
+    function doctorSvg() {
+      return `
+      <svg viewBox="0 0 190 170" role="img" aria-label="doctor">
+        <circle cx="91" cy="46" r="25" fill="#ffe0bd" stroke="#161616" stroke-width="4"/>
+        <path d="M66 42 C72 15 116 15 121 42 C104 31 82 31 66 42Z" fill="#111" stroke="#161616" stroke-width="3"/>
+        <circle cx="83" cy="47" r="3" fill="#111"/><circle cx="101" cy="47" r="3" fill="#111"/>
+        <path d="M82 61 C88 68 99 68 105 61" fill="none" stroke="#161616" stroke-width="3" stroke-linecap="round"/>
+        <path d="M60 76 L38 150 L145 150 L123 76 Z" fill="#fff" stroke="#161616" stroke-width="4"/>
+        <path d="M80 76l12 34 12-34" fill="#1475c9" stroke="#161616" stroke-width="3"/>
+        <path d="M58 94 C28 98 22 118 39 130M125 94 C151 100 159 119 145 134" fill="none" stroke="#161616" stroke-width="6" stroke-linecap="round"/>
+        <rect x="122" y="103" width="25" height="35" rx="3" fill="#c97932" stroke="#161616" stroke-width="3"/>
+        <path d="M145 25h32v32h-32z" fill="#fff" stroke="#161616" stroke-width="3"/>
+        <path d="M161 31v20M151 41h20" stroke="#e84135" stroke-width="5" stroke-linecap="round"/>
+      </svg>`;
+    }
+
+    function shuffleQuick() {
+      const body = randomFrom(bodies);
+      const feeling = randomFrom(feelings);
+      const sense = randomFrom(senses);
+      $("#quickBody").textContent = body.word;
+      $("#quickFeeling").textContent = feeling.word;
+      $("#quickSense").textContent = sense.word;
+      $("#quickSenseLine").textContent = `${sense.word} ${sense.object}`;
+      speakParts([
+        `My ${body.word} hurts.`,
+        `Are you ${feeling.word}?`,
+        `She can ${sense.word} ${sense.object}.`
+      ]);
+    }
+
+    function showPanel(id, shouldScroll = true) {
+      const panel = document.getElementById(id);
+      if (!panel || !panel.matches("[data-panel]")) return;
+      $$(".tab").forEach(item => item.classList.toggle("active", item.dataset.tab === id));
+      $$("[data-panel]").forEach(item => item.hidden = item.id !== id);
+      if (shouldScroll) window.scrollTo(0, panel.offsetTop);
+    }
+
+    function initTabs() {
+      $$(".tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          const id = tab.dataset.tab;
+          showPanel(id);
+          history.replaceState(null, "", `#${id}`);
+        });
+      });
+    }
+
+    function initGallery() {
+      $$(".gallery-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          const key = tab.dataset.gallery;
+          $$(".gallery-tab").forEach(item => item.classList.toggle("active", item === tab));
+          $$(".gallery-pane").forEach(pane => pane.classList.toggle("active", pane.dataset.galleryPane === key));
+        });
+      });
+    }
+
+    function buildPracticeQuestions() {
+      const seen = new Set();
+      const items = [];
+      for (let number = 1; number <= 100; number++) {
+        const challenge = gameChallenge(number);
+        const choiceData = challengeOptions(challenge);
+        const dedupeKey = `${challenge.type}|${choiceData.question}`;
+        if (seen.has(dedupeKey)) continue;
+        seen.add(dedupeKey);
+        items.push({
+          type: challenge.type,
+          square: number,
+          question: choiceData.question,
+          answer: challenge.answer
+        });
+      }
+      return items;
+    }
+
+    function renderPracticeList(filter = "all") {
+      const list = $("#practiceList");
+      const items = practiceQuestions.filter(item => filter === "all" || item.type === filter);
+      $("#practiceCount").textContent = `${items.length} questions`;
+      list.innerHTML = items.map(item => `
+        <div class="practice-card">
+          <span class="practice-tag">${item.type} - Square ${item.square}</span>
+          <p class="practice-question">${item.question}</p>
+          <p class="practice-answer">${item.answer}</p>
+        </div>`).join("");
+      Array.from(list.querySelectorAll(".practice-card")).forEach((card, index) => {
+        card.style.cursor = "pointer";
+        card.addEventListener("click", () => speak(items[index].answer));
+      });
+    }
+
+    function initPractice() {
+      practiceQuestions = buildPracticeQuestions();
+      renderPracticeList("all");
+      $$(".practice-filter-row .btn").forEach(button => {
+        button.addEventListener("click", () => {
+          $$(".practice-filter-row .btn").forEach(item => item.classList.remove("active"));
+          button.classList.add("active");
+          renderPracticeList(button.dataset.practiceFilter);
+        });
+      });
+    }
+
+    function init() {
+      $("#heroMonsterOne").innerHTML = monsterImage(words[0], {eager:true});
+      $("#heroMonsterTwo").innerHTML = monsterImage(words[5], {eager:true});
+      $("#heroMonsterThree").innerHTML = monsterImage(words[17], {eager:true});
+      renderWords();
+      newQuizRound();
+      renderFeelingChoices();
+      renderAnswerButtons();
+      renderBodyChoices();
+      renderSenses();
+      renderScene();
+      renderGameBoard();
+      initTabs();
+      initGallery();
+      initPractice();
+
+      $$(".filter-row .btn:not(.practice-filter-row .btn)").forEach(button => {
+        button.addEventListener("click", () => {
+          $$(".filter-row .btn:not(.practice-filter-row .btn)").forEach(item => item.classList.remove("active"));
+          button.classList.add("active");
+          renderWords(button.dataset.filter);
+        });
+      });
+
+      $("#newQuiz").addEventListener("click", newQuizRound);
+      $("#speakQuiz").addEventListener("click", () => speak($("#quizPrompt").textContent));
+      $("#testVoice").addEventListener("click", () => speak("Are you happy? Yes, I am."));
+      $$("[data-pronoun]").forEach(button => {
+        button.addEventListener("click", () => {
+          $$("[data-pronoun]").forEach(item => item.classList.remove("active"));
+          button.classList.add("active");
+          selectedPronoun = button.dataset.pronoun;
+          updateQuestionLine();
+        });
+      });
+      $("#checkHurt").addEventListener("click", checkHurt);
+      $("#hurtInput").addEventListener("keydown", event => {
+        if (event.key === "Enter") checkHurt();
+      });
+      $("#newScene").addEventListener("click", renderScene);
+      $("#shuffleQuick").addEventListener("click", shuffleQuick);
+      $("#printPage").addEventListener("click", () => window.print());
+      $("#rollDice").addEventListener("click", rollGameDice);
+      $("#resetGame").addEventListener("click", resetGameBoard);
+      $("#printGame").addEventListener("click", () => window.print());
+      updateQuestionLine(false);
+      window.addEventListener("hashchange", () => {
+        const id = location.hash.replace("#", "");
+        if (id) showPanel(id);
+      });
+      const hashPanel = location.hash.replace("#", "");
+      if (hashPanel) showPanel(hashPanel, true);
+    }
+
+    init();
+  </script>
 </body>
 </html>
