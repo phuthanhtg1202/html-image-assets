@@ -378,19 +378,163 @@
       color: var(--purple);
     }
 
+    .practice-card .practice-mode-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin: 0 0 8px 6px;
+      border-radius: 999px;
+      background: #eaf3ff;
+      border: 2px solid var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      color: #1d5fa8;
+    }
+
     .practice-card .practice-question {
-      margin: 0 0 8px;
+      margin: 0 0 12px;
       font-size: 20px;
       font-weight: 900;
       line-height: 1.4;
     }
 
-    .practice-card .practice-answer {
-      margin: 0;
-      font-size: 17px;
-      font-weight: 700;
+    .practice-card .practice-convo {
+      display: grid;
+      gap: 6px;
+      margin: 0 0 12px;
+    }
+
+    .practice-card .practice-convo .line {
+      font-size: 18px;
+      font-weight: 800;
       line-height: 1.4;
-      color: #2c6e2f;
+    }
+
+    .practice-card .practice-convo .line .blank {
+      display: inline-block;
+      min-width: 90px;
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .practice-mc {
+      display: grid;
+      gap: 10px;
+    }
+
+    .practice-mc .btn {
+      width: 100%;
+      padding: 12px 14px;
+      text-align: left;
+      line-height: 1.3;
+      box-shadow: 0 4px 0 var(--ink);
+    }
+
+    .practice-mc .btn.correct { background: #dcffd8; }
+    .practice-mc .btn.wrong { background: #ffe1e1; }
+
+    .practice-write {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .practice-write input {
+      flex: 1;
+      min-width: 180px;
+      padding: 10px 12px;
+      border: 3px solid var(--ink);
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .practice-write input.correct { background: #dcffd8; border-color: var(--green); }
+    .practice-write input.wrong { background: #ffe1e1; border-color: var(--red); }
+
+    .practice-feedback-line {
+      margin: 10px 0 0;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .practice-feedback-line.correct { color: #2c6e2f; }
+    .practice-feedback-line.wrong { color: #b0312a; }
+
+    .practice-points {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .practice-reveal-btn {
+      margin-top: 10px;
+      font-size: 14px;
+      padding: 8px 14px;
+    }
+
+    .practice-reveal-text {
+      margin: 10px 0 0;
+      padding: 8px 10px;
+      border: 2px dashed var(--ink);
+      border-radius: 6px;
+      background: var(--soft-yellow);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .practice-card.solved {
+      border-color: var(--green);
+    }
+
+    .practice-card-body {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .practice-image {
+      width: 96px;
+    }
+
+    .practice-image .monster-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .practice-card-main {
+      min-width: 0;
+    }
+
+    .practice-blank-hint {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      font-family: "Courier New", monospace;
+    }
+
+    .practice-word-count {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: normal;
+    }
+
+    @media (max-width: 560px) {
+      .practice-card-body {
+        grid-template-columns: 1fr;
+      }
+      .practice-image {
+        width: 76px;
+      }
     }
 
     .word-grid {
@@ -1314,9 +1458,9 @@
       <div class="section-head">
         <div>
           <h2>Board Question Practice</h2>
-          <div class="feedback" id="practiceFeedback">Every question style that appears on the Monster Ladders board, in one list.</div>
+          <div class="feedback" id="practiceFeedback">Answer each question. Get it right first try for max points.</div>
         </div>
-        <div class="score-pill" id="practiceCount">0 questions</div>
+        <div class="score-pill" id="practiceScore">Score 0</div>
       </div>
       <div class="filter-row practice-filter-row" aria-label="Practice filters">
         <button class="btn active" data-practice-filter="all">All</button>
@@ -1326,6 +1470,7 @@
         <button class="btn green" data-practice-filter="Senses Question">Senses</button>
         <button class="btn blue" data-practice-filter="Boost">Boost</button>
         <button class="btn red" data-practice-filter="Trap">Trap</button>
+        <button class="btn" id="resetPractice" type="button" style="margin-left:auto;">Reset Score</button>
       </div>
       <div class="practice-list" id="practiceList"></div>
     </section>
@@ -1370,6 +1515,8 @@
     let selectedObject = null;
     let currentAudio = null;
     let practiceQuestions = [];
+    let practiceScore = 0;
+    let practiceAttempts = {};
     const gameState = {
       currentTeam: "a",
       positions: {a: 0, b: 0},
@@ -2171,6 +2318,12 @@
       });
     }
 
+    function wordBlankHint(text) {
+      // Strip trailing punctuation per word, keep word count visible as underscores.
+      const words = text.trim().split(/\s+/).map(w => w.replace(/[.,!?]+$/, ""));
+      return words.map(w => "_".repeat(Math.max(2, w.length))).join(" ") + (/[.!?]$/.test(text.trim()) ? text.trim().slice(-1) : "");
+    }
+
     function buildPracticeQuestions() {
       const seen = new Set();
       const items = [];
@@ -2180,41 +2333,292 @@
         const dedupeKey = `${challenge.type}|${choiceData.question}`;
         if (seen.has(dedupeKey)) continue;
         seen.add(dedupeKey);
-        items.push({
+
+        const base = {
+          id: `p${number}`,
           type: challenge.type,
           square: number,
           question: choiceData.question,
-          answer: challenge.answer
-        });
+          answer: challenge.answer,
+          image: challenge.image
+        };
+
+        if (challenge.type === "Vocabulary" || challenge.type === "Boost" || challenge.type === "Senses Question") {
+          items.push({
+            ...base,
+            mode: "mc",
+            options: choiceData.options,
+            correct: choiceData.correct
+          });
+        } else if (challenge.type === "Grammar") {
+          const correct = choiceData.correct;
+          items.push({
+            ...base,
+            mode: "blank",
+            question: challenge.word,
+            correct,
+            accept: [correct.toLowerCase()],
+            wordCount: correct.trim().split(/\s+/).length,
+            blankHint: wordBlankHint(correct)
+          });
+        } else if (challenge.type === "Trap") {
+          const [q, yes, no] = challenge.audioParts;
+          items.push({
+            ...base,
+            mode: "convo",
+            convoLines: [
+              {speaker: "A", text: q},
+              {speaker: "B", text: "___BLANK___"}
+            ],
+            correct: yes,
+            accept: [yes.toLowerCase(), no.toLowerCase()],
+            wordCount: yes.trim().split(/\s+/).length,
+            blankHint: wordBlankHint(yes)
+          });
+        } else if (challenge.type === "Hospital") {
+          const [q, a] = challenge.audioParts;
+          items.push({
+            ...base,
+            mode: "convo",
+            convoLines: [
+              {speaker: "Doctor", text: q},
+              {speaker: "Monster", text: "___BLANK___"}
+            ],
+            correct: a,
+            accept: [a.toLowerCase()],
+            wordCount: a.trim().split(/\s+/).length,
+            blankHint: wordBlankHint(a)
+          });
+        } else {
+          const parts = challenge.audioParts || [challenge.answer];
+          items.push({
+            ...base,
+            mode: "write",
+            correct: challenge.answer,
+            accept: parts.map(part => part.toLowerCase()),
+            wordCount: parts[0].trim().split(/\s+/).length,
+            blankHint: wordBlankHint(parts[0])
+          });
+        }
       }
       return items;
+    }
+
+    function normalizeAnswer(text) {
+      return text.trim().toLowerCase().replace(/[.!?]+$/g, "").replace(/\s+/g, " ");
+    }
+
+    function isWrittenAnswerCorrect(item, raw) {
+      const normalized = normalizeAnswer(raw);
+      if (!normalized) return false;
+      return item.accept.some(accepted => {
+        const cleanAccepted = normalizeAnswer(accepted);
+        return normalized === cleanAccepted || cleanAccepted.includes(normalized) && normalized.length > 3;
+      });
+    }
+
+    function pointsForAttempt(attempts) {
+      if (attempts === 1) return 10;
+      if (attempts === 2) return 5;
+      return 2;
+    }
+
+    function practiceImageHtml(item) {
+      if (!item.image) return "";
+      return `<div class="practice-image">${monsterImage({word: item.image, prop: item.image})}</div>`;
+    }
+
+    function practiceCardMarkup(item) {
+      const tagHtml = `<span class="practice-tag">${item.type} - Square ${item.square}</span>`;
+      const imageHtml = practiceImageHtml(item);
+      const wrapOpen = imageHtml ? `<div class="practice-card-body">` : "";
+      const wrapClose = imageHtml ? `</div>` : "";
+      const revealBtn = `<button class="btn orange practice-reveal-btn" type="button" data-reveal>Reveal Answer</button>`;
+      const revealSlot = `<p class="practice-reveal-text" data-reveal-text hidden></p>`;
+
+      if (item.mode === "mc") {
+        const modeTag = `<span class="practice-mode-tag">Multiple choice</span>`;
+        const optionsHtml = item.options.map(option => `
+          <button class="btn blue" type="button" data-mc-option="${option.replace(/"/g, "&quot;")}">${option}</button>`).join("");
+        return `
+          <div class="practice-card" data-id="${item.id}">
+            ${tagHtml}${modeTag}
+            ${wrapOpen}${imageHtml}<div class="practice-card-main">
+              <p class="practice-question">${item.question}</p>
+              <div class="practice-mc">${optionsHtml}</div>
+              <p class="practice-feedback-line" data-feedback></p>
+              ${revealSlot}
+              ${revealBtn}
+            </div>${wrapClose}
+          </div>`;
+      }
+      if (item.mode === "blank") {
+        const modeTag = `<span class="practice-mode-tag">Fill in the blank</span>`;
+        return `
+          <div class="practice-card" data-id="${item.id}">
+            ${tagHtml}${modeTag}
+            ${wrapOpen}${imageHtml}<div class="practice-card-main">
+              <p class="practice-question">${item.question}</p>
+              <p class="practice-blank-hint">${item.blankHint} <span class="practice-word-count">(${item.wordCount} ${item.wordCount === 1 ? "word" : "words"})</span></p>
+              <div class="practice-write">
+                <input type="text" placeholder="Type the answer..." data-blank-input>
+                <button class="btn primary" type="button" data-check-blank>Check</button>
+              </div>
+              <p class="practice-feedback-line" data-feedback></p>
+              ${revealSlot}
+              ${revealBtn}
+            </div>${wrapClose}
+          </div>`;
+      }
+      if (item.mode === "convo") {
+        const modeTag = `<span class="practice-mode-tag">Conversation fill-in</span>`;
+        const linesHtml = item.convoLines.map(line => {
+          const text = line.text === "___BLANK___"
+            ? `<span class="blank" data-convo-blank-slot></span>`
+            : line.text;
+          return `<div class="line"><b>${line.speaker}:</b> ${text}</div>`;
+        }).join("");
+        return `
+          <div class="practice-card" data-id="${item.id}">
+            ${tagHtml}${modeTag}
+            ${wrapOpen}${imageHtml}<div class="practice-card-main">
+              <div class="practice-convo">${linesHtml}</div>
+              <p class="practice-blank-hint">${item.blankHint} <span class="practice-word-count">(${item.wordCount} ${item.wordCount === 1 ? "word" : "words"})</span></p>
+              <div class="practice-write">
+                <input type="text" placeholder="Complete the missing line..." data-blank-input>
+                <button class="btn primary" type="button" data-check-blank>Check</button>
+              </div>
+              <p class="practice-feedback-line" data-feedback></p>
+              ${revealSlot}
+              ${revealBtn}
+            </div>${wrapClose}
+          </div>`;
+      }
+      // write mode
+      const modeTag = `<span class="practice-mode-tag">Written answer</span>`;
+      return `
+        <div class="practice-card" data-id="${item.id}">
+          ${tagHtml}${modeTag}
+          ${wrapOpen}${imageHtml}<div class="practice-card-main">
+            <p class="practice-question">${item.question}</p>
+            <p class="practice-blank-hint">${item.blankHint} <span class="practice-word-count">(${item.wordCount} ${item.wordCount === 1 ? "word" : "words"})</span></p>
+            <div class="practice-write">
+              <input type="text" placeholder="Write your answer..." data-blank-input>
+              <button class="btn primary" type="button" data-check-blank>Check</button>
+            </div>
+            <p class="practice-feedback-line" data-feedback></p>
+            ${revealSlot}
+            ${revealBtn}
+          </div>${wrapClose}
+        </div>`;
+    }
+
+    function updatePracticeScoreDisplay() {
+      $("#practiceScore").textContent = `Score ${practiceScore}`;
+    }
+
+    function markCardSolved(card, points) {
+      card.classList.add("solved");
+      const feedback = card.querySelector("[data-feedback]");
+      feedback.classList.remove("wrong");
+      feedback.classList.add("correct");
+      feedback.innerHTML = `Correct! <span class="practice-points">+${points} pts</span>`;
+    }
+
+    function handlePracticeAnswer(item, card, isCorrect, attempts, revealed) {
+      const feedback = card.querySelector("[data-feedback]");
+      if (isCorrect) {
+        const points = revealed ? 2 : pointsForAttempt(attempts);
+        practiceScore += points;
+        updatePracticeScoreDisplay();
+        markCardSolved(card, points);
+        speak(item.correct);
+        if (!revealed) celebrate();
+      } else {
+        feedback.classList.remove("correct");
+        feedback.classList.add("wrong");
+        feedback.textContent = attempts === 1 ? "Not quite, try again." : "Still not it - check the model answer style and try once more.";
+      }
+    }
+
+    function wireUpPracticeCard(card, item) {
+      practiceAttempts[item.id] = 0;
+      let revealed = false;
+      const revealBtn = card.querySelector("[data-reveal]");
+      const revealText = card.querySelector("[data-reveal-text]");
+
+      revealBtn.addEventListener("click", () => {
+        if (card.classList.contains("solved")) return;
+        revealed = true;
+        revealText.hidden = false;
+        revealText.textContent = `Answer: ${item.correct}`;
+        revealBtn.disabled = true;
+        speak(item.correct);
+      });
+
+      if (item.mode === "mc") {
+        card.querySelectorAll("[data-mc-option]").forEach(button => {
+          button.addEventListener("click", () => {
+            if (card.classList.contains("solved")) return;
+            practiceAttempts[item.id] += 1;
+            const isCorrect = button.dataset.mcOption === item.correct;
+            button.classList.toggle("correct", isCorrect);
+            button.classList.toggle("wrong", !isCorrect);
+            if (!isCorrect) {
+              setTimeout(() => button.classList.remove("wrong"), 900);
+            } else {
+              card.querySelectorAll("[data-mc-option]").forEach(other => other.disabled = true);
+            }
+            handlePracticeAnswer(item, card, isCorrect, practiceAttempts[item.id], revealed);
+          });
+        });
+      } else {
+        const input = card.querySelector("[data-blank-input]");
+        const checkButton = card.querySelector("[data-check-blank]");
+        const submit = () => {
+          if (card.classList.contains("solved")) return;
+          practiceAttempts[item.id] += 1;
+          const isCorrect = isWrittenAnswerCorrect(item, input.value);
+          input.classList.toggle("correct", isCorrect);
+          input.classList.toggle("wrong", !isCorrect);
+          if (isCorrect) input.disabled = true;
+          handlePracticeAnswer(item, card, isCorrect, practiceAttempts[item.id], revealed);
+        };
+        checkButton.addEventListener("click", submit);
+        input.addEventListener("keydown", event => {
+          if (event.key === "Enter") submit();
+        });
+      }
     }
 
     function renderPracticeList(filter = "all") {
       const list = $("#practiceList");
       const items = practiceQuestions.filter(item => filter === "all" || item.type === filter);
-      $("#practiceCount").textContent = `${items.length} questions`;
-      list.innerHTML = items.map(item => `
-        <div class="practice-card">
-          <span class="practice-tag">${item.type} - Square ${item.square}</span>
-          <p class="practice-question">${item.question}</p>
-          <p class="practice-answer">${item.answer}</p>
-        </div>`).join("");
+      list.innerHTML = items.map(practiceCardMarkup).join("");
       Array.from(list.querySelectorAll(".practice-card")).forEach((card, index) => {
-        card.style.cursor = "pointer";
-        card.addEventListener("click", () => speak(items[index].answer));
+        wireUpPracticeCard(card, items[index]);
       });
     }
 
     function initPractice() {
       practiceQuestions = buildPracticeQuestions();
+      practiceScore = 0;
+      practiceAttempts = {};
+      updatePracticeScoreDisplay();
       renderPracticeList("all");
-      $$(".practice-filter-row .btn").forEach(button => {
+      $$(".practice-filter-row .btn[data-practice-filter]").forEach(button => {
         button.addEventListener("click", () => {
-          $$(".practice-filter-row .btn").forEach(item => item.classList.remove("active"));
+          $$(".practice-filter-row .btn[data-practice-filter]").forEach(item => item.classList.remove("active"));
           button.classList.add("active");
           renderPracticeList(button.dataset.practiceFilter);
         });
+      });
+      $("#resetPractice").addEventListener("click", () => {
+        const activeFilter = $(".practice-filter-row .btn.active")?.dataset.practiceFilter || "all";
+        practiceScore = 0;
+        practiceAttempts = {};
+        updatePracticeScoreDisplay();
+        renderPracticeList(activeFilter);
       });
     }
 
