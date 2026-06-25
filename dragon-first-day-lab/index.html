@@ -235,6 +235,59 @@
       object-fit: cover;
     }
 
+    .lesson-review {
+      margin: 0 0 18px;
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .88);
+      box-shadow: 0 8px 0 rgba(0,0,0,.08);
+    }
+
+    .lesson-review h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      text-transform: uppercase;
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .review-card {
+      padding: 10px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .review-card img {
+      display: block;
+      width: 100%;
+      height: 104px;
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+
+    .review-card.scene img {
+      height: auto;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid rgba(22,22,22,.2);
+    }
+
+    .review-card .small {
+      display: block;
+      margin-top: 3px;
+      font-size: 13px;
+      color: var(--purple);
+    }
+
     /* ===== Race to Collect (Lesson 1) ===== */
     .collect-top {
       display: flex;
@@ -257,6 +310,10 @@
     .collect-timer.urgent { background: #ffd9d4; color: var(--red); }
 
     .collect-target {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       margin: 0 0 14px;
       font-size: 22px;
       font-weight: 900;
@@ -267,12 +324,21 @@
       background: var(--soft-yellow);
     }
 
+    .collect-target img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+    }
+
     .collect-stage {
       position: relative;
-      height: 360px;
+      height: 480px;
       border: 4px solid var(--ink);
       border-radius: 14px;
-      background: var(--soft-teal);
+      background:
+        linear-gradient(180deg, rgba(7, 33, 40, .18), rgba(255, 196, 104, .1)),
+        url("dragon-first-day-assets/game/classroom-background.png") center / cover no-repeat,
+        var(--soft-teal);
       overflow: hidden;
       margin-bottom: 16px;
       touch-action: none;
@@ -280,45 +346,58 @@
 
     .collect-item {
       position: absolute;
-      width: 86px;
-      padding: 8px;
-      border: 3px solid var(--ink);
-      border-radius: 10px;
-      background: white;
-      text-align: center;
+      width: 104px;
+      height: 104px;
+      padding: 4px;
+      border: 0;
+      border-radius: 12px;
+      background: rgba(255,255,255,.08);
       cursor: grab;
       user-select: none;
-      box-shadow: 0 4px 0 var(--ink);
+      z-index: 6;
+      filter: drop-shadow(0 8px 5px rgba(0,0,0,.25));
     }
 
-    .collect-item.dragging { cursor: grabbing; opacity: .85; z-index: 50; }
+    .collect-item.dragging { cursor: grabbing; opacity: .92; z-index: 50; }
     .collect-item .collect-thumb {
-      width: 54px;
-      height: 54px;
-      object-fit: cover;
-      border: 2px solid var(--ink);
-      border-radius: 8px;
-      margin-bottom: 4px;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
     }
     .collect-item .collect-emoji { font-size: 30px; }
-    .collect-item .collect-word { font-size: 12px; font-weight: 900; }
 
     .collect-backpack {
       position: absolute;
-      right: 14px;
-      bottom: 14px;
-      width: 110px;
-      height: 110px;
+      left: 50%;
+      top: 54%;
+      width: min(360px, 48vw);
+      aspect-ratio: 1 / 1;
       display: grid;
       place-items: center;
-      border: 4px dashed var(--ink);
-      border-radius: 14px;
-      background: rgba(255,255,255,.7);
-      font-size: 40px;
+      border: 4px dashed rgba(255,255,255,.72);
+      border-radius: 26px;
+      background: rgba(255,255,255,.12);
       text-align: center;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
     }
 
-    .collect-backpack.hover { background: var(--soft-green); border-color: var(--green); }
+    .collect-backpack img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .collect-backpack.hover {
+      background: rgba(225,247,217,.35);
+      border-color: var(--yellow);
+      transform: translate(-50%, -50%) scale(1.04);
+    }
 
     .collect-feedback-float {
       position: absolute;
@@ -754,13 +833,19 @@
           </div>
           <div class="score-pill" id="collectScore">Score 0</div>
         </div>
+        <div class="lesson-review">
+          <h3>Review First</h3>
+          <div class="review-grid" id="suppliesReview"></div>
+        </div>
         <div class="collect-top">
           <button class="btn primary" id="startCollect" type="button">▶ Start Round</button>
           <div class="collect-timer" id="collectTimer">⏱ 30s</div>
         </div>
         <div class="collect-target" id="collectTarget">Press Start to begin!</div>
         <div class="collect-stage" id="collectStage">
-          <div class="collect-backpack" id="collectBackpack">🎒</div>
+          <div class="collect-backpack" id="collectBackpack">
+            <img id="collectBackpackImg" src="dragon-first-day-assets/game/backpack-empty.png" alt="open backpack">
+          </div>
         </div>
         <div class="collect-results hidden" id="collectResults"></div>
       </section>
@@ -773,6 +858,10 @@
             <div class="feedback" id="builderFeedback">Pick the correct sentence as fast as you can!</div>
           </div>
           <div class="score-pill" id="builderScore">Score 0</div>
+        </div>
+        <div class="lesson-review">
+          <h3>Review First</h3>
+          <div class="review-grid" id="grammarReview"></div>
         </div>
         <div class="builder-top">
           <button class="btn primary" id="startBuilder" type="button">▶ Start Round</button>
@@ -809,6 +898,10 @@
           </div>
           <div class="score-pill" id="sceneScore">Kind choices 0</div>
         </div>
+        <div class="lesson-review">
+          <h3>Review First</h3>
+          <div class="review-grid" id="valuesReview"></div>
+        </div>
         <div class="scene-cards" id="sceneCards"></div>
         <div class="value-banner">🐲 Value of the Day: Be Nice 🐲</div>
       </section>
@@ -821,6 +914,10 @@
             <div class="feedback" id="phonicsFeedback">Listen for the sound, then pop the bubble with the matching letter before it floats away!</div>
           </div>
           <div class="score-pill" id="phonicsScore">Score 0</div>
+        </div>
+        <div class="lesson-review">
+          <h3>Review First</h3>
+          <div class="review-grid" id="phonicsReview"></div>
         </div>
         <div class="pop-top">
           <button class="btn primary" id="startPop" type="button">▶ Start Round</button>
@@ -867,14 +964,14 @@
 
     // ===== Data =====
     const supplies = [
-      {word: "pen", vn: "cái bút mực", emoji: "🖊️", image: "dragon-first-day-assets/pen.png"},
-      {word: "pencil", vn: "bút chì", emoji: "✏️", image: "dragon-first-day-assets/pencil.png"},
-      {word: "book", vn: "sách", emoji: "📘", image: "dragon-first-day-assets/book.png"},
-      {word: "notebook", vn: "vở", emoji: "📓", image: "dragon-first-day-assets/notebook.png"},
-      {word: "desk", vn: "cái bàn", emoji: "🗄️", image: "dragon-first-day-assets/desk.png"},
-      {word: "chair", vn: "cái ghế", emoji: "🪑", image: "dragon-first-day-assets/chair.png"},
-      {word: "eraser", vn: "cái gôm/tẩy", emoji: "🧽", image: "dragon-first-day-assets/eraser.png"},
-      {word: "ruler", vn: "cây thước", emoji: "📏", image: "dragon-first-day-assets/ruler.png"}
+      {word: "pen", vn: "cái bút mực", emoji: "🖊️", image: "dragon-first-day-assets/pen.png", soloImage: "dragon-first-day-assets/standalone/pen.png"},
+      {word: "pencil", vn: "bút chì", emoji: "✏️", image: "dragon-first-day-assets/pencil.png", soloImage: "dragon-first-day-assets/standalone/pencil.png"},
+      {word: "book", vn: "sách", emoji: "📘", image: "dragon-first-day-assets/book.png", soloImage: "dragon-first-day-assets/standalone/book.png"},
+      {word: "notebook", vn: "vở", emoji: "📓", image: "dragon-first-day-assets/notebook.png", soloImage: "dragon-first-day-assets/standalone/notebook.png"},
+      {word: "desk", vn: "cái bàn", emoji: "🗄️", image: "dragon-first-day-assets/desk.png", soloImage: "dragon-first-day-assets/standalone/desk.png"},
+      {word: "chair", vn: "cái ghế", emoji: "🪑", image: "dragon-first-day-assets/chair.png", soloImage: "dragon-first-day-assets/standalone/chair.png"},
+      {word: "eraser", vn: "cái gôm/tẩy", emoji: "🧽", image: "dragon-first-day-assets/eraser.png", soloImage: "dragon-first-day-assets/standalone/eraser.png"},
+      {word: "ruler", vn: "cây thước", emoji: "📏", image: "dragon-first-day-assets/ruler.png", soloImage: "dragon-first-day-assets/standalone/ruler.png"}
     ];
 
     const phonicsSounds = [
@@ -890,6 +987,13 @@
       "Draw a picture of your toys.",
       "Write your name on the cover.",
       "Show your book to a friend."
+    ];
+
+    const backpackStates = [
+      "dragon-first-day-assets/game/backpack-empty.png",
+      "dragon-first-day-assets/game/backpack-low.png",
+      "dragon-first-day-assets/game/backpack-mid.png",
+      "dragon-first-day-assets/game/backpack-full.png"
     ];
 
     let currentAudio = null;
@@ -927,6 +1031,36 @@
       return `<div${idAttr} class="placeholder-art"><b>${emoji || "🐲"}</b>${label}</div>`;
     }
 
+    function reviewCard(image, title, subtitle = "", extraClass = "") {
+      return `
+        <div class="review-card ${extraClass}">
+          <img src="${escapeAttr(image)}" alt="${escapeAttr(title)}" loading="lazy">
+          <span>${title}</span>
+          ${subtitle ? `<span class="small">${subtitle}</span>` : ""}
+        </div>`;
+    }
+
+    function renderLessonReviews() {
+      $("#suppliesReview").innerHTML = supplies
+        .map(item => reviewCard(item.soloImage, item.word, item.vn))
+        .join("");
+
+      $("#grammarReview").innerHTML = [
+        reviewCard(supplies[2].soloImage, "It's a book.", "Yes sentence"),
+        reviewCard(supplies[1].soloImage, "It isn't a book.", "No sentence"),
+        reviewCard(supplies[0].soloImage, "What is it?", "It's a pen."),
+        reviewCard(supplies[7].soloImage, "It isn't a pencil.", "Negative pattern")
+      ].join("");
+
+      $("#valuesReview").innerHTML = firstDayScenes
+        .map(scene => reviewCard(scene.image, scene.title.replace(/^Scene \d+:\s*/, ""), "Be nice", "scene"))
+        .join("");
+
+      $("#phonicsReview").innerHTML = phonicsSounds
+        .map(item => reviewCard(item.image, `${item.letter} ${item.sound}`, item.word, "scene"))
+        .join("");
+    }
+
     function celebrate() {
       const wrap = document.createElement("div");
       wrap.className = "confetti";
@@ -950,10 +1084,18 @@
     let collectTargetWord = null;
     let collectRunning = false;
     let collectDrag = null; // {el, offsetX, offsetY}
+    let collectPackedCount = 0;
+
+    function updateCollectBackpackState() {
+      const stateIndex = Math.min(backpackStates.length - 1, Math.floor(collectPackedCount / 2));
+      $("#collectBackpackImg").src = backpackStates[stateIndex];
+    }
 
     function collectPickTarget() {
       collectTargetWord = supplies[Math.floor(Math.random() * supplies.length)];
-      $("#collectTarget").textContent = `Find and collect: "${collectTargetWord.word}"`;
+      $("#collectTarget").innerHTML = `
+        <span>Find and collect: "${collectTargetWord.word}"</span>
+        <img src="${escapeAttr(collectTargetWord.soloImage)}" alt="${escapeAttr(collectTargetWord.word)}">`;
     }
 
     function collectSpawnItem() {
@@ -963,18 +1105,30 @@
       const el = document.createElement("div");
       el.className = "collect-item";
       el.dataset.word = item.word;
-      const collectArt = item.image
-        ? `<img class="collect-thumb" src="${escapeAttr(item.image)}" alt="${escapeAttr(item.word)}" loading="lazy">`
+      el.setAttribute("aria-label", item.word);
+      const collectArt = item.soloImage
+        ? `<img class="collect-thumb" src="${escapeAttr(item.soloImage)}" alt="${escapeAttr(item.word)}" loading="lazy">`
         : `<div class="collect-emoji">${item.emoji}</div>`;
-      el.innerHTML = `${collectArt}<div class="collect-word">${item.word}</div>`;
+      el.innerHTML = collectArt;
       const stageRect = stage.getBoundingClientRect();
-      const maxX = Math.max(10, stageRect.width - 96);
-      const maxY = Math.max(10, stageRect.height - 200);
-      el.style.left = `${10 + Math.random() * maxX}px`;
-      el.style.top = `${10 + Math.random() * maxY}px`;
+      const itemSize = 104;
+      const margin = 14;
+      const zones = [
+        {x1: margin, x2: stageRect.width * .22, y1: margin, y2: stageRect.height - itemSize - margin},
+        {x1: stageRect.width * .78, x2: stageRect.width - itemSize - margin, y1: margin, y2: stageRect.height - itemSize - margin},
+        {x1: stageRect.width * .26, x2: stageRect.width * .66, y1: margin, y2: stageRect.height * .22},
+        {x1: stageRect.width * .26, x2: stageRect.width * .66, y1: stageRect.height * .78, y2: stageRect.height - itemSize - margin}
+      ];
+      const zone = zones[Math.floor(Math.random() * zones.length)];
+      const x1 = Math.min(zone.x1, zone.x2);
+      const x2 = Math.max(zone.x1, zone.x2);
+      const y1 = Math.min(zone.y1, zone.y2);
+      const y2 = Math.max(zone.y1, zone.y2);
+      el.style.left = `${x1 + Math.random() * Math.max(1, x2 - x1)}px`;
+      el.style.top = `${y1 + Math.random() * Math.max(1, y2 - y1)}px`;
       stage.appendChild(el);
       wireCollectItem(el);
-      setTimeout(() => { if (el.parentNode) el.remove(); }, 4200);
+      setTimeout(() => { if (el.parentNode) el.remove(); }, 5200);
     }
 
     function collectFloatText(x, y, text, good) {
@@ -1031,7 +1185,9 @@
           const floatY = bpRect.top - stageRect.top;
           if (isCorrect) {
             collectScore += 10;
+            collectPackedCount += 1;
             $("#collectScore").textContent = `Score ${collectScore}`;
+            updateCollectBackpackState();
             collectFloatText(floatX, floatY, "+10", true);
             speak(`This is a ${el.dataset.word}.`);
             collectPickTarget();
@@ -1050,10 +1206,12 @@
       if (collectRunning) return;
       collectRunning = true;
       collectScore = 0;
+      collectPackedCount = 0;
       collectTimeLeft = 30;
       $("#collectScore").textContent = "Score 0";
       $("#collectResults").classList.add("hidden");
       $("#collectStage").querySelectorAll(".collect-item").forEach(el => el.remove());
+      updateCollectBackpackState();
       collectPickTarget();
       $("#collectTimer").textContent = `⏱ ${collectTimeLeft}s`;
       $("#collectTimer").classList.remove("urgent");
@@ -1400,7 +1558,7 @@
           id: `supplies${index}`,
           type: "Supplies",
           mode: "mc",
-          image: item.image,
+          image: item.soloImage,
           emoji: item.emoji,
           question: `"${item.word}" là gì?`,
           options,
@@ -1416,7 +1574,7 @@
           id: `grammarPos${index}`,
           type: "Grammar",
           mode: "blank",
-          image: item.image,
+          image: item.soloImage,
           emoji: item.emoji,
           question: `Affirmative: This is a ${item.word}. Write the sentence using "It's".`,
           correct,
@@ -1434,7 +1592,7 @@
           id: `grammarNeg${index}`,
           type: "Grammar",
           mode: "blank",
-          image: item.image,
+          image: item.soloImage,
           emoji: item.emoji,
           question: `This is a ${item.word}, not a ${wrongWord}. Write the negative sentence using "It isn't".`,
           correct,
@@ -1640,8 +1798,10 @@
     }
 
     function init() {
+      renderLessonReviews();
       renderScenes();
       renderProjectChecklist();
+      updateCollectBackpackState();
       initTabs();
       initPractice();
 
