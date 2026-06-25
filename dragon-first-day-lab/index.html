@@ -1,0 +1,1660 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dragon First Day Lab</title>
+  <style>
+    :root {
+      --ink: #161616;
+      --paper: #fffdf7;
+      --blue: #1475c9;
+      --green: #23a73e;
+      --pink: #ef4f91;
+      --orange: #f47c16;
+      --purple: #7a4ac7;
+      --yellow: #ffc629;
+      --red: #e84135;
+      --teal: #0fa3a3;
+      --soft-blue: #eaf6ff;
+      --soft-green: #effbe9;
+      --soft-pink: #fff0f7;
+      --soft-yellow: #fff8d8;
+      --soft-teal: #e6fbfb;
+      --shadow: 0 14px 0 rgba(0, 0, 0, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 198, 41, .18) 0 80px, transparent 82px),
+        radial-gradient(circle at 90% 10%, rgba(15, 163, 163, .14) 0 100px, transparent 102px),
+        radial-gradient(circle at 60% 90%, rgba(239, 79, 145, .12) 0 130px, transparent 132px),
+        linear-gradient(90deg, rgba(22,22,22,.035) 1px, transparent 1px),
+        linear-gradient(rgba(22,22,22,.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: auto, auto, auto, 28px 28px, 28px 28px, auto;
+      font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    .page {
+      width: min(1180px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 18px 0 48px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 14px 0 6px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      display: inline-grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--soft-teal);
+      font-size: 24px;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .5px;
+    }
+
+    .brand-sub {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--purple);
+    }
+
+    h1 {
+      margin: 10px 0 6px;
+      font-size: clamp(34px, 5.4vw, 56px);
+      line-height: 1.02;
+      text-transform: uppercase;
+      text-shadow: 3px 3px 0 #fff, 6px 6px 0 rgba(15, 163, 163, .16);
+    }
+
+    .lead {
+      max-width: 720px;
+      margin: 0 0 18px;
+      font-size: clamp(16px, 2vw, 20px);
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--ink);
+      transition: transform .08s ease;
+    }
+
+    .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+
+    .btn.primary { background: var(--yellow); }
+    .btn.blue { background: #d8efff; }
+    .btn.green { background: #e1f7d9; }
+    .btn.pink { background: #ffe0ef; }
+    .btn.orange { background: #ffe3c8; }
+    .btn.purple { background: #eee4ff; }
+    .btn.teal { background: var(--soft-teal); }
+    .btn.red { background: #ffd9d4; }
+    .btn[disabled] { opacity: .55; cursor: default; }
+
+    .btn.active { outline: 3px solid var(--ink); outline-offset: -3px; }
+
+    .tabs {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 0;
+      margin-bottom: 10px;
+      background: var(--paper);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .tab {
+      padding: 9px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: white;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--ink);
+    }
+
+    .tab.active { background: var(--teal); color: white; }
+
+    main { display: block; }
+
+    section[data-panel] { padding: 10px 0 30px; }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 6px;
+      font-size: clamp(24px, 3.4vw, 36px);
+      text-transform: uppercase;
+    }
+
+    .feedback {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--purple);
+    }
+
+    .score-pill {
+      padding: 8px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--soft-yellow);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .placeholder-art {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border: 3px dashed rgba(22,22,22,.35);
+      border-radius: 10px;
+      background: repeating-linear-gradient(45deg, #fff, #fff 10px, #f3f3f3 10px, #f3f3f3 20px);
+      color: rgba(22,22,22,.45);
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+      padding: 6px;
+    }
+
+    .placeholder-art b {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .placeholder-art.has-image {
+      padding: 0;
+      border-style: solid;
+      background: #f6efe2;
+      overflow: hidden;
+    }
+
+    .placeholder-art img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ===== Race to Collect (Lesson 1) ===== */
+    .collect-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .collect-timer {
+      font-size: 22px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--soft-pink);
+    }
+
+    .collect-timer.urgent { background: #ffd9d4; color: var(--red); }
+
+    .collect-target {
+      margin: 0 0 14px;
+      font-size: 22px;
+      font-weight: 900;
+      text-align: center;
+      padding: 10px;
+      border: 3px dashed var(--ink);
+      border-radius: 10px;
+      background: var(--soft-yellow);
+    }
+
+    .collect-stage {
+      position: relative;
+      height: 360px;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      background: var(--soft-teal);
+      overflow: hidden;
+      margin-bottom: 16px;
+      touch-action: none;
+    }
+
+    .collect-item {
+      position: absolute;
+      width: 86px;
+      padding: 8px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 4px 0 var(--ink);
+    }
+
+    .collect-item.dragging { cursor: grabbing; opacity: .85; z-index: 50; }
+    .collect-item .collect-thumb {
+      width: 54px;
+      height: 54px;
+      object-fit: cover;
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      margin-bottom: 4px;
+    }
+    .collect-item .collect-emoji { font-size: 30px; }
+    .collect-item .collect-word { font-size: 12px; font-weight: 900; }
+
+    .collect-backpack {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      width: 110px;
+      height: 110px;
+      display: grid;
+      place-items: center;
+      border: 4px dashed var(--ink);
+      border-radius: 14px;
+      background: rgba(255,255,255,.7);
+      font-size: 40px;
+      text-align: center;
+    }
+
+    .collect-backpack.hover { background: var(--soft-green); border-color: var(--green); }
+
+    .collect-feedback-float {
+      position: absolute;
+      font-size: 20px;
+      font-weight: 900;
+      pointer-events: none;
+      animation: floatUp .7s ease-out forwards;
+    }
+
+    .collect-feedback-float.good { color: var(--green); }
+    .collect-feedback-float.bad { color: var(--red); }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-40px); }
+    }
+
+    .collect-results {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* ===== Speed Round builder (Lesson 2) ===== */
+    .builder-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .builder-timer {
+      font-size: 22px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--soft-pink);
+    }
+
+    .builder-timer.urgent { background: #ffd9d4; color: var(--red); }
+
+    .builder-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .builder-object {
+      padding: 18px;
+      border: 4px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+    }
+
+    .builder-object .placeholder-art { aspect-ratio: 1/1; max-width: 220px; margin: 0 auto 10px; }
+
+    .builder-sentence {
+      margin-top: 14px;
+      font-size: 22px;
+      font-weight: 900;
+      min-height: 34px;
+    }
+
+    .builder-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .builder-card {
+      padding: 14px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .builder-choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .builder-choices .btn { width: 100%; text-align: left; }
+    .builder-choices .btn.correct { background: #dcffd8; }
+    .builder-choices .btn.wrong { background: #ffe1e1; }
+
+    .builder-streak {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--purple);
+      margin-top: 6px;
+    }
+
+    .builder-results {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* ===== Story & Values (Lesson 3) ===== */
+    .scene-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .scene-card {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .scene-card .placeholder-art { aspect-ratio: 16/10; margin-bottom: 10px; }
+
+    .scene-card p { margin: 6px 0; font-weight: 700; line-height: 1.4; }
+
+    .scene-choices { display: grid; gap: 8px; margin-top: 10px; }
+    .scene-choices .btn { width: 100%; text-align: left; }
+    .scene-choices .btn.correct { background: #dcffd8; }
+    .scene-choices .btn.wrong { background: #ffe1e1; }
+
+    .value-banner {
+      margin: 18px 0;
+      padding: 16px;
+      border: 4px solid var(--ink);
+      border-radius: 10px;
+      background: var(--soft-pink);
+      text-align: center;
+      font-size: 26px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    /* ===== Phonics Pop (Lesson 4) ===== */
+    .pop-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .pop-timer {
+      font-size: 22px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--soft-pink);
+    }
+
+    .pop-timer.urgent { background: #ffd9d4; color: var(--red); }
+
+    .pop-target {
+      margin: 0 0 14px;
+      font-size: 22px;
+      font-weight: 900;
+      text-align: center;
+      padding: 10px;
+      border: 3px dashed var(--ink);
+      border-radius: 10px;
+      background: var(--soft-yellow);
+    }
+
+    .pop-stage {
+      position: relative;
+      height: 380px;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      background: linear-gradient(180deg, var(--soft-blue), #fff);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .pop-bubble {
+      position: absolute;
+      bottom: -70px;
+      width: 70px;
+      height: 70px;
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: white;
+      font-size: 28px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,.12);
+      animation-name: bubbleRise;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+    }
+
+    .pop-bubble.popped {
+      animation: none !important;
+      transform: scale(1.4);
+      opacity: 0;
+      transition: transform .25s ease, opacity .25s ease;
+      pointer-events: none;
+    }
+
+    .pop-bubble.wrong-pop {
+      animation: none !important;
+      border-color: var(--red);
+      background: #ffe1e1;
+    }
+
+    @keyframes bubbleRise {
+      from { bottom: -70px; }
+      to { bottom: 100%; }
+    }
+
+    .pop-results {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .project-checklist {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .project-checklist label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 10px 0;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .project-checklist input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ===== Practice tab ===== */
+    .practice-list { display: grid; gap: 14px; margin-top: 16px; }
+
+    .practice-card {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .practice-card.solved { border-color: var(--green); }
+
+    .practice-card-body {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .practice-card-body .placeholder-art { width: 96px; aspect-ratio: 1/1; }
+
+    .practice-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin-bottom: 8px;
+      border-radius: 999px;
+      background: var(--soft-yellow);
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .practice-mode-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin: 0 0 8px 6px;
+      border-radius: 999px;
+      background: #eaf3ff;
+      border: 2px solid var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      color: #1d5fa8;
+    }
+
+    .practice-question {
+      margin: 0 0 12px;
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1.4;
+    }
+
+    .practice-blank-hint {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      font-family: "Courier New", monospace;
+    }
+
+    .practice-word-count {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: normal;
+    }
+
+    .practice-mc { display: grid; gap: 10px; }
+    .practice-mc .btn { width: 100%; text-align: left; box-shadow: 0 4px 0 var(--ink); }
+    .practice-mc .btn.correct { background: #dcffd8; }
+    .practice-mc .btn.wrong { background: #ffe1e1; }
+
+    .practice-write {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .practice-write input {
+      flex: 1;
+      min-width: 180px;
+      padding: 10px 12px;
+      border: 3px solid var(--ink);
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .practice-write input.correct { background: #dcffd8; border-color: var(--green); }
+    .practice-write input.wrong { background: #ffe1e1; border-color: var(--red); }
+
+    .practice-feedback-line { margin: 10px 0 0; font-size: 15px; font-weight: 800; }
+    .practice-feedback-line.correct { color: #2c6e2f; }
+    .practice-feedback-line.wrong { color: #b0312a; }
+
+    .practice-points {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .practice-reveal-btn { margin-top: 10px; font-size: 14px; padding: 8px 14px; }
+
+    .practice-reveal-text {
+      margin: 10px 0 0;
+      padding: 8px 10px;
+      border: 2px dashed var(--ink);
+      border-radius: 6px;
+      background: var(--soft-yellow);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .hidden { display: none !important; }
+
+    .confetti { pointer-events: none; position: fixed; inset: 0; z-index: 100; overflow: hidden; }
+    .confetti i {
+      position: absolute;
+      width: 12px;
+      height: 18px;
+      border: 2px solid rgba(22,22,22,.35);
+      animation: fall 900ms ease-out forwards;
+    }
+
+    @keyframes fall {
+      from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      to { transform: translateY(100vh) rotate(240deg); opacity: 0; }
+    }
+
+    @media (max-width: 860px) {
+      .builder-stage { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .practice-card-body { grid-template-columns: 1fr; }
+      .practice-card-body .placeholder-art { width: 76px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top-bar">
+      <div class="brand">
+        <span class="brand-badge">🐲</span>
+        <div>
+          <p class="brand-title">Dragon First Day Lab</p>
+          <p class="brand-sub">Unit 1 - First Day Review</p>
+        </div>
+      </div>
+      <button class="btn teal" id="testVoice" type="button">🔊 Test Voice</button>
+    </div>
+
+    <h1>First Day With Baby Dragons</h1>
+    <p class="lead">Review School Supplies, "It's / It isn't" sentences, kindness values, and phonics - all with a friendly baby dragon crew.</p>
+
+    <nav class="tabs" aria-label="Lesson tabs">
+      <button class="tab active" data-tab="lesson1">Lesson 1</button>
+      <button class="tab" data-tab="lesson2">Lesson 2</button>
+      <button class="tab" data-tab="lesson3">Lesson 3</button>
+      <button class="tab" data-tab="lesson4">Lesson 4</button>
+      <button class="tab" data-tab="practice">Practice</button>
+    </nav>
+
+    <main>
+      <!-- LESSON 1 -->
+      <section id="lesson1" data-panel>
+        <div class="section-head">
+          <div>
+            <h2>Race to Collect</h2>
+            <div class="feedback" id="collectFeedback">Drag the correct item into the dragon's backpack before time runs out!</div>
+          </div>
+          <div class="score-pill" id="collectScore">Score 0</div>
+        </div>
+        <div class="collect-top">
+          <button class="btn primary" id="startCollect" type="button">▶ Start Round</button>
+          <div class="collect-timer" id="collectTimer">⏱ 30s</div>
+        </div>
+        <div class="collect-target" id="collectTarget">Press Start to begin!</div>
+        <div class="collect-stage" id="collectStage">
+          <div class="collect-backpack" id="collectBackpack">🎒</div>
+        </div>
+        <div class="collect-results hidden" id="collectResults"></div>
+      </section>
+
+      <!-- LESSON 2 -->
+      <section id="lesson2" data-panel hidden>
+        <div class="section-head">
+          <div>
+            <h2>It's / It Isn't Speed Round</h2>
+            <div class="feedback" id="builderFeedback">Pick the correct sentence as fast as you can!</div>
+          </div>
+          <div class="score-pill" id="builderScore">Score 0</div>
+        </div>
+        <div class="builder-top">
+          <button class="btn primary" id="startBuilder" type="button">▶ Start Round</button>
+          <div class="builder-timer" id="builderTimer">⏱ 30s</div>
+        </div>
+        <div class="builder-stage">
+          <div class="builder-object">
+            <div class="placeholder-art has-image" id="builderArt"><img src="dragon-first-day-assets/book.png" alt="baby dragon reading a book" loading="lazy"></div>
+            <div class="builder-sentence" id="builderSentence">Press Start to begin!</div>
+            <div class="builder-streak" id="builderStreak">Streak: 0</div>
+          </div>
+          <div class="builder-panel">
+            <div class="builder-card">
+              <h3 style="margin:0 0 8px;">Choose the correct sentence</h3>
+              <div class="builder-choices" id="builderChoices"></div>
+            </div>
+            <div class="builder-card">
+              <h3 style="margin:0 0 8px;">Pattern Reference</h3>
+              <p style="margin:4px 0;font-weight:700;">✅ It's a <b>book</b>.</p>
+              <p style="margin:4px 0;font-weight:700;">❌ It isn't a <b>book</b>.</p>
+              <p style="margin:4px 0;font-weight:700;">❓ What is it? It's a <b>pencil</b>.</p>
+            </div>
+            <div class="builder-results hidden" id="builderResults"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LESSON 3 -->
+      <section id="lesson3" data-panel hidden>
+        <div class="section-head">
+          <div>
+            <h2>First Day Stories</h2>
+            <div class="feedback" id="sceneFeedback">Pick the kind choice for each baby dragon.</div>
+          </div>
+          <div class="score-pill" id="sceneScore">Kind choices 0</div>
+        </div>
+        <div class="scene-cards" id="sceneCards"></div>
+        <div class="value-banner">🐲 Value of the Day: Be Nice 🐲</div>
+      </section>
+
+      <!-- LESSON 4 -->
+      <section id="lesson4" data-panel hidden>
+        <div class="section-head">
+          <div>
+            <h2>Phonics Pop</h2>
+            <div class="feedback" id="phonicsFeedback">Listen for the sound, then pop the bubble with the matching letter before it floats away!</div>
+          </div>
+          <div class="score-pill" id="phonicsScore">Score 0</div>
+        </div>
+        <div class="pop-top">
+          <button class="btn primary" id="startPop" type="button">▶ Start Round</button>
+          <div class="pop-timer" id="popTimer">⏱ 30s</div>
+        </div>
+        <div class="pop-target" id="popTarget">Press Start to begin!</div>
+        <div class="pop-stage" id="popStage"></div>
+        <div class="pop-results hidden" id="popResults"></div>
+
+        <div class="section-head" style="margin-top:30px;">
+          <div>
+            <h2>My Book About Me - Project</h2>
+            <div class="feedback">Check off each page as you finish it.</div>
+          </div>
+        </div>
+        <div class="project-checklist" id="projectChecklist"></div>
+      </section>
+
+      <!-- PRACTICE -->
+      <section id="practice" data-panel hidden>
+        <div class="section-head">
+          <div>
+            <h2>Unit 1 Practice</h2>
+            <div class="feedback" id="practiceFeedback">Answer each question. First try correct = max points.</div>
+          </div>
+          <div class="score-pill" id="practiceScoreDisplay">Score 0</div>
+        </div>
+        <div class="filter-row practice-filter-row" aria-label="Practice filters">
+          <button class="btn active" data-practice-filter="all">All</button>
+          <button class="btn pink" data-practice-filter="Supplies">Supplies</button>
+          <button class="btn purple" data-practice-filter="Grammar">Grammar</button>
+          <button class="btn orange" data-practice-filter="Phonics">Phonics</button>
+          <button class="btn green" data-practice-filter="Values">Values</button>
+          <button class="btn" id="resetPractice" type="button" style="margin-left:auto;">Reset Score</button>
+        </div>
+        <div class="practice-list" id="practiceList"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const $ = selector => document.querySelector(selector);
+    const $$ = selector => Array.from(document.querySelectorAll(selector));
+
+    // ===== Data =====
+    const supplies = [
+      {word: "pen", vn: "cái bút mực", emoji: "🖊️", image: "dragon-first-day-assets/pen.png"},
+      {word: "pencil", vn: "bút chì", emoji: "✏️", image: "dragon-first-day-assets/pencil.png"},
+      {word: "book", vn: "sách", emoji: "📘", image: "dragon-first-day-assets/book.png"},
+      {word: "notebook", vn: "vở", emoji: "📓", image: "dragon-first-day-assets/notebook.png"},
+      {word: "desk", vn: "cái bàn", emoji: "🗄️", image: "dragon-first-day-assets/desk.png"},
+      {word: "chair", vn: "cái ghế", emoji: "🪑", image: "dragon-first-day-assets/chair.png"},
+      {word: "eraser", vn: "cái gôm/tẩy", emoji: "🧽", image: "dragon-first-day-assets/eraser.png"},
+      {word: "ruler", vn: "cây thước", emoji: "📏", image: "dragon-first-day-assets/ruler.png"}
+    ];
+
+    const phonicsSounds = [
+      {letter: "A", sound: "/a/", word: "apple", emoji: "🍎", image: "dragon-first-day-assets/phonics-apple.png"},
+      {letter: "B", sound: "/b/", word: "book", emoji: "📘", image: "dragon-first-day-assets/phonics-book.png"},
+      {letter: "C", sound: "/c/", word: "cat", emoji: "🐱", image: "dragon-first-day-assets/phonics-cat.png"},
+      {letter: "D", sound: "/d/", word: "dog", emoji: "🐶", image: "dragon-first-day-assets/phonics-dog.png"}
+    ];
+
+    const projectPages = [
+      "Draw a picture of you.",
+      "Draw a picture of your family.",
+      "Draw a picture of your toys.",
+      "Write your name on the cover.",
+      "Show your book to a friend."
+    ];
+
+    let currentAudio = null;
+    let practiceQuestions = [];
+    let practiceScore = 0;
+    let practiceAttempts = {};
+
+    // ===== Speech =====
+    async function speak(text) {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        utterance.rate = .9;
+        utterance.pitch = 1.05;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function escapeAttr(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function placeholderArt(label, emoji, image, id = "") {
+      const idAttr = id ? ` id="${escapeAttr(id)}"` : "";
+      if (image) {
+        return `<div${idAttr} class="placeholder-art has-image"><img src="${escapeAttr(image)}" alt="${escapeAttr(label)}" loading="lazy"></div>`;
+      }
+      return `<div${idAttr} class="placeholder-art"><b>${emoji || "🐲"}</b>${label}</div>`;
+    }
+
+    function celebrate() {
+      const wrap = document.createElement("div");
+      wrap.className = "confetti";
+      const colors = ["#1475c9", "#23a73e", "#ef4f91", "#f47c16", "#7a4ac7", "#ffc629"];
+      for (let i = 0; i < 24; i++) {
+        const piece = document.createElement("i");
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.background = colors[i % colors.length];
+        piece.style.animationDelay = `${Math.random() * .3}s`;
+        wrap.appendChild(piece);
+      }
+      document.body.appendChild(wrap);
+      setTimeout(() => wrap.remove(), 1300);
+    }
+
+    // ===== Lesson 1: Race to Collect =====
+    let collectScore = 0;
+    let collectTimeLeft = 30;
+    let collectTimerId = null;
+    let collectSpawnId = null;
+    let collectTargetWord = null;
+    let collectRunning = false;
+    let collectDrag = null; // {el, offsetX, offsetY}
+
+    function collectPickTarget() {
+      collectTargetWord = supplies[Math.floor(Math.random() * supplies.length)];
+      $("#collectTarget").textContent = `Find and collect: "${collectTargetWord.word}"`;
+    }
+
+    function collectSpawnItem() {
+      const stage = $("#collectStage");
+      const isTarget = Math.random() < .45 || !stage.querySelector(`[data-word="${collectTargetWord.word}"]`);
+      const item = isTarget ? collectTargetWord : supplies[Math.floor(Math.random() * supplies.length)];
+      const el = document.createElement("div");
+      el.className = "collect-item";
+      el.dataset.word = item.word;
+      const collectArt = item.image
+        ? `<img class="collect-thumb" src="${escapeAttr(item.image)}" alt="${escapeAttr(item.word)}" loading="lazy">`
+        : `<div class="collect-emoji">${item.emoji}</div>`;
+      el.innerHTML = `${collectArt}<div class="collect-word">${item.word}</div>`;
+      const stageRect = stage.getBoundingClientRect();
+      const maxX = Math.max(10, stageRect.width - 96);
+      const maxY = Math.max(10, stageRect.height - 200);
+      el.style.left = `${10 + Math.random() * maxX}px`;
+      el.style.top = `${10 + Math.random() * maxY}px`;
+      stage.appendChild(el);
+      wireCollectItem(el);
+      setTimeout(() => { if (el.parentNode) el.remove(); }, 4200);
+    }
+
+    function collectFloatText(x, y, text, good) {
+      const stage = $("#collectStage");
+      const float = document.createElement("div");
+      float.className = `collect-feedback-float ${good ? "good" : "bad"}`;
+      float.textContent = text;
+      float.style.left = `${x}px`;
+      float.style.top = `${y}px`;
+      stage.appendChild(float);
+      setTimeout(() => float.remove(), 700);
+    }
+
+    function wireCollectItem(el) {
+      const startDrag = clientX => clientY => {
+        const rect = el.getBoundingClientRect();
+        collectDrag = {el, offsetX: clientX - rect.left, offsetY: clientY - rect.top};
+        el.classList.add("dragging");
+      };
+
+      el.addEventListener("pointerdown", event => {
+        if (!collectRunning) return;
+        el.setPointerCapture(event.pointerId);
+        startDrag(event.clientX)(event.clientY);
+      });
+
+      el.addEventListener("pointermove", event => {
+        if (!collectDrag || collectDrag.el !== el) return;
+        const stage = $("#collectStage");
+        const stageRect = stage.getBoundingClientRect();
+        const x = event.clientX - stageRect.left - collectDrag.offsetX;
+        const y = event.clientY - stageRect.top - collectDrag.offsetY;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+
+        const backpack = $("#collectBackpack");
+        const bpRect = backpack.getBoundingClientRect();
+        const overBackpack = event.clientX > bpRect.left && event.clientX < bpRect.right && event.clientY > bpRect.top && event.clientY < bpRect.bottom;
+        backpack.classList.toggle("hover", overBackpack);
+      });
+
+      el.addEventListener("pointerup", event => {
+        if (!collectDrag || collectDrag.el !== el) return;
+        el.classList.remove("dragging");
+        const backpack = $("#collectBackpack");
+        const bpRect = backpack.getBoundingClientRect();
+        backpack.classList.remove("hover");
+        const overBackpack = event.clientX > bpRect.left && event.clientX < bpRect.right && event.clientY > bpRect.top && event.clientY < bpRect.bottom;
+        if (overBackpack) {
+          const isCorrect = el.dataset.word === collectTargetWord.word;
+          const stage = $("#collectStage");
+          const stageRect = stage.getBoundingClientRect();
+          const floatX = bpRect.left - stageRect.left;
+          const floatY = bpRect.top - stageRect.top;
+          if (isCorrect) {
+            collectScore += 10;
+            $("#collectScore").textContent = `Score ${collectScore}`;
+            collectFloatText(floatX, floatY, "+10", true);
+            speak(`This is a ${el.dataset.word}.`);
+            collectPickTarget();
+          } else {
+            collectScore = Math.max(0, collectScore - 3);
+            $("#collectScore").textContent = `Score ${collectScore}`;
+            collectFloatText(floatX, floatY, "-3", false);
+          }
+          el.remove();
+        }
+        collectDrag = null;
+      });
+    }
+
+    function startCollectRound() {
+      if (collectRunning) return;
+      collectRunning = true;
+      collectScore = 0;
+      collectTimeLeft = 30;
+      $("#collectScore").textContent = "Score 0";
+      $("#collectResults").classList.add("hidden");
+      $("#collectStage").querySelectorAll(".collect-item").forEach(el => el.remove());
+      collectPickTarget();
+      $("#collectTimer").textContent = `⏱ ${collectTimeLeft}s`;
+      $("#collectTimer").classList.remove("urgent");
+
+      collectSpawnId = setInterval(collectSpawnItem, 900);
+      collectTimerId = setInterval(() => {
+        collectTimeLeft -= 1;
+        $("#collectTimer").textContent = `⏱ ${collectTimeLeft}s`;
+        if (collectTimeLeft <= 10) $("#collectTimer").classList.add("urgent");
+        if (collectTimeLeft <= 0) endCollectRound();
+      }, 1000);
+    }
+
+    function endCollectRound() {
+      collectRunning = false;
+      clearInterval(collectTimerId);
+      clearInterval(collectSpawnId);
+      $("#collectStage").querySelectorAll(".collect-item").forEach(el => el.remove());
+      $("#collectTarget").textContent = "Round over! Press Start to play again.";
+      $("#collectResults").classList.remove("hidden");
+      $("#collectResults").textContent = `Final score: ${collectScore} points. Great job collecting school supplies!`;
+      if (collectScore >= 50) celebrate();
+    }
+
+    // ===== Lesson 2: It's / It isn't Speed Round =====
+    let builderScore = 0;
+    let builderStreak = 0;
+    let builderTimeLeft = 30;
+    let builderTimerId = null;
+    let builderRunning = false;
+
+    function builderNewRound() {
+      const correctItem = supplies[Math.floor(Math.random() * supplies.length)];
+      const isNegative = Math.random() < .4;
+      let shownItem = correctItem;
+      if (isNegative) {
+        const others = supplies.filter(s => s.word !== correctItem.word);
+        shownItem = others[Math.floor(Math.random() * others.length)];
+      }
+
+      $("#builderArt").outerHTML = placeholderArt(shownItem.word, shownItem.emoji, shownItem.image, "builderArt");
+      $("#builderSentence").textContent = "What is it?";
+
+      const correctSentence = isNegative ? `It isn't a ${correctItem.word}.` : `It's a ${correctItem.word}.`;
+      const wrongSentence = isNegative ? `It's a ${correctItem.word}.` : `It isn't a ${correctItem.word}.`;
+      const distractorPool = supplies.filter(s => s.word !== correctItem.word);
+      const distractorWord = distractorPool[Math.floor(Math.random() * distractorPool.length)].word;
+      const distractorSentence = `It's a ${distractorWord}.`;
+
+      const choices = [correctSentence, wrongSentence, distractorSentence].sort(() => Math.random() - .5);
+      $("#builderChoices").innerHTML = choices.map(choice => `
+        <button class="btn blue" type="button" data-choice="${choice.replace(/"/g, "&quot;")}">${choice}</button>`).join("");
+
+      $$("#builderChoices .btn").forEach(button => {
+        button.addEventListener("click", () => {
+          if (!builderRunning) return;
+          const isCorrect = button.dataset.choice === correctSentence;
+          button.classList.toggle("correct", isCorrect);
+          button.classList.toggle("wrong", !isCorrect);
+          $$("#builderChoices .btn").forEach(b => b.disabled = true);
+          if (isCorrect) {
+            builderStreak += 1;
+            const bonus = Math.min(10, builderStreak * 2);
+            builderScore += 5 + bonus;
+            $("#builderScore").textContent = `Score ${builderScore}`;
+            $("#builderStreak").textContent = `Streak: ${builderStreak}`;
+            $("#builderFeedback").textContent = "Correct! " + correctSentence;
+            speak(correctSentence);
+            celebrate();
+          } else {
+            builderStreak = 0;
+            $("#builderStreak").textContent = "Streak: 0";
+            $("#builderFeedback").textContent = "Not quite. The answer was: " + correctSentence;
+          }
+          setTimeout(builderNewRound, 700);
+        });
+      });
+    }
+
+    function startBuilderRound() {
+      if (builderRunning) return;
+      builderRunning = true;
+      builderScore = 0;
+      builderStreak = 0;
+      builderTimeLeft = 30;
+      $("#builderScore").textContent = "Score 0";
+      $("#builderStreak").textContent = "Streak: 0";
+      $("#builderResults").classList.add("hidden");
+      $("#builderTimer").textContent = `⏱ ${builderTimeLeft}s`;
+      $("#builderTimer").classList.remove("urgent");
+      builderNewRound();
+
+      builderTimerId = setInterval(() => {
+        builderTimeLeft -= 1;
+        $("#builderTimer").textContent = `⏱ ${builderTimeLeft}s`;
+        if (builderTimeLeft <= 10) $("#builderTimer").classList.add("urgent");
+        if (builderTimeLeft <= 0) endBuilderRound();
+      }, 1000);
+    }
+
+    function endBuilderRound() {
+      builderRunning = false;
+      clearInterval(builderTimerId);
+      $$("#builderChoices .btn").forEach(b => b.disabled = true);
+      $("#builderSentence").textContent = "Round over! Press Start to play again.";
+      $("#builderResults").classList.remove("hidden");
+      $("#builderResults").textContent = `Final score: ${builderScore} points. Best streak counted toward your bonus!`;
+      if (builderScore >= 50) celebrate();
+    }
+
+    // ===== Lesson 3: First Day Stories (Values) =====
+    const firstDayScenes = [
+      {
+        title: "Scene 1: A New Friend",
+        prompt: "A new dragon is standing alone at the door on the first day. What should you do?",
+        emoji: "🚪",
+        image: "dragon-first-day-assets/scene-new-friend.png",
+        choices: [
+          {text: "Say hello and smile.", correct: true},
+          {text: "Look away and say nothing.", correct: false},
+          {text: "Laugh at their backpack.", correct: false}
+        ]
+      },
+      {
+        title: "Scene 2: Dropped Pencils",
+        prompt: "A classmate drops their pencils on the floor. What should you do?",
+        emoji: "✏️",
+        image: "dragon-first-day-assets/scene-dropped-pencils.png",
+        choices: [
+          {text: "Help pick them up.", correct: true},
+          {text: "Step on them.", correct: false},
+          {text: "Walk past quickly.", correct: false}
+        ]
+      },
+      {
+        title: "Scene 3: Sharing a Desk",
+        prompt: "There is only one chair left and a new dragon needs a seat. What should you do?",
+        emoji: "🪑",
+        image: "dragon-first-day-assets/scene-share-desk.png",
+        choices: [
+          {text: "Share the desk and chair.", correct: true},
+          {text: "Say \"This is my chair only.\"", correct: false},
+          {text: "Push the new dragon away.", correct: false}
+        ]
+      },
+      {
+        title: "Scene 4: Asking for Help",
+        prompt: "A friend can't find their notebook. What should you do?",
+        emoji: "📓",
+        image: "dragon-first-day-assets/scene-find-notebook.png",
+        choices: [
+          {text: "Help them look for it.", correct: true},
+          {text: "Tell them it's not your problem.", correct: false},
+          {text: "Hide your own notebook.", correct: false}
+        ]
+      }
+    ];
+
+    let sceneKindChoices = 0;
+
+    function renderScenes() {
+      const wrap = $("#sceneCards");
+      wrap.innerHTML = firstDayScenes.map((scene, index) => `
+        <div class="scene-card" data-index="${index}">
+          ${placeholderArt(scene.title, scene.emoji, scene.image)}
+          <h3 style="margin:6px 0;">${scene.title}</h3>
+          <p>${scene.prompt}</p>
+          <div class="scene-choices">
+            ${scene.choices.map(choice => `
+              <button class="btn" type="button" data-correct="${choice.correct}">${choice.text}</button>`).join("")}
+          </div>
+        </div>`).join("");
+
+      $$(".scene-card").forEach((card, index) => {
+        $$(".btn", card).forEach(button => {
+          button.addEventListener("click", () => {
+            const isCorrect = button.dataset.correct === "true";
+            button.classList.toggle("correct", isCorrect);
+            button.classList.toggle("wrong", !isCorrect);
+            if (isCorrect) {
+              sceneKindChoices += 1;
+              $("#sceneScore").textContent = `Kind choices ${sceneKindChoices}`;
+              $("#sceneFeedback").textContent = "Great! That's being nice. " + firstDayScenes[index].title;
+              speak("Be nice. " + button.textContent);
+              celebrate();
+              $$(".btn", card).forEach(b => b.disabled = true);
+            } else {
+              $("#sceneFeedback").textContent = "Think about how the new dragon feels. Try another choice.";
+              setTimeout(() => button.classList.remove("wrong"), 800);
+            }
+          });
+        });
+      });
+    }
+
+    // ===== Lesson 4: Phonics Pop =====
+    let popScore = 0;
+    let popTimeLeft = 30;
+    let popTimerId = null;
+    let popSpawnId = null;
+    let popTargetSound = null;
+    let popRunning = false;
+    let popBubbleSeq = 0;
+
+    function popPickTarget() {
+      popTargetSound = phonicsSounds[Math.floor(Math.random() * phonicsSounds.length)];
+      $("#popTarget").textContent = `Pop the bubble for the sound: ${popTargetSound.sound} (${popTargetSound.word})`;
+      speak(popTargetSound.sound.replace(/\//g, ""));
+    }
+
+    function popSpawnBubble() {
+      const stage = $("#popStage");
+      const isTarget = Math.random() < .4 || !stage.querySelector(`[data-letter="${popTargetSound.letter}"]`);
+      const item = isTarget ? popTargetSound : phonicsSounds[Math.floor(Math.random() * phonicsSounds.length)];
+      const el = document.createElement("div");
+      popBubbleSeq += 1;
+      el.className = "pop-bubble";
+      el.dataset.letter = item.letter;
+      el.dataset.seq = popBubbleSeq;
+      el.textContent = item.letter;
+      const stageRect = stage.getBoundingClientRect();
+      const maxX = Math.max(10, stageRect.width - 70);
+      el.style.left = `${10 + Math.random() * maxX}px`;
+      const duration = 3.4 + Math.random() * 1.6;
+      el.style.animationDuration = `${duration}s`;
+      stage.appendChild(el);
+
+      el.addEventListener("click", () => {
+        if (!popRunning || el.classList.contains("popped") || el.classList.contains("wrong-pop")) return;
+        const isCorrect = item.letter === popTargetSound.letter;
+        if (isCorrect) {
+          el.classList.add("popped");
+          popScore += 10;
+          $("#popScore").textContent = `Score ${popScore}`;
+          $("#phonicsFeedback").textContent = `Pop! ${item.letter} is for ${item.word}.`;
+          speak(`${item.sound.replace(/\//g, "")} for ${item.word}`);
+          popPickTarget();
+        } else {
+          el.classList.add("wrong-pop");
+          popScore = Math.max(0, popScore - 3);
+          $("#popScore").textContent = `Score ${popScore}`;
+          $("#phonicsFeedback").textContent = "Not that sound - listen again!";
+          setTimeout(() => el.remove(), 400);
+        }
+      });
+
+      el.addEventListener("animationend", () => {
+        if (el.parentNode && !el.classList.contains("popped")) el.remove();
+      });
+    }
+
+    function startPopRound() {
+      if (popRunning) return;
+      popRunning = true;
+      popScore = 0;
+      popTimeLeft = 30;
+      $("#popScore").textContent = "Score 0";
+      $("#popResults").classList.add("hidden");
+      $("#popStage").querySelectorAll(".pop-bubble").forEach(el => el.remove());
+      popPickTarget();
+      $("#popTimer").textContent = `⏱ ${popTimeLeft}s`;
+      $("#popTimer").classList.remove("urgent");
+
+      popSpawnId = setInterval(popSpawnBubble, 850);
+      popTimerId = setInterval(() => {
+        popTimeLeft -= 1;
+        $("#popTimer").textContent = `⏱ ${popTimeLeft}s`;
+        if (popTimeLeft <= 10) $("#popTimer").classList.add("urgent");
+        if (popTimeLeft <= 0) endPopRound();
+      }, 1000);
+    }
+
+    function endPopRound() {
+      popRunning = false;
+      clearInterval(popTimerId);
+      clearInterval(popSpawnId);
+      $("#popStage").querySelectorAll(".pop-bubble").forEach(el => el.remove());
+      $("#popTarget").textContent = "Round over! Press Start to play again.";
+      $("#popResults").classList.remove("hidden");
+      $("#popResults").textContent = `Final score: ${popScore} points. Nice phonics ears!`;
+      if (popScore >= 50) celebrate();
+    }
+
+    function renderProjectChecklist() {
+      $("#projectChecklist").innerHTML = projectPages.map((page, index) => `
+        <label>
+          <input type="checkbox" id="project${index}">
+          <span>${page}</span>
+        </label>`).join("");
+    }
+
+    // ===== Tabs =====
+    function showPanel(id) {
+      const panel = document.getElementById(id);
+      if (!panel || !panel.matches("[data-panel]")) return;
+      $$(".tab").forEach(item => item.classList.toggle("active", item.dataset.tab === id));
+      $$("[data-panel]").forEach(item => item.hidden = item.id !== id);
+      window.scrollTo(0, panel.offsetTop);
+    }
+
+    function initTabs() {
+      $$(".tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          showPanel(tab.dataset.tab);
+          history.replaceState(null, "", `#${tab.dataset.tab}`);
+        });
+      });
+    }
+
+    // ===== Practice tab =====
+    function normalizeAnswer(text) {
+      return text.trim().toLowerCase().replace(/[.!?]+$/g, "").replace(/\s+/g, " ");
+    }
+
+    function isWrittenAnswerCorrect(item, raw) {
+      const normalized = normalizeAnswer(raw);
+      if (!normalized) return false;
+      return item.accept.some(accepted => {
+        const cleanAccepted = normalizeAnswer(accepted);
+        return normalized === cleanAccepted || (cleanAccepted.includes(normalized) && normalized.length > 3);
+      });
+    }
+
+    function pointsForAttempt(attempts) {
+      if (attempts === 1) return 10;
+      if (attempts === 2) return 5;
+      return 2;
+    }
+
+    function wordBlankHint(text) {
+      const words = text.trim().split(/\s+/).map(w => w.replace(/[.,!?]+$/, ""));
+      return words.map(w => "_".repeat(Math.max(2, w.length))).join(" ") + (/[.!?]$/.test(text.trim()) ? text.trim().slice(-1) : "");
+    }
+
+    function buildPracticeQuestions() {
+      const items = [];
+
+      // Supplies: multiple choice translation
+      supplies.forEach((item, index) => {
+        const wrongs = supplies.filter(s => s.word !== item.word).map(s => s.vn);
+        const wrongPicks = wrongs.sort(() => Math.random() - .5).slice(0, 2);
+        const options = [item.vn, ...wrongPicks].sort(() => Math.random() - .5);
+        items.push({
+          id: `supplies${index}`,
+          type: "Supplies",
+          mode: "mc",
+          image: item.image,
+          emoji: item.emoji,
+          question: `"${item.word}" là gì?`,
+          options,
+          correct: item.vn,
+          answer: item.vn
+        });
+      });
+
+      // Grammar: It's / It isn't fill-in-blank
+      supplies.forEach((item, index) => {
+        const correct = `It's a ${item.word}.`;
+        items.push({
+          id: `grammarPos${index}`,
+          type: "Grammar",
+          mode: "blank",
+          image: item.image,
+          emoji: item.emoji,
+          question: `Affirmative: This is a ${item.word}. Write the sentence using "It's".`,
+          correct,
+          accept: [correct.toLowerCase()],
+          wordCount: correct.trim().split(/\s+/).length,
+          blankHint: wordBlankHint(correct),
+          answer: correct
+        });
+      });
+      const negativeSample = supplies.slice(0, 4);
+      negativeSample.forEach((item, index) => {
+        const wrongWord = supplies.find(s => s.word !== item.word).word;
+        const correct = `It isn't a ${wrongWord}.`;
+        items.push({
+          id: `grammarNeg${index}`,
+          type: "Grammar",
+          mode: "blank",
+          image: item.image,
+          emoji: item.emoji,
+          question: `This is a ${item.word}, not a ${wrongWord}. Write the negative sentence using "It isn't".`,
+          correct,
+          accept: [correct.toLowerCase()],
+          wordCount: correct.trim().split(/\s+/).length,
+          blankHint: wordBlankHint(correct),
+          answer: correct
+        });
+      });
+
+      // Phonics: written answer
+      phonicsSounds.forEach((item, index) => {
+        items.push({
+          id: `phonics${index}`,
+          type: "Phonics",
+          mode: "write",
+          image: item.image,
+          emoji: item.emoji,
+          question: `Which word starts with the sound ${item.sound}?`,
+          correct: item.word,
+          accept: [item.word.toLowerCase()],
+          wordCount: 1,
+          blankHint: wordBlankHint(item.word),
+          answer: item.word
+        });
+      });
+
+      // Values: multiple choice from scenes
+      firstDayScenes.forEach((scene, index) => {
+        const correctChoice = scene.choices.find(c => c.correct).text;
+        const options = scene.choices.map(c => c.text).sort(() => Math.random() - .5);
+        items.push({
+          id: `values${index}`,
+          type: "Values",
+          mode: "mc",
+          image: scene.image,
+          emoji: scene.emoji,
+          question: scene.prompt,
+          options,
+          correct: correctChoice,
+          answer: correctChoice
+        });
+      });
+
+      return items;
+    }
+
+    function practiceImageHtml(item) {
+      if (!item.image) return "";
+      return placeholderArt(item.answer || item.type, item.emoji, item.image);
+    }
+
+    function practiceCardMarkup(item) {
+      const tagHtml = `<span class="practice-tag">${item.type}</span>`;
+      const imageHtml = practiceImageHtml(item);
+      const wrapOpen = imageHtml ? `<div class="practice-card-body">` : "";
+      const wrapClose = imageHtml ? `</div>` : "";
+      const revealBtn = `<button class="btn orange practice-reveal-btn" type="button" data-reveal>Reveal Answer</button>`;
+      const revealSlot = `<p class="practice-reveal-text" data-reveal-text hidden></p>`;
+
+      if (item.mode === "mc") {
+        const modeTag = `<span class="practice-mode-tag">Multiple choice</span>`;
+        const optionsHtml = item.options.map(option => `
+          <button class="btn blue" type="button" data-mc-option="${option.replace(/"/g, "&quot;")}">${option}</button>`).join("");
+        return `
+          <div class="practice-card" data-id="${item.id}">
+            ${tagHtml}${modeTag}
+            ${wrapOpen}${imageHtml}<div class="practice-card-main">
+              <p class="practice-question">${item.question}</p>
+              <div class="practice-mc">${optionsHtml}</div>
+              <p class="practice-feedback-line" data-feedback></p>
+              ${revealSlot}
+              ${revealBtn}
+            </div>${wrapClose}
+          </div>`;
+      }
+      // blank / write share the same markup shape
+      const modeLabel = item.mode === "blank" ? "Fill in the blank" : "Written answer";
+      return `
+        <div class="practice-card" data-id="${item.id}">
+          ${tagHtml}<span class="practice-mode-tag">${modeLabel}</span>
+          ${wrapOpen}${imageHtml}<div class="practice-card-main">
+            <p class="practice-question">${item.question}</p>
+            <p class="practice-blank-hint">${item.blankHint} <span class="practice-word-count">(${item.wordCount} ${item.wordCount === 1 ? "word" : "words"})</span></p>
+            <div class="practice-write">
+              <input type="text" placeholder="Type your answer..." data-blank-input>
+              <button class="btn primary" type="button" data-check-blank>Check</button>
+            </div>
+            <p class="practice-feedback-line" data-feedback></p>
+            ${revealSlot}
+            ${revealBtn}
+          </div>${wrapClose}
+        </div>`;
+    }
+
+    function updatePracticeScoreDisplay() {
+      $("#practiceScoreDisplay").textContent = `Score ${practiceScore}`;
+    }
+
+    function markCardSolved(card, points) {
+      card.classList.add("solved");
+      const feedback = card.querySelector("[data-feedback]");
+      feedback.classList.remove("wrong");
+      feedback.classList.add("correct");
+      feedback.innerHTML = `Correct! <span class="practice-points">+${points} pts</span>`;
+    }
+
+    function handlePracticeAnswer(item, card, isCorrect, attempts, revealed) {
+      const feedback = card.querySelector("[data-feedback]");
+      if (isCorrect) {
+        const points = revealed ? 2 : pointsForAttempt(attempts);
+        practiceScore += points;
+        updatePracticeScoreDisplay();
+        markCardSolved(card, points);
+        speak(item.answer);
+        if (!revealed) celebrate();
+      } else {
+        feedback.classList.remove("correct");
+        feedback.classList.add("wrong");
+        feedback.textContent = attempts === 1 ? "Not quite, try again." : "Still not it - try once more.";
+      }
+    }
+
+    function wireUpPracticeCard(card, item) {
+      practiceAttempts[item.id] = 0;
+      let revealed = false;
+      const revealBtn = card.querySelector("[data-reveal]");
+      const revealText = card.querySelector("[data-reveal-text]");
+
+      revealBtn.addEventListener("click", () => {
+        if (card.classList.contains("solved")) return;
+        revealed = true;
+        revealText.hidden = false;
+        revealText.textContent = `Answer: ${item.answer}`;
+        revealBtn.disabled = true;
+        speak(item.answer);
+      });
+
+      if (item.mode === "mc") {
+        card.querySelectorAll("[data-mc-option]").forEach(button => {
+          button.addEventListener("click", () => {
+            if (card.classList.contains("solved")) return;
+            practiceAttempts[item.id] += 1;
+            const isCorrect = button.dataset.mcOption === item.correct;
+            button.classList.toggle("correct", isCorrect);
+            button.classList.toggle("wrong", !isCorrect);
+            if (!isCorrect) {
+              setTimeout(() => button.classList.remove("wrong"), 900);
+            } else {
+              card.querySelectorAll("[data-mc-option]").forEach(other => other.disabled = true);
+            }
+            handlePracticeAnswer(item, card, isCorrect, practiceAttempts[item.id], revealed);
+          });
+        });
+      } else {
+        const input = card.querySelector("[data-blank-input]");
+        const checkButton = card.querySelector("[data-check-blank]");
+        const submit = () => {
+          if (card.classList.contains("solved")) return;
+          practiceAttempts[item.id] += 1;
+          const isCorrect = isWrittenAnswerCorrect(item, input.value);
+          input.classList.toggle("correct", isCorrect);
+          input.classList.toggle("wrong", !isCorrect);
+          if (isCorrect) input.disabled = true;
+          handlePracticeAnswer(item, card, isCorrect, practiceAttempts[item.id], revealed);
+        };
+        checkButton.addEventListener("click", submit);
+        input.addEventListener("keydown", event => {
+          if (event.key === "Enter") submit();
+        });
+      }
+    }
+
+    function renderPracticeList(filter = "all") {
+      const list = $("#practiceList");
+      const items = practiceQuestions.filter(item => filter === "all" || item.type === filter);
+      list.innerHTML = items.map(practiceCardMarkup).join("");
+      Array.from(list.querySelectorAll(".practice-card")).forEach((card, index) => {
+        wireUpPracticeCard(card, items[index]);
+      });
+    }
+
+    function initPractice() {
+      practiceQuestions = buildPracticeQuestions();
+      practiceScore = 0;
+      practiceAttempts = {};
+      updatePracticeScoreDisplay();
+      renderPracticeList("all");
+      $$(".practice-filter-row .btn[data-practice-filter]").forEach(button => {
+        button.addEventListener("click", () => {
+          $$(".practice-filter-row .btn[data-practice-filter]").forEach(item => item.classList.remove("active"));
+          button.classList.add("active");
+          renderPracticeList(button.dataset.practiceFilter);
+        });
+      });
+      $("#resetPractice").addEventListener("click", () => {
+        const activeFilter = $(".practice-filter-row .btn.active")?.dataset.practiceFilter || "all";
+        practiceScore = 0;
+        practiceAttempts = {};
+        updatePracticeScoreDisplay();
+        renderPracticeList(activeFilter);
+      });
+    }
+
+    function init() {
+      renderScenes();
+      renderProjectChecklist();
+      initTabs();
+      initPractice();
+
+      $("#startCollect").addEventListener("click", startCollectRound);
+      $("#startBuilder").addEventListener("click", startBuilderRound);
+      $("#startPop").addEventListener("click", startPopRound);
+      $("#testVoice").addEventListener("click", () => speak("It's a pencil. It isn't a book."));
+
+      const hashPanel = location.hash.replace("#", "");
+      if (hashPanel) showPanel(hashPanel);
+    }
+
+    init();
+  </script>
+</body>
+</html>
