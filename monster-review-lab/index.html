@@ -141,6 +141,7 @@
     .btn.pink { background: #ffe0ef; }
     .btn.orange { background: #ffe3c8; }
     .btn.purple { background: #eee4ff; }
+    .btn.red { background: #ffd9d4; }
 
     .voice-control {
       display: flex;
@@ -306,6 +307,234 @@
       display: block;
       padding: 8px 10px;
       font-size: 18px;
+    }
+
+    .gallery-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .gallery-tab {
+      padding: 10px 18px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: white;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--ink);
+    }
+
+    .gallery-tab.active {
+      background: var(--yellow);
+    }
+
+    .gallery-stage {
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      background: #fffefb;
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .gallery-pane {
+      display: none;
+    }
+
+    .gallery-pane.active {
+      display: block;
+    }
+
+    .gallery-pane img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .practice-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .practice-card {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .practice-card .practice-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin-bottom: 8px;
+      border-radius: 999px;
+      background: var(--soft-yellow);
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .practice-card .practice-mode-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin: 0 0 8px 6px;
+      border-radius: 999px;
+      background: #eaf3ff;
+      border: 2px solid var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      color: #1d5fa8;
+    }
+
+    .practice-card .practice-question {
+      margin: 0 0 12px;
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.4;
+    }
+
+    .practice-card .practice-convo {
+      display: grid;
+      gap: 6px;
+      margin: 0 0 12px;
+    }
+
+    .practice-card .practice-convo .line {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .practice-card .practice-convo .line .blank {
+      display: inline-block;
+      min-width: 90px;
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .practice-mc {
+      display: grid;
+      gap: 10px;
+    }
+
+    .practice-mc .btn {
+      width: 100%;
+      padding: 12px 14px;
+      text-align: left;
+      line-height: 1.3;
+      box-shadow: 0 4px 0 var(--ink);
+    }
+
+    .practice-mc .btn.correct { background: #dcffd8; }
+    .practice-mc .btn.wrong { background: #ffe1e1; }
+
+    .practice-write {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .practice-write input {
+      flex: 1;
+      min-width: 180px;
+      padding: 10px 12px;
+      border: 3px solid var(--ink);
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .practice-write input.correct { background: #dcffd8; border-color: var(--green); }
+    .practice-write input.wrong { background: #ffe1e1; border-color: var(--red); }
+
+    .practice-feedback-line {
+      margin: 10px 0 0;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .practice-feedback-line.correct { color: #2c6e2f; }
+    .practice-feedback-line.wrong { color: #b0312a; }
+
+    .practice-points {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .practice-reveal-btn {
+      margin-top: 10px;
+      font-size: 14px;
+      padding: 8px 14px;
+    }
+
+    .practice-reveal-text {
+      margin: 10px 0 0;
+      padding: 8px 10px;
+      border: 2px dashed var(--ink);
+      border-radius: 6px;
+      background: var(--soft-yellow);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .practice-card.solved {
+      border-color: var(--green);
+    }
+
+    .practice-card-body {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .practice-image {
+      width: 96px;
+    }
+
+    .practice-image .monster-img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .practice-card-main {
+      min-width: 0;
+    }
+
+    .practice-blank-hint {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      font-family: "Courier New", monospace;
+    }
+
+    .practice-word-count {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: normal;
+    }
+
+    @media (max-width: 560px) {
+      .practice-card-body {
+        grid-template-columns: 1fr;
+      }
+      .practice-image {
+        width: 76px;
+      }
     }
 
     .word-grid {
@@ -640,14 +869,24 @@
     .board-token {
       position: absolute;
       z-index: 20;
-      width: 7.4%;
+      width: 12.5%;
       height: auto;
       transform: translate(-50%, -78%);
-      transition: left .55s cubic-bezier(.2,.9,.2,1), top .55s cubic-bezier(.2,.9,.2,1), opacity .2s ease, scale .2s ease;
+      transition: left .42s cubic-bezier(.34,1.4,.64,1), top .42s cubic-bezier(.34,1.4,.64,1), opacity .2s ease, scale .2s ease;
       filter: drop-shadow(5px 7px 0 rgba(0,0,0,.2));
     }
 
     .board-token.hidden { opacity: 0; scale: .6; }
+
+    .board-token.hopping {
+      animation: tokenHop .42s ease-in-out;
+    }
+
+    @keyframes tokenHop {
+      0% { transform: translate(-50%, -78%) scale(1); }
+      40% { transform: translate(-50%, -120%) scale(1.08); }
+      100% { transform: translate(-50%, -78%) scale(1); }
+    }
 
     .game-cell {
       position: relative;
@@ -742,7 +981,7 @@
     .dice-card,
     .challenge-card,
     .instructions-card {
-      padding: 14px;
+      padding: 18px;
       border: 3px solid var(--ink);
       border-radius: 8px;
       background: white;
@@ -756,27 +995,48 @@
     }
 
     .dice-face {
+      width: 86px;
+      height: 86px;
+      perspective: 420px;
+    }
+
+    .dice-cube {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 1.05s cubic-bezier(.2,.85,.25,1);
+      transform: rotateX(-22deg) rotateY(35deg);
+    }
+
+    .dice-cube .face {
+      position: absolute;
+      inset: 0;
       display: grid;
       place-items: center;
-      width: 86px;
-      aspect-ratio: 1 / 1;
-      border: 4px solid var(--ink);
+      border: 3px solid var(--ink);
       border-radius: 8px;
       background: #fff;
-      box-shadow: 0 7px 0 rgba(0,0,0,.16);
-      font-size: 48px;
-      font-weight: 900;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.05);
     }
 
-    .dice-face img {
+    .dice-cube .face img {
       display: block;
-      width: 74px;
-      height: 74px;
+      width: 70%;
+      height: 70%;
       object-fit: contain;
+      pointer-events: none;
     }
 
-    .dice-face.rolling {
-      animation: diceWiggle .46s ease-in-out infinite;
+    .dice-cube .face.front  { transform: translateZ(43px); }
+    .dice-cube .face.back   { transform: translateZ(-43px) rotateY(180deg); }
+    .dice-cube .face.right  { transform: rotateY(90deg) translateZ(43px); }
+    .dice-cube .face.left   { transform: rotateY(-90deg) translateZ(43px); }
+    .dice-cube .face.top    { transform: rotateX(90deg) translateZ(43px); }
+    .dice-cube .face.bottom { transform: rotateX(-90deg) translateZ(43px); }
+
+    .dice-face.rolling .dice-cube {
+      transition: transform .9s cubic-bezier(.34,1.4,.34,1);
     }
 
     .game-status,
@@ -796,21 +1056,28 @@
 
     .challenge-card p,
     .instructions-card p {
-      margin: 7px 0;
+      margin: 11px 0;
       font-size: 18px;
       font-weight: 800;
-      line-height: 1.2;
+      line-height: 1.45;
+    }
+
+    .challenge-card p + p {
+      padding-top: 6px;
+      border-top: 2px dashed rgba(22,22,22,.18);
     }
 
     .answer-options {
       display: grid;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 12px;
+      margin: 16px 0;
     }
 
     .answer-options .btn {
       width: 100%;
+      padding: 12px 14px;
       text-align: left;
+      line-height: 1.3;
       box-shadow: 0 4px 0 var(--ink);
     }
 
@@ -858,12 +1125,6 @@
       0%, 100% { transform: translateX(0); }
       25% { transform: translateX(-6px); }
       75% { transform: translateX(6px); }
-    }
-
-    @keyframes diceWiggle {
-      0%, 100% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(-8deg) scale(1.05); }
-      75% { transform: rotate(8deg) scale(1.05); }
     }
 
     @keyframes fall {
@@ -974,6 +1235,8 @@
       <button class="tab" data-tab="senses">Senses</button>
       <button class="tab" data-tab="game">Game</button>
       <button class="tab" data-tab="roleplay">Roleplay</button>
+      <button class="tab" data-tab="gallery">Gallery</button>
+      <button class="tab" data-tab="practice">Practice</button>
     </nav>
 
     <section id="words" data-panel>
@@ -992,11 +1255,6 @@
         <button class="btn purple" data-filter="grammar">Grammar</button>
       </div>
       <div class="word-grid" id="wordGrid"></div>
-      <div class="reference-grid" aria-label="Reference pictures">
-        <div class="ref-card"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/vocab.png" alt="Vocabulary reference"><b>Vocabulary picture</b></div>
-        <div class="ref-card"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/grammar.png" alt="Grammar reference"><b>Grammar picture</b></div>
-        <div class="ref-card"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/conversation.png" alt="Conversation reference"><b>Conversation picture</b></div>
-      </div>
     </section>
 
     <section id="quiz" data-panel hidden>
@@ -1110,7 +1368,14 @@
           <div class="dice-card">
             <div class="dice-row">
               <div class="dice-face" id="diceFace">
-                <img id="diceImage" src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-1.png" alt="dice one">
+                <div class="dice-cube" id="diceCube">
+                  <div class="face front"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-1.png" alt="dice one"></div>
+                  <div class="face back"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-6.png" alt="dice six"></div>
+                  <div class="face right"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-2.png" alt="dice two"></div>
+                  <div class="face left"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-5.png" alt="dice five"></div>
+                  <div class="face top"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-3.png" alt="dice three"></div>
+                  <div class="face bottom"><img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-4.png" alt="dice four"></div>
+                </div>
               </div>
               <div>
                 <div class="game-status" id="teamTurn">Team A's turn</div>
@@ -1163,6 +1428,52 @@
         </div>
       </div>
     </section>
+
+    <section id="gallery" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Picture Gallery</h2>
+          <div class="feedback" id="galleryFeedback">Vocabulary, grammar, and conversation reference sheets - shown full size.</div>
+        </div>
+      </div>
+      <div class="gallery-tabs" role="tablist" aria-label="Gallery pictures">
+        <button class="gallery-tab active" data-gallery="vocab" type="button">Vocabulary</button>
+        <button class="gallery-tab" data-gallery="grammar" type="button">Grammar</button>
+        <button class="gallery-tab" data-gallery="conversation" type="button">Conversation</button>
+      </div>
+      <div class="gallery-stage">
+        <div class="gallery-pane active" data-gallery-pane="vocab">
+          <img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/vocab.png" alt="Vocabulary reference, full size">
+        </div>
+        <div class="gallery-pane" data-gallery-pane="grammar">
+          <img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/grammar.png" alt="Grammar reference, full size">
+        </div>
+        <div class="gallery-pane" data-gallery-pane="conversation">
+          <img src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/conversation.png" alt="Conversation reference, full size">
+        </div>
+      </div>
+    </section>
+
+    <section id="practice" data-panel hidden>
+      <div class="section-head">
+        <div>
+          <h2>Board Question Practice</h2>
+          <div class="feedback" id="practiceFeedback">Answer each question. Get it right first try for max points.</div>
+        </div>
+        <div class="score-pill" id="practiceScore">Score 0</div>
+      </div>
+      <div class="filter-row practice-filter-row" aria-label="Practice filters">
+        <button class="btn active" data-practice-filter="all">All</button>
+        <button class="btn pink" data-practice-filter="Vocabulary">Vocabulary</button>
+        <button class="btn purple" data-practice-filter="Grammar">Grammar</button>
+        <button class="btn orange" data-practice-filter="Hospital">Hospital</button>
+        <button class="btn green" data-practice-filter="Senses Question">Senses</button>
+        <button class="btn blue" data-practice-filter="Boost">Boost</button>
+        <button class="btn red" data-practice-filter="Trap">Trap</button>
+        <button class="btn" id="resetPractice" type="button" style="margin-left:auto;">Reset Score</button>
+      </div>
+      <div class="practice-list" id="practiceList"></div>
+    </section>
   </main>
 
   <script src="https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/audio/manifest.js"></script>
@@ -1203,6 +1514,9 @@
     let selectedBody = bodies[2];
     let selectedObject = null;
     let currentAudio = null;
+    let practiceQuestions = [];
+    let practiceScore = 0;
+    let practiceAttempts = {};
     const gameState = {
       currentTeam: "a",
       positions: {a: 0, b: 0},
@@ -1706,7 +2020,7 @@
       const colInRow = (number - 1) % 10;
       const col = rowFromBottom % 2 === 0 ? colInRow : 9 - colInRow;
       const row = 9 - rowFromBottom;
-      const teamOffset = team === "a" ? -1.9 : 1.9;
+      const teamOffset = team === "a" ? -3 : 3;
       return {
         x: (col + .5) * 10 + teamOffset,
         y: (row + .58) * 10,
@@ -1720,6 +2034,22 @@
       token.style.left = `${point.x}%`;
       token.style.top = `${point.y}%`;
       token.classList.toggle("hidden", point.hidden);
+    }
+
+    async function stepMoveToken(team, from, to) {
+      const token = team === "a" ? $("#tokenA") : $("#tokenB");
+      const step = to > from ? 1 : -1;
+      let pos = from;
+      while (pos !== to) {
+        pos += step;
+        placeToken(team, pos);
+        token.classList.remove("hopping");
+        // eslint-disable-next-line no-unused-expressions
+        token.offsetWidth; // restart the hop animation on every square
+        token.classList.add("hopping");
+        await delay(260);
+      }
+      gameState.positions[team] = pos;
     }
 
     function positionTokens() {
@@ -1806,19 +2136,33 @@
       else speak(challenge.answer);
     }
 
+    // Face -> base rotation (deg) needed to bring that face to the front.
+    const diceFaceRotation = {
+      1: {x: 0, y: 0},
+      2: {x: 0, y: -90},
+      3: {x: -90, y: 0},
+      4: {x: 90, y: 0},
+      5: {x: 0, y: 90},
+      6: {x: 0, y: 180}
+    };
+
     async function animateDice(finalRoll) {
       const face = $("#diceFace");
-      const img = $("#diceImage");
+      const cube = $("#diceCube");
+      const target = diceFaceRotation[finalRoll];
+      const spinsX = 2 + Math.floor(Math.random() * 2);
+      const spinsY = 3 + Math.floor(Math.random() * 2);
       face.classList.add("rolling");
-      for (let i = 0; i < 12; i++) {
-        const value = (i % 6) + 1;
-        img.src = `https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-${value}.png`;
-        img.alt = `dice ${value}`;
-        await delay(65);
-      }
-      img.src = `https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-${finalRoll}.png`;
-      img.alt = `dice ${finalRoll}`;
+      const finalX = target.x - 360 * spinsX;
+      const finalY = target.y + 360 * spinsY;
+      cube.style.transform = `rotateX(${finalX}deg) rotateY(${finalY}deg)`;
+      await delay(900);
       face.classList.remove("rolling");
+      // Settle on the clean, un-spun angle so the next roll's math stays simple.
+      cube.style.transition = "none";
+      cube.style.transform = `rotateX(${target.x}deg) rotateY(${target.y}deg)`;
+      cube.offsetHeight; // force reflow before restoring the transition
+      cube.style.transition = "";
     }
 
     async function rollGameDice() {
@@ -1829,17 +2173,16 @@
       const teamName = team === "a" ? "Team A" : "Team B";
       gameState.lastRoll = roll;
       await animateDice(roll);
-      let landed = Math.min(100, gameState.positions[team] + roll);
+      const start = gameState.positions[team];
+      let landed = Math.min(100, start + roll);
       let finalPosition = landed;
       if (gameBoosts[landed]) finalPosition = gameBoosts[landed];
       if (gameTraps[landed]) finalPosition = gameTraps[landed];
-      gameState.positions[team] = landed;
-      positionTokens();
-      await delay(620);
+      await stepMoveToken(team, start, landed);
+      await delay(300);
       if (finalPosition !== landed) {
-        gameState.positions[team] = finalPosition;
-        positionTokens();
-        await delay(620);
+        await stepMoveToken(team, landed, finalPosition);
+        await delay(300);
       }
       renderGameChallenge(landed, finalPosition !== landed ? finalPosition : null, landed);
       if (finalPosition === 100) {
@@ -1862,9 +2205,14 @@
       gameState.positions = {a: 0, b: 0};
       gameState.lastRoll = 1;
       gameState.rolling = false;
-      $("#diceImage").src = "https://cdn.jsdelivr.net/gh/phuthanhtg1202/html-image-assets@main/monster-review-lab/game/dice-1.png";
-      $("#diceImage").alt = "dice one";
+      const cube = $("#diceCube");
+      cube.style.transition = "none";
+      cube.style.transform = "rotateX(0deg) rotateY(0deg)";
+      cube.offsetHeight;
+      cube.style.transition = "";
       $("#diceFace").classList.remove("rolling");
+      $("#tokenA").classList.remove("hopping");
+      $("#tokenB").classList.remove("hopping");
       $("#teamTurn").textContent = "Team A's turn";
       $("#gameFeedback").textContent = "Roll, move, and speak before the next team plays.";
       $("#challengeCard").innerHTML = `
@@ -1960,6 +2308,320 @@
       });
     }
 
+    function initGallery() {
+      $$(".gallery-tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          const key = tab.dataset.gallery;
+          $$(".gallery-tab").forEach(item => item.classList.toggle("active", item === tab));
+          $$(".gallery-pane").forEach(pane => pane.classList.toggle("active", pane.dataset.galleryPane === key));
+        });
+      });
+    }
+
+    function wordBlankHint(text) {
+      // Strip trailing punctuation per word, keep word count visible as underscores.
+      const words = text.trim().split(/\s+/).map(w => w.replace(/[.,!?]+$/, ""));
+      return words.map(w => "_".repeat(Math.max(2, w.length))).join(" ") + (/[.!?]$/.test(text.trim()) ? text.trim().slice(-1) : "");
+    }
+
+    function buildPracticeQuestions() {
+      const seen = new Set();
+      const items = [];
+      for (let number = 1; number <= 100; number++) {
+        const challenge = gameChallenge(number);
+        const choiceData = challengeOptions(challenge);
+        const dedupeKey = `${challenge.type}|${choiceData.question}`;
+        if (seen.has(dedupeKey)) continue;
+        seen.add(dedupeKey);
+
+        const base = {
+          id: `p${number}`,
+          type: challenge.type,
+          square: number,
+          question: choiceData.question,
+          answer: challenge.answer,
+          image: challenge.image
+        };
+
+        if (challenge.type === "Vocabulary" || challenge.type === "Boost" || challenge.type === "Senses Question") {
+          items.push({
+            ...base,
+            mode: "mc",
+            options: choiceData.options,
+            correct: choiceData.correct
+          });
+        } else if (challenge.type === "Grammar") {
+          const correct = choiceData.correct;
+          items.push({
+            ...base,
+            mode: "blank",
+            question: challenge.word,
+            correct,
+            accept: [correct.toLowerCase()],
+            wordCount: correct.trim().split(/\s+/).length,
+            blankHint: wordBlankHint(correct)
+          });
+        } else if (challenge.type === "Trap") {
+          const [q, yes, no] = challenge.audioParts;
+          items.push({
+            ...base,
+            mode: "convo",
+            convoLines: [
+              {speaker: "A", text: q},
+              {speaker: "B", text: "___BLANK___"}
+            ],
+            correct: yes,
+            accept: [yes.toLowerCase(), no.toLowerCase()],
+            wordCount: yes.trim().split(/\s+/).length,
+            blankHint: wordBlankHint(yes)
+          });
+        } else if (challenge.type === "Hospital") {
+          const [q, a] = challenge.audioParts;
+          items.push({
+            ...base,
+            mode: "convo",
+            convoLines: [
+              {speaker: "Doctor", text: q},
+              {speaker: "Monster", text: "___BLANK___"}
+            ],
+            correct: a,
+            accept: [a.toLowerCase()],
+            wordCount: a.trim().split(/\s+/).length,
+            blankHint: wordBlankHint(a)
+          });
+        } else {
+          const parts = challenge.audioParts || [challenge.answer];
+          items.push({
+            ...base,
+            mode: "write",
+            correct: challenge.answer,
+            accept: parts.map(part => part.toLowerCase()),
+            wordCount: parts[0].trim().split(/\s+/).length,
+            blankHint: wordBlankHint(parts[0])
+          });
+        }
+      }
+      return items;
+    }
+
+    function normalizeAnswer(text) {
+      return text.trim().toLowerCase().replace(/[.!?]+$/g, "").replace(/\s+/g, " ");
+    }
+
+    function isWrittenAnswerCorrect(item, raw) {
+      const normalized = normalizeAnswer(raw);
+      if (!normalized) return false;
+      return item.accept.some(accepted => {
+        const cleanAccepted = normalizeAnswer(accepted);
+        return normalized === cleanAccepted || cleanAccepted.includes(normalized) && normalized.length > 3;
+      });
+    }
+
+    function pointsForAttempt(attempts) {
+      if (attempts === 1) return 10;
+      if (attempts === 2) return 5;
+      return 2;
+    }
+
+    function practiceImageHtml(item) {
+      if (!item.image) return "";
+      return `<div class="practice-image">${monsterImage({word: item.image, prop: item.image})}</div>`;
+    }
+
+    function practiceCardMarkup(item) {
+      const tagHtml = `<span class="practice-tag">${item.type} - Square ${item.square}</span>`;
+      const imageHtml = practiceImageHtml(item);
+      const wrapOpen = imageHtml ? `<div class="practice-card-body">` : "";
+      const wrapClose = imageHtml ? `</div>` : "";
+      const revealBtn = `<button class="btn orange practice-reveal-btn" type="button" data-reveal>Reveal Answer</button>`;
+      const revealSlot = `<p class="practice-reveal-text" data-reveal-text hidden></p>`;
+
+      if (item.mode === "mc") {
+        const modeTag = `<span class="practice-mode-tag">Multiple choice</span>`;
+        const optionsHtml = item.options.map(option => `
+          <button class="btn blue" type="button" data-mc-option="${option.replace(/"/g, "&quot;")}">${option}</button>`).join("");
+        return `
+          <div class="practice-card" data-id="${item.id}">
+            ${tagHtml}${modeTag}
+            ${wrapOpen}${imageHtml}<div class="practice-card-main">
+              <p class="practice-question">${item.question}</p>
+              <div class="practice-mc">${optionsHtml}</div>
+              <p class="practice-feedback-line" data-feedback></p>
+              ${revealSlot}
+              ${revealBtn}
+            </div>${wrapClose}
+          </div>`;
+      }
+      if (item.mode === "blank") {
+        const modeTag = `<span class="practice-mode-tag">Fill in the blank</span>`;
+        return `
+          <div class="practice-card" data-id="${item.id}">
+            ${tagHtml}${modeTag}
+            ${wrapOpen}${imageHtml}<div class="practice-card-main">
+              <p class="practice-question">${item.question}</p>
+              <p class="practice-blank-hint">${item.blankHint} <span class="practice-word-count">(${item.wordCount} ${item.wordCount === 1 ? "word" : "words"})</span></p>
+              <div class="practice-write">
+                <input type="text" placeholder="Type the answer..." data-blank-input>
+                <button class="btn primary" type="button" data-check-blank>Check</button>
+              </div>
+              <p class="practice-feedback-line" data-feedback></p>
+              ${revealSlot}
+              ${revealBtn}
+            </div>${wrapClose}
+          </div>`;
+      }
+      if (item.mode === "convo") {
+        const modeTag = `<span class="practice-mode-tag">Conversation fill-in</span>`;
+        const linesHtml = item.convoLines.map(line => {
+          const text = line.text === "___BLANK___"
+            ? `<span class="blank" data-convo-blank-slot></span>`
+            : line.text;
+          return `<div class="line"><b>${line.speaker}:</b> ${text}</div>`;
+        }).join("");
+        return `
+          <div class="practice-card" data-id="${item.id}">
+            ${tagHtml}${modeTag}
+            ${wrapOpen}${imageHtml}<div class="practice-card-main">
+              <div class="practice-convo">${linesHtml}</div>
+              <p class="practice-blank-hint">${item.blankHint} <span class="practice-word-count">(${item.wordCount} ${item.wordCount === 1 ? "word" : "words"})</span></p>
+              <div class="practice-write">
+                <input type="text" placeholder="Complete the missing line..." data-blank-input>
+                <button class="btn primary" type="button" data-check-blank>Check</button>
+              </div>
+              <p class="practice-feedback-line" data-feedback></p>
+              ${revealSlot}
+              ${revealBtn}
+            </div>${wrapClose}
+          </div>`;
+      }
+      // write mode
+      const modeTag = `<span class="practice-mode-tag">Written answer</span>`;
+      return `
+        <div class="practice-card" data-id="${item.id}">
+          ${tagHtml}${modeTag}
+          ${wrapOpen}${imageHtml}<div class="practice-card-main">
+            <p class="practice-question">${item.question}</p>
+            <p class="practice-blank-hint">${item.blankHint} <span class="practice-word-count">(${item.wordCount} ${item.wordCount === 1 ? "word" : "words"})</span></p>
+            <div class="practice-write">
+              <input type="text" placeholder="Write your answer..." data-blank-input>
+              <button class="btn primary" type="button" data-check-blank>Check</button>
+            </div>
+            <p class="practice-feedback-line" data-feedback></p>
+            ${revealSlot}
+            ${revealBtn}
+          </div>${wrapClose}
+        </div>`;
+    }
+
+    function updatePracticeScoreDisplay() {
+      $("#practiceScore").textContent = `Score ${practiceScore}`;
+    }
+
+    function markCardSolved(card, points) {
+      card.classList.add("solved");
+      const feedback = card.querySelector("[data-feedback]");
+      feedback.classList.remove("wrong");
+      feedback.classList.add("correct");
+      feedback.innerHTML = `Correct! <span class="practice-points">+${points} pts</span>`;
+    }
+
+    function handlePracticeAnswer(item, card, isCorrect, attempts, revealed) {
+      const feedback = card.querySelector("[data-feedback]");
+      if (isCorrect) {
+        const points = revealed ? 2 : pointsForAttempt(attempts);
+        practiceScore += points;
+        updatePracticeScoreDisplay();
+        markCardSolved(card, points);
+        speak(item.correct);
+        if (!revealed) celebrate();
+      } else {
+        feedback.classList.remove("correct");
+        feedback.classList.add("wrong");
+        feedback.textContent = attempts === 1 ? "Not quite, try again." : "Still not it - check the model answer style and try once more.";
+      }
+    }
+
+    function wireUpPracticeCard(card, item) {
+      practiceAttempts[item.id] = 0;
+      let revealed = false;
+      const revealBtn = card.querySelector("[data-reveal]");
+      const revealText = card.querySelector("[data-reveal-text]");
+
+      revealBtn.addEventListener("click", () => {
+        if (card.classList.contains("solved")) return;
+        revealed = true;
+        revealText.hidden = false;
+        revealText.textContent = `Answer: ${item.correct}`;
+        revealBtn.disabled = true;
+        speak(item.correct);
+      });
+
+      if (item.mode === "mc") {
+        card.querySelectorAll("[data-mc-option]").forEach(button => {
+          button.addEventListener("click", () => {
+            if (card.classList.contains("solved")) return;
+            practiceAttempts[item.id] += 1;
+            const isCorrect = button.dataset.mcOption === item.correct;
+            button.classList.toggle("correct", isCorrect);
+            button.classList.toggle("wrong", !isCorrect);
+            if (!isCorrect) {
+              setTimeout(() => button.classList.remove("wrong"), 900);
+            } else {
+              card.querySelectorAll("[data-mc-option]").forEach(other => other.disabled = true);
+            }
+            handlePracticeAnswer(item, card, isCorrect, practiceAttempts[item.id], revealed);
+          });
+        });
+      } else {
+        const input = card.querySelector("[data-blank-input]");
+        const checkButton = card.querySelector("[data-check-blank]");
+        const submit = () => {
+          if (card.classList.contains("solved")) return;
+          practiceAttempts[item.id] += 1;
+          const isCorrect = isWrittenAnswerCorrect(item, input.value);
+          input.classList.toggle("correct", isCorrect);
+          input.classList.toggle("wrong", !isCorrect);
+          if (isCorrect) input.disabled = true;
+          handlePracticeAnswer(item, card, isCorrect, practiceAttempts[item.id], revealed);
+        };
+        checkButton.addEventListener("click", submit);
+        input.addEventListener("keydown", event => {
+          if (event.key === "Enter") submit();
+        });
+      }
+    }
+
+    function renderPracticeList(filter = "all") {
+      const list = $("#practiceList");
+      const items = practiceQuestions.filter(item => filter === "all" || item.type === filter);
+      list.innerHTML = items.map(practiceCardMarkup).join("");
+      Array.from(list.querySelectorAll(".practice-card")).forEach((card, index) => {
+        wireUpPracticeCard(card, items[index]);
+      });
+    }
+
+    function initPractice() {
+      practiceQuestions = buildPracticeQuestions();
+      practiceScore = 0;
+      practiceAttempts = {};
+      updatePracticeScoreDisplay();
+      renderPracticeList("all");
+      $$(".practice-filter-row .btn[data-practice-filter]").forEach(button => {
+        button.addEventListener("click", () => {
+          $$(".practice-filter-row .btn[data-practice-filter]").forEach(item => item.classList.remove("active"));
+          button.classList.add("active");
+          renderPracticeList(button.dataset.practiceFilter);
+        });
+      });
+      $("#resetPractice").addEventListener("click", () => {
+        const activeFilter = $(".practice-filter-row .btn.active")?.dataset.practiceFilter || "all";
+        practiceScore = 0;
+        practiceAttempts = {};
+        updatePracticeScoreDisplay();
+        renderPracticeList(activeFilter);
+      });
+    }
+
     function init() {
       $("#heroMonsterOne").innerHTML = monsterImage(words[0], {eager:true});
       $("#heroMonsterTwo").innerHTML = monsterImage(words[5], {eager:true});
@@ -1973,10 +2635,12 @@
       renderScene();
       renderGameBoard();
       initTabs();
+      initGallery();
+      initPractice();
 
-      $$(".filter-row .btn").forEach(button => {
+      $$(".filter-row .btn:not(.practice-filter-row .btn)").forEach(button => {
         button.addEventListener("click", () => {
-          $$(".filter-row .btn").forEach(item => item.classList.remove("active"));
+          $$(".filter-row .btn:not(.practice-filter-row .btn)").forEach(item => item.classList.remove("active"));
           button.classList.add("active");
           renderWords(button.dataset.filter);
         });
