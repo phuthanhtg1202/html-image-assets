@@ -651,9 +651,11 @@
     }
 
     .builder-game-wrap:fullscreen .builder-stage {
-      min-height: calc(100vh - 112px);
-      grid-template-columns: minmax(360px, .95fr) minmax(360px, .8fr);
+      height: calc(100vh - 122px);
+      min-height: 0;
+      grid-template-columns: minmax(0, 1.35fr) minmax(330px, .65fr);
       align-items: stretch;
+      overflow: hidden;
     }
 
     .builder-game-wrap:fullscreen .builder-object,
@@ -661,9 +663,27 @@
       min-height: 0;
     }
 
+    .builder-game-wrap:fullscreen .builder-object {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
     .builder-game-wrap:fullscreen .builder-object .placeholder-art {
-      max-width: min(82vh, 980px);
-      min-height: min(72vh, 760px);
+      flex: 1 1 auto;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      max-width: 100%;
+      aspect-ratio: auto;
+      margin-bottom: 10px;
+    }
+
+    .builder-game-wrap:fullscreen .builder-object .placeholder-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 12px;
     }
 
     .builder-object {
