@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,22 +6,31 @@
   <title>Dragon First Day Lab</title>
   <style>
     :root {
-      --ink: #161616;
-      --paper: #fffdf7;
-      --blue: #1475c9;
-      --green: #23a73e;
-      --pink: #ef4f91;
-      --orange: #f47c16;
-      --purple: #7a4ac7;
-      --yellow: #ffc629;
-      --red: #e84135;
-      --teal: #0fa3a3;
-      --soft-blue: #eaf6ff;
-      --soft-green: #effbe9;
-      --soft-pink: #fff0f7;
-      --soft-yellow: #fff8d8;
-      --soft-teal: #e6fbfb;
-      --shadow: 0 14px 0 rgba(0, 0, 0, .08);
+      --ink: #21160f;
+      --paper: #f3e5c6;
+      --cave: #102a2f;
+      --cave-2: #173f45;
+      --ember: #f0a24a;
+      --gold: #ffd37a;
+      --copper: #b96d32;
+      --teal: #1c9ca0;
+      --moss: #5c8a59;
+      --ruby: #d94c3d;
+      --amethyst: #7b5ac9;
+      --blue: var(--teal);
+      --green: var(--moss);
+      --pink: #d88474;
+      --orange: var(--ember);
+      --purple: var(--amethyst);
+      --yellow: var(--gold);
+      --red: var(--ruby);
+      --parchment: #f7e6bf;
+      --soft-blue: #d9f1ee;
+      --soft-green: #e2f0d4;
+      --soft-pink: #f6d5c5;
+      --soft-yellow: #f9e4a8;
+      --soft-teal: #d7eeea;
+      --shadow: 0 14px 0 rgba(29, 15, 8, .18);
     }
 
     * { box-sizing: border-box; }
@@ -32,22 +41,20 @@
       margin: 0;
       color: var(--ink);
       background:
-        radial-gradient(circle at 10% 20%, rgba(255, 198, 41, .18) 0 80px, transparent 82px),
-        radial-gradient(circle at 90% 10%, rgba(15, 163, 163, .14) 0 100px, transparent 102px),
-        radial-gradient(circle at 60% 90%, rgba(239, 79, 145, .12) 0 130px, transparent 132px),
-        linear-gradient(90deg, rgba(22,22,22,.035) 1px, transparent 1px),
-        linear-gradient(rgba(22,22,22,.035) 1px, transparent 1px),
+        radial-gradient(circle at 18% 12%, rgba(240, 162, 74, .28) 0 130px, transparent 132px),
+        radial-gradient(circle at 82% 4%, rgba(28, 156, 160, .24) 0 160px, transparent 162px),
+        linear-gradient(180deg, #0d252c 0, #173b3e 420px, #352117 421px, #f3e5c6 680px),
         var(--paper);
-      background-size: auto, auto, auto, 28px 28px, 28px 28px, auto;
+      background-attachment: fixed;
       font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
     }
 
     button, input { font: inherit; }
 
     .page {
-      width: min(1180px, calc(100% - 28px));
+      width: min(1200px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 18px 0 48px;
+      padding: 14px 0 48px;
     }
 
     .top-bar {
@@ -56,7 +63,8 @@
       justify-content: space-between;
       gap: 14px;
       flex-wrap: wrap;
-      padding: 14px 0 6px;
+      padding: 10px 0;
+      color: #fff7df;
     }
 
     .brand {
@@ -72,7 +80,7 @@
       height: 46px;
       border: 3px solid var(--ink);
       border-radius: 999px;
-      background: var(--soft-teal);
+      background: linear-gradient(135deg, var(--ember), var(--teal));
       font-size: 24px;
     }
 
@@ -87,23 +95,97 @@
       margin: 0;
       font-size: 13px;
       font-weight: 700;
-      color: var(--purple);
+      color: #ffdca0;
+    }
+
+    .hero {
+      position: relative;
+      min-height: min(760px, calc(100vh - 24px));
+      display: grid;
+      align-items: end;
+      margin: 6px 0 16px;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(17, 37, 39, .88) 0 35%, rgba(17,37,39,.42) 58%, rgba(17,37,39,.08) 100%),
+        url("dragon-first-day-assets/game/dragon-kingdom-hero.png") center / cover no-repeat;
+      box-shadow: 0 18px 0 rgba(0,0,0,.22);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 28%;
+      background: linear-gradient(180deg, transparent, rgba(10, 24, 27, .8));
+      pointer-events: none;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      padding: clamp(24px, 5vw, 58px);
+      color: #fff7df;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      padding: 7px 12px;
+      border: 2px solid rgba(255, 211, 122, .82);
+      border-radius: 999px;
+      background: rgba(16, 42, 47, .62);
+      color: #ffd37a;
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
     }
 
     h1 {
-      margin: 10px 0 6px;
-      font-size: clamp(34px, 5.4vw, 56px);
-      line-height: 1.02;
+      margin: 12px 0 10px;
+      font-size: clamp(44px, 7vw, 86px);
+      line-height: .94;
       text-transform: uppercase;
-      text-shadow: 3px 3px 0 #fff, 6px 6px 0 rgba(15, 163, 163, .16);
+      text-shadow: 0 4px 0 rgba(33,22,15,.75), 0 0 28px rgba(240,162,74,.36);
     }
 
     .lead {
-      max-width: 720px;
-      margin: 0 0 18px;
-      font-size: clamp(16px, 2vw, 20px);
+      max-width: 650px;
+      margin: 0;
+      font-size: clamp(17px, 2vw, 23px);
       line-height: 1.4;
       font-weight: 700;
+      color: #ffe9ba;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .flying-dragon {
+      position: absolute;
+      z-index: 2;
+      top: 18%;
+      left: -14%;
+      font-size: clamp(64px, 9vw, 132px);
+      line-height: 1;
+      filter: drop-shadow(0 10px 6px rgba(0,0,0,.35));
+      opacity: .82;
+      transform: scaleX(-1) rotate(-12deg);
+      animation: dragonFlight 16s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes dragonFlight {
+      0% { translate: 0 40px; rotate: -8deg; opacity: 0; }
+      12% { opacity: .85; }
+      50% { translate: 58vw -36px; rotate: 8deg; }
+      88% { opacity: .85; }
+      100% { translate: 118vw 22px; rotate: -6deg; opacity: 0; }
     }
 
     .btn {
@@ -113,7 +195,7 @@
       padding: 10px 16px;
       border: 3px solid var(--ink);
       border-radius: 8px;
-      background: white;
+      background: var(--parchment);
       font-weight: 900;
       cursor: pointer;
       box-shadow: 0 4px 0 var(--ink);
@@ -122,12 +204,12 @@
 
     .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
 
-    .btn.primary { background: var(--yellow); }
-    .btn.blue { background: #d8efff; }
-    .btn.green { background: #e1f7d9; }
-    .btn.pink { background: #ffe0ef; }
-    .btn.orange { background: #ffe3c8; }
-    .btn.purple { background: #eee4ff; }
+    .btn.primary { background: var(--gold); }
+    .btn.blue { background: #cdebe8; }
+    .btn.green { background: #dcecc8; }
+    .btn.pink { background: #f5d0bd; }
+    .btn.orange { background: #f6c37f; }
+    .btn.purple { background: #d9cff3; }
     .btn.teal { background: var(--soft-teal); }
     .btn.red { background: #ffd9d4; }
     .btn[disabled] { opacity: .55; cursor: default; }
@@ -143,7 +225,7 @@
       gap: 8px;
       padding: 10px 0;
       margin-bottom: 10px;
-      background: var(--paper);
+      background: rgba(16, 42, 47, .94);
       border-bottom: 3px solid var(--ink);
     }
 
@@ -151,17 +233,26 @@
       padding: 9px 16px;
       border: 3px solid var(--ink);
       border-radius: 999px;
-      background: white;
+      background: #f5dfb2;
       font-weight: 900;
       cursor: pointer;
       box-shadow: 0 3px 0 var(--ink);
     }
 
-    .tab.active { background: var(--teal); color: white; }
+    .tab.active { background: var(--ember); color: var(--ink); }
 
     main { display: block; }
 
-    section[data-panel] { padding: 10px 0 30px; }
+    section[data-panel] {
+      padding: 18px;
+      margin-bottom: 22px;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, rgba(247, 230, 191, .96), rgba(217, 130, 62, .18)),
+        radial-gradient(circle at 100% 0, rgba(28, 156, 160, .16), transparent 240px);
+      box-shadow: var(--shadow);
+    }
 
     .section-head {
       display: flex;
@@ -181,14 +272,14 @@
     .feedback {
       font-size: 15px;
       font-weight: 700;
-      color: var(--purple);
+      color: var(--copper);
     }
 
     .score-pill {
       padding: 8px 16px;
       border: 3px solid var(--ink);
       border-radius: 999px;
-      background: var(--soft-yellow);
+      background: var(--gold);
       font-weight: 900;
       white-space: nowrap;
     }
@@ -207,7 +298,7 @@
       aspect-ratio: 1 / 1;
       border: 3px dashed rgba(22,22,22,.35);
       border-radius: 10px;
-      background: repeating-linear-gradient(45deg, #fff, #fff 10px, #f3f3f3 10px, #f3f3f3 20px);
+      background: repeating-linear-gradient(45deg, #fff7df, #fff7df 10px, #f1ddb0 10px, #f1ddb0 20px);
       color: rgba(22,22,22,.45);
       font-size: 12px;
       font-weight: 800;
@@ -240,8 +331,10 @@
       padding: 16px;
       border: 3px solid var(--ink);
       border-radius: 10px;
-      background: rgba(255, 255, 255, .88);
-      box-shadow: 0 8px 0 rgba(0,0,0,.08);
+      background:
+        linear-gradient(135deg, rgba(255, 243, 207, .95), rgba(240, 162, 74, .18)),
+        var(--parchment);
+      box-shadow: 0 8px 0 rgba(33, 22, 15, .14);
     }
 
     .lesson-review h3 {
@@ -260,7 +353,7 @@
       padding: 10px;
       border: 3px solid var(--ink);
       border-radius: 10px;
-      background: white;
+      background: #fff4d4;
       text-align: center;
       font-weight: 900;
     }
@@ -309,25 +402,62 @@
 
     .collect-timer.urgent { background: #ffd9d4; color: var(--red); }
 
-    .collect-target {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin: 0 0 14px;
-      font-size: 22px;
-      font-weight: 900;
-      text-align: center;
-      padding: 10px;
-      border: 3px dashed var(--ink);
-      border-radius: 10px;
-      background: var(--soft-yellow);
+    .collect-game-wrap {
+      margin-bottom: 16px;
     }
 
-    .collect-target img {
-      width: 46px;
-      height: 46px;
-      object-fit: contain;
+    .collect-hud {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 14px;
+      z-index: 22;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .collect-hud .btn,
+    .collect-target {
+      pointer-events: auto;
+    }
+
+    .collect-target {
+      display: grid;
+      gap: 3px;
+      min-width: min(390px, calc(100% - 72px));
+      margin: 0;
+      padding: 10px 14px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: rgba(255, 244, 212, .94);
+      box-shadow: 0 5px 0 rgba(33, 22, 15, .25);
+      text-align: left;
+    }
+
+    .quest-label {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--copper);
+    }
+
+    .quest-word {
+      font-size: clamp(24px, 4vw, 42px);
+      line-height: 1;
+      font-weight: 900;
+      color: var(--cave);
+    }
+
+    .collect-fullscreen {
+      width: 52px;
+      height: 52px;
+      justify-content: center;
+      padding: 0;
+      font-size: 24px;
+      background: var(--gold);
     }
 
     .collect-stage {
@@ -340,8 +470,25 @@
         url("dragon-first-day-assets/game/classroom-background.png") center / cover no-repeat,
         var(--soft-teal);
       overflow: hidden;
-      margin-bottom: 16px;
       touch-action: none;
+    }
+
+    .collect-stage:fullscreen {
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      border-radius: 0;
+      margin: 0;
+    }
+
+    .collect-stage:fullscreen .collect-backpack {
+      width: min(440px, 44vw, 56vh);
+      top: 56%;
+    }
+
+    .collect-stage:fullscreen .collect-item {
+      width: 118px;
+      height: 118px;
     }
 
     .collect-item {
@@ -419,7 +566,7 @@
       padding: 16px;
       border: 3px solid var(--ink);
       border-radius: 10px;
-      background: white;
+      background: #fff4d4;
       text-align: center;
       font-size: 18px;
       font-weight: 800;
@@ -457,7 +604,7 @@
       padding: 18px;
       border: 4px solid var(--ink);
       border-radius: 10px;
-      background: white;
+      background: #fff4d4;
       text-align: center;
     }
 
@@ -479,7 +626,7 @@
       padding: 14px;
       border: 3px solid var(--ink);
       border-radius: 10px;
-      background: white;
+      background: #fff4d4;
     }
 
     .builder-choices {
@@ -503,7 +650,7 @@
       padding: 16px;
       border: 3px solid var(--ink);
       border-radius: 10px;
-      background: white;
+      background: #fff4d4;
       text-align: center;
       font-size: 18px;
       font-weight: 800;
@@ -520,7 +667,7 @@
       padding: 16px;
       border: 3px solid var(--ink);
       border-radius: 10px;
-      background: white;
+      background: #fff4d4;
     }
 
     .scene-card .placeholder-art { aspect-ratio: 16/10; margin-bottom: 10px; }
@@ -581,7 +728,7 @@
       height: 380px;
       border: 4px solid var(--ink);
       border-radius: 14px;
-      background: linear-gradient(180deg, var(--soft-blue), #fff);
+      background: linear-gradient(180deg, rgba(28, 156, 160, .28), rgba(255, 211, 122, .2)), #f4e3bd;
       overflow: hidden;
       margin-bottom: 16px;
     }
@@ -595,7 +742,7 @@
       place-items: center;
       border: 3px solid var(--ink);
       border-radius: 999px;
-      background: white;
+      background: #fff4d4;
       font-size: 28px;
       font-weight: 900;
       cursor: pointer;
@@ -628,7 +775,7 @@
       padding: 16px;
       border: 3px solid var(--ink);
       border-radius: 10px;
-      background: white;
+      background: #fff4d4;
       text-align: center;
       font-size: 18px;
       font-weight: 800;
@@ -638,7 +785,7 @@
       padding: 16px;
       border: 3px solid var(--ink);
       border-radius: 10px;
-      background: white;
+      background: #fff4d4;
     }
 
     .project-checklist label {
@@ -664,7 +811,7 @@
       padding: 16px;
       border: 3px solid var(--ink);
       border-radius: 10px;
-      background: white;
+      background: #fff4d4;
     }
 
     .practice-card.solved { border-color: var(--green); }
@@ -812,8 +959,18 @@
       <button class="btn teal" id="testVoice" type="button">🔊 Test Voice</button>
     </div>
 
-    <h1>First Day With Baby Dragons</h1>
-    <p class="lead">Review School Supplies, "It's / It isn't" sentences, kindness values, and phonics - all with a friendly baby dragon crew.</p>
+    <header class="hero">
+      <div class="flying-dragon" aria-hidden="true">🐉</div>
+      <div class="hero-copy">
+        <span class="hero-kicker">Dragon Academy Review Quest</span>
+        <h1>First Day With Baby Dragons</h1>
+        <p class="lead">Pack supplies, speak magic sentences, choose kindness, and pop phonics sounds before the academy bell rings.</p>
+        <div class="hero-actions">
+          <button class="btn primary" type="button" onclick="document.getElementById('lesson1').scrollIntoView({behavior:'smooth'});">Start Review Quest</button>
+          <button class="btn teal" type="button" onclick="document.getElementById('practice').scrollIntoView({behavior:'smooth'});">Practice Cards</button>
+        </div>
+      </div>
+    </header>
 
     <nav class="tabs" aria-label="Lesson tabs">
       <button class="tab active" data-tab="lesson1">Lesson 1</button>
@@ -838,13 +995,21 @@
           <div class="review-grid" id="suppliesReview"></div>
         </div>
         <div class="collect-top">
-          <button class="btn primary" id="startCollect" type="button">▶ Start Round</button>
-          <div class="collect-timer" id="collectTimer">⏱ 30s</div>
+          <button class="btn primary" id="startCollect" type="button">&#9654; Start Round</button>
+          <div class="collect-timer" id="collectTimer">Time 30s</div>
         </div>
-        <div class="collect-target" id="collectTarget">Press Start to begin!</div>
-        <div class="collect-stage" id="collectStage">
-          <div class="collect-backpack" id="collectBackpack">
-            <img id="collectBackpackImg" src="dragon-first-day-assets/game/backpack-empty.png" alt="open backpack">
+        <div class="collect-game-wrap">
+          <div class="collect-stage" id="collectStage">
+            <div class="collect-hud">
+              <div class="collect-target" id="collectTarget">
+                <span class="quest-label">Quest</span>
+                <span class="quest-word">Press Start</span>
+              </div>
+              <button class="btn collect-fullscreen" id="toggleCollectFullscreen" type="button" title="Full screen" aria-label="Full screen">&#x26F6;</button>
+            </div>
+            <div class="collect-backpack" id="collectBackpack">
+              <img id="collectBackpackImg" src="dragon-first-day-assets/game/backpack-empty.png" alt="open backpack">
+            </div>
           </div>
         </div>
         <div class="collect-results hidden" id="collectResults"></div>
@@ -1094,8 +1259,17 @@
     function collectPickTarget() {
       collectTargetWord = supplies[Math.floor(Math.random() * supplies.length)];
       $("#collectTarget").innerHTML = `
-        <span>Find and collect: "${collectTargetWord.word}"</span>
-        <img src="${escapeAttr(collectTargetWord.soloImage)}" alt="${escapeAttr(collectTargetWord.word)}">`;
+        <span class="quest-label">Quest: find and pack</span>
+        <span class="quest-word">${collectTargetWord.word}</span>`;
+    }
+
+    function toggleCollectFullscreen() {
+      const stage = $("#collectStage");
+      if (!document.fullscreenElement) {
+        stage.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
     }
 
     function collectSpawnItem() {
@@ -1230,7 +1404,9 @@
       clearInterval(collectTimerId);
       clearInterval(collectSpawnId);
       $("#collectStage").querySelectorAll(".collect-item").forEach(el => el.remove());
-      $("#collectTarget").textContent = "Round over! Press Start to play again.";
+      $("#collectTarget").innerHTML = `
+        <span class="quest-label">Quest complete</span>
+        <span class="quest-word">Press Start</span>`;
       $("#collectResults").classList.remove("hidden");
       $("#collectResults").textContent = `Final score: ${collectScore} points. Great job collecting school supplies!`;
       if (collectScore >= 50) celebrate();
@@ -1806,6 +1982,7 @@
       initPractice();
 
       $("#startCollect").addEventListener("click", startCollectRound);
+      $("#toggleCollectFullscreen").addEventListener("click", toggleCollectFullscreen);
       $("#startBuilder").addEventListener("click", startBuilderRound);
       $("#startPop").addEventListener("click", startPopRound);
       $("#testVoice").addEventListener("click", () => speak("It's a pencil. It isn't a book."));
