@@ -645,7 +645,7 @@
 
     .builder-stage {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(300px, .82fr);
+      grid-template-columns: minmax(360px, .95fr) minmax(360px, .85fr);
       gap: 20px;
       align-items: start;
     }
@@ -662,7 +662,7 @@
     }
 
     .builder-game-wrap:fullscreen .builder-object .placeholder-art {
-      max-width: min(48vh, 520px);
+      max-width: min(66vh, 720px);
     }
 
     .builder-object {
@@ -673,7 +673,7 @@
       text-align: center;
     }
 
-    .builder-object .placeholder-art { aspect-ratio: 1/1; max-width: 320px; margin: 0 auto 10px; background: #fff8df; }
+    .builder-object .placeholder-art { aspect-ratio: 1/1; max-width: min(560px, 100%); margin: 0 auto 10px; background: #fff8df; }
 
     .builder-sentence {
       margin-top: 14px;
@@ -756,6 +756,71 @@
       text-transform: uppercase;
     }
 
+
+    .flipbook {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr);
+      gap: 18px;
+      align-items: stretch;
+      padding: 16px;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(255, 244, 212, .96), rgba(240, 162, 74, .18));
+      box-shadow: 0 10px 0 rgba(33, 22, 15, .14);
+    }
+
+    .flipbook-art {
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      background: #fff8df;
+      overflow: hidden;
+      min-height: 360px;
+    }
+
+    .flipbook-art img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+    }
+
+    .flipbook-page {
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      padding: 18px;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      background: #fff4d4;
+    }
+
+    .flipbook-page h3 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1;
+    }
+
+    .flipbook-page p {
+      margin: 0;
+      font-size: clamp(20px, 2.5vw, 30px);
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .story-page-count {
+      color: var(--copper);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .flipbook-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
     /* ===== Phonics Pop (Lesson 4) ===== */
     .pop-top {
       display: flex;
@@ -790,36 +855,58 @@
 
     .pop-stage {
       position: relative;
-      height: 380px;
+      height: 520px;
       border: 4px solid var(--ink);
       border-radius: 14px;
-      background: linear-gradient(180deg, rgba(28, 156, 160, .28), rgba(255, 211, 122, .2)), #f4e3bd;
+      background:
+        linear-gradient(180deg, rgba(16, 42, 47, .08), rgba(255, 211, 122, .12)),
+        url("dragon-first-day-assets/game/phonics-sky-background.png") center / cover no-repeat,
+        #d7eeea;
       overflow: hidden;
       margin-bottom: 16px;
     }
 
     .pop-bubble {
       position: absolute;
-      bottom: -70px;
-      width: 70px;
-      height: 70px;
+      bottom: -150px;
+      width: 132px;
+      height: 132px;
       display: grid;
       place-items: center;
-      border: 3px solid var(--ink);
-      border-radius: 999px;
-      background: #fff4d4;
-      font-size: 28px;
-      font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 4px 0 rgba(0,0,0,.12);
-      animation-name: bubbleRise;
+      animation-name: dragonRise;
       animation-timing-function: linear;
       animation-fill-mode: forwards;
+      filter: drop-shadow(0 10px 6px rgba(0,0,0,.28));
+    }
+
+    .pop-bubble img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .pop-bubble .dragon-letter {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: rgba(255, 244, 212, .94);
+      font-size: 28px;
+      font-weight: 900;
+      box-shadow: 0 3px 0 rgba(33, 22, 15, .34);
     }
 
     .pop-bubble.popped {
       animation: none !important;
-      transform: scale(1.4);
+      transform: scale(1.24);
       opacity: 0;
       transition: transform .25s ease, opacity .25s ease;
       pointer-events: none;
@@ -827,13 +914,13 @@
 
     .pop-bubble.wrong-pop {
       animation: none !important;
-      border-color: var(--red);
-      background: #ffe1e1;
+      filter: drop-shadow(0 0 10px rgba(217, 76, 61, .72));
     }
 
-    @keyframes bubbleRise {
-      from { bottom: -70px; }
-      to { bottom: 100%; }
+    @keyframes dragonRise {
+      from { bottom: -150px; transform: translateX(0) rotate(-4deg); }
+      45% { transform: translateX(28px) rotate(4deg); }
+      to { bottom: 104%; transform: translateX(-18px) rotate(-2deg); }
     }
 
     .pop-results {
@@ -883,20 +970,34 @@
 
     .practice-card-body {
       display: grid;
-      grid-template-columns: minmax(150px, 220px) 1fr;
-      gap: 18px;
+      grid-template-columns: 1fr;
+      gap: 16px;
       align-items: start;
     }
 
     .practice-image-wrap {
       position: relative;
-      width: min(220px, 100%);
+      width: 100%;
     }
 
     .practice-card-body .placeholder-art {
       width: 100%;
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 16 / 9;
+      min-height: 260px;
       background: #fff8df;
+    }
+
+    .practice-card-body .placeholder-art img {
+      object-fit: contain;
+      padding: 8px;
+    }
+
+    .practice-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
     }
 
     .practice-tag {
@@ -994,6 +1095,32 @@
       font-weight: 800;
     }
 
+
+    .pet-dragon {
+      position: fixed;
+      right: 14px;
+      bottom: 12px;
+      z-index: 80;
+      width: clamp(96px, 13vw, 165px);
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      filter: drop-shadow(0 12px 10px rgba(0,0,0,.32));
+      animation: petBreathe 3.2s ease-in-out infinite;
+    }
+
+    .pet-dragon img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    @keyframes petBreathe {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-5px) scale(1.025); }
+    }
+
     .hidden { display: none !important; }
 
     .confetti { pointer-events: none; position: fixed; inset: 0; z-index: 100; overflow: hidden; }
@@ -1012,11 +1139,12 @@
 
     @media (max-width: 860px) {
       .builder-stage { grid-template-columns: 1fr; }
+      .flipbook { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 560px) {
       .practice-card-body { grid-template-columns: 1fr; }
-      .practice-image-wrap { width: min(240px, 100%); }
+      .practice-card-body .placeholder-art { min-height: 190px; }
     }
   </style>
 </head>
@@ -1113,12 +1241,12 @@
           <div class="builder-stage" id="builderStage">
             <div class="builder-object">
               <div class="placeholder-art has-image" id="builderArt"><img src="dragon-first-day-assets/book.png" alt="baby dragon reading a book" loading="lazy"></div>
-              <div class="builder-sentence" id="builderSentence">Press Start to begin!</div>
               <div class="builder-streak" id="builderStreak">Streak: 0</div>
             </div>
             <div class="builder-panel">
               <div class="builder-card">
                 <h3 style="margin:0 0 8px;">Choose the correct sentence</h3>
+                <div class="builder-sentence" id="builderSentence">Press Start to begin!</div>
                 <div class="builder-choices" id="builderChoices"></div>
               </div>
               <div class="builder-card">
@@ -1138,16 +1266,30 @@
         <div class="section-head">
           <div>
             <h2>First Day Stories</h2>
-            <div class="feedback" id="sceneFeedback">Pick the kind choice for each baby dragon.</div>
+            <div class="feedback" id="sceneFeedback">Read the short story, flip the pages, and listen in English.</div>
           </div>
-          <div class="score-pill" id="sceneScore">Kind choices 0</div>
+          <div class="score-pill" id="sceneScore">Story page 1</div>
         </div>
         <div class="lesson-review">
           <h3>Review First</h3>
           <div class="review-grid" id="valuesReview"></div>
         </div>
-        <div class="scene-cards" id="sceneCards"></div>
-        <div class="value-banner">🐲 Value of the Day: Be Nice 🐲</div>
+        <div class="flipbook" id="storyFlipbook">
+          <div class="flipbook-art">
+            <img id="storyFlipbookImage" src="dragon-first-day-assets/game/story-flipbook-kindness.png" alt="dragon classroom story">
+          </div>
+          <div class="flipbook-page">
+            <div class="story-page-count" id="storyPageCount">Page 1 / 4</div>
+            <h3 id="storyTitle">The First Bell</h3>
+            <p id="storyText">A little dragon comes to class with a big backpack and a shy smile.</p>
+            <div class="flipbook-actions">
+              <button class="btn" id="prevStoryPage" type="button">Back</button>
+              <button class="btn primary" id="listenStoryPage" type="button">Listen</button>
+              <button class="btn teal" id="nextStoryPage" type="button">Next</button>
+            </div>
+          </div>
+        </div>
+        <div class="value-banner">Value of the Day: Be Nice</div>
       </section>
 
       <!-- LESSON 4 -->
@@ -1201,6 +1343,10 @@
       </section>
     </main>
   </div>
+
+  <button class="pet-dragon" id="petDragon" type="button" title="Pet dragon helper" aria-label="Pet dragon helper">
+    <img src="dragon-first-day-assets/game/pet-dragon.png" alt="">
+  </button>
 
   <script>
     const $ = selector => document.querySelector(selector);
@@ -1477,7 +1623,6 @@
             updateCollectScoreDisplay();
             updateCollectBackpackState();
             collectFloatText(floatX, floatY, "+10", true);
-            speak(`This is a ${el.dataset.word}.`);
             collectPickTarget();
           } else {
             collectScore = Math.max(0, collectScore - 3);
@@ -1669,41 +1814,56 @@
       }
     ];
 
+    const storyPages = [
+      {
+        title: "The First Bell",
+        text: "A little dragon comes to class with a big backpack and a shy smile."
+      },
+      {
+        title: "A Pencil Falls",
+        text: "A friend drops a pencil. The little dragon stops and helps."
+      },
+      {
+        title: "A Kind Seat",
+        text: "There is one chair. The dragons share the desk and say, sit with me."
+      },
+      {
+        title: "Ready to Learn",
+        text: "The bell rings. The class is ready, and every dragon has a friend."
+      }
+    ];
+
+    let storyPageIndex = 0;
     let sceneKindChoices = 0;
 
     function renderScenes() {
-      const wrap = $("#sceneCards");
-      wrap.innerHTML = firstDayScenes.map((scene, index) => `
-        <div class="scene-card" data-index="${index}">
-          ${placeholderArt(scene.title, scene.emoji, scene.image)}
-          <h3 style="margin:6px 0;">${scene.title}</h3>
-          <p>${scene.prompt}</p>
-          <div class="scene-choices">
-            ${scene.choices.map(choice => `
-              <button class="btn" type="button" data-correct="${choice.correct}">${choice.text}</button>`).join("")}
-          </div>
-        </div>`).join("");
+      updateStoryPage();
+    }
 
-      $$(".scene-card").forEach((card, index) => {
-        $$(".btn", card).forEach(button => {
-          button.addEventListener("click", () => {
-            const isCorrect = button.dataset.correct === "true";
-            button.classList.toggle("correct", isCorrect);
-            button.classList.toggle("wrong", !isCorrect);
-            if (isCorrect) {
-              sceneKindChoices += 1;
-              $("#sceneScore").textContent = `Kind choices ${sceneKindChoices}`;
-              $("#sceneFeedback").textContent = "Great! That's being nice. " + firstDayScenes[index].title;
-              speak("Be nice. " + button.textContent);
-              celebrate();
-              $$(".btn", card).forEach(b => b.disabled = true);
-            } else {
-              $("#sceneFeedback").textContent = "Think about how the new dragon feels. Try another choice.";
-              setTimeout(() => button.classList.remove("wrong"), 800);
-            }
-          });
-        });
-      });
+    function updateStoryPage() {
+      const page = storyPages[storyPageIndex];
+      $("#storyPageCount").textContent = `Page ${storyPageIndex + 1} / ${storyPages.length}`;
+      $("#storyTitle").textContent = page.title;
+      $("#storyText").textContent = page.text;
+      $("#prevStoryPage").disabled = storyPageIndex === 0;
+      $("#nextStoryPage").disabled = storyPageIndex === storyPages.length - 1;
+      $("#sceneScore").textContent = `Story page ${storyPageIndex + 1}`;
+      $("#sceneFeedback").textContent = "Read the short story, then listen to each page.";
+    }
+
+    function nextStoryPage() {
+      storyPageIndex = Math.min(storyPages.length - 1, storyPageIndex + 1);
+      updateStoryPage();
+    }
+
+    function prevStoryPage() {
+      storyPageIndex = Math.max(0, storyPageIndex - 1);
+      updateStoryPage();
+    }
+
+    function listenStoryPage() {
+      const page = storyPages[storyPageIndex];
+      speak(`${page.title}. ${page.text}`);
     }
 
     // ===== Lesson 4: Phonics Pop =====
@@ -1717,7 +1877,7 @@
 
     function popPickTarget() {
       popTargetSound = phonicsSounds[Math.floor(Math.random() * phonicsSounds.length)];
-      $("#popTarget").textContent = `Pop the bubble for the sound: ${popTargetSound.sound} (${popTargetSound.word})`;
+      $("#popTarget").textContent = `Help the dragon fly with: ${popTargetSound.sound} (${popTargetSound.word})`;
       speak(popTargetSound.sound.replace(/\//g, ""));
     }
 
@@ -1730,7 +1890,9 @@
       el.className = "pop-bubble";
       el.dataset.letter = item.letter;
       el.dataset.seq = popBubbleSeq;
-      el.textContent = item.letter;
+      el.innerHTML = `
+        <img src="dragon-first-day-assets/game/phonics-flying-dragon.png" alt="">
+        <span class="dragon-letter">${item.letter}</span>`;
       const stageRect = stage.getBoundingClientRect();
       const maxX = Math.max(10, stageRect.width - 70);
       el.style.left = `${10 + Math.random() * maxX}px`;
@@ -1863,7 +2025,8 @@
           question: `"${item.word}" là gì?`,
           options,
           correct: item.vn,
-          answer: item.vn
+          answer: item.vn,
+          speak: item.word
         });
       });
 
@@ -1916,7 +2079,8 @@
           accept: [item.word.toLowerCase()],
           wordCount: 1,
           blankHint: wordBlankHint(item.word),
-          answer: item.word
+          answer: item.word,
+          speak: item.word
         });
       });
 
@@ -1933,7 +2097,8 @@
           question: scene.prompt,
           options,
           correct: correctChoice,
-          answer: correctChoice
+          answer: correctChoice,
+          speak: correctChoice
         });
       });
 
@@ -1942,7 +2107,7 @@
 
     function practiceImageHtml(item) {
       if (!item.image) return "";
-      const speakText = item.answer || item.question || item.type;
+      const speakText = item.speak || item.correct || item.answer || item.question || item.type;
       return `
         <div class="practice-image-wrap">
           <button class="audio-btn" type="button" title="Listen" aria-label="Listen" data-speak="${escapeAttr(speakText)}">&#9654;</button>
@@ -1964,8 +2129,8 @@
           <button class="btn blue" type="button" data-mc-option="${option.replace(/"/g, "&quot;")}">${option}</button>`).join("");
         return `
           <div class="practice-card" data-id="${item.id}">
-            ${tagHtml}${modeTag}
             ${wrapOpen}${imageHtml}<div class="practice-card-main">
+              <div class="practice-meta">${tagHtml}${modeTag}</div>
               <p class="practice-question">${item.question}</p>
               <div class="practice-mc">${optionsHtml}</div>
               <p class="practice-feedback-line" data-feedback></p>
@@ -1978,8 +2143,8 @@
       const modeLabel = item.mode === "blank" ? "Fill in the blank" : "Written answer";
       return `
         <div class="practice-card" data-id="${item.id}">
-          ${tagHtml}<span class="practice-mode-tag">${modeLabel}</span>
           ${wrapOpen}${imageHtml}<div class="practice-card-main">
+            <div class="practice-meta">${tagHtml}<span class="practice-mode-tag">${modeLabel}</span></div>
             <p class="practice-question">${item.question}</p>
             <p class="practice-blank-hint">${item.blankHint} <span class="practice-word-count">(${item.wordCount} ${item.wordCount === 1 ? "word" : "words"})</span></p>
             <div class="practice-write">
@@ -2012,7 +2177,7 @@
         practiceScore += points;
         updatePracticeScoreDisplay();
         markCardSolved(card, points);
-        speak(item.answer);
+        speak(item.speak || item.correct || item.answer);
         if (!revealed) celebrate();
       } else {
         feedback.classList.remove("correct");
@@ -2033,7 +2198,7 @@
         revealText.hidden = false;
         revealText.textContent = `Answer: ${item.answer}`;
         revealBtn.disabled = true;
-        speak(item.answer);
+        speak(item.speak || item.correct || item.answer);
       });
 
       if (item.mode === "mc") {
@@ -2123,6 +2288,10 @@
       $("#startBuilder").addEventListener("click", startBuilderRound);
       $("#toggleBuilderFullscreen").addEventListener("click", toggleBuilderFullscreen);
       $("#startPop").addEventListener("click", startPopRound);
+      $("#prevStoryPage").addEventListener("click", prevStoryPage);
+      $("#nextStoryPage").addEventListener("click", nextStoryPage);
+      $("#listenStoryPage").addEventListener("click", listenStoryPage);
+      $("#petDragon").addEventListener("click", () => speak("Ready, little dragon? Let's learn English!"));
       $("#testVoice").addEventListener("click", () => speak("It's a pencil. It isn't a book."));
 
       const hashPanel = location.hash.replace("#", "");
