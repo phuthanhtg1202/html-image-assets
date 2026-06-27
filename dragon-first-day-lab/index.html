@@ -645,7 +645,7 @@
 
     .builder-stage {
       display: grid;
-      grid-template-columns: minmax(520px, 1.35fr) minmax(320px, .65fr);
+      grid-template-columns: minmax(560px, 1.5fr) minmax(300px, .55fr);
       gap: 20px;
       align-items: start;
     }
@@ -662,8 +662,8 @@
     }
 
     .builder-game-wrap:fullscreen .builder-object .placeholder-art {
-      max-width: min(78vh, 900px);
-      min-height: min(68vh, 720px);
+      max-width: min(82vh, 980px);
+      min-height: min(72vh, 760px);
     }
 
     .builder-object {
@@ -675,9 +675,10 @@
     }
 
     .builder-object .placeholder-art {
-      aspect-ratio: 4 / 3;
-      max-width: min(820px, 100%);
-      min-height: 430px;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: min(900px, 100%);
+      min-height: clamp(520px, 52vw, 760px);
       margin: 0 auto 10px;
       background: #fff8df;
     }
@@ -987,26 +988,36 @@
 
     .practice-card-body {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      align-items: start;
+      grid-template-columns: minmax(260px, 38%) minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
     }
 
     .practice-image-wrap {
       position: relative;
       width: 100%;
+      height: 100%;
+      min-height: clamp(300px, 34vw, 520px);
     }
 
     .practice-card-body .placeholder-art {
       width: 100%;
+      height: 100%;
+      min-height: inherit;
       aspect-ratio: auto;
-      height: clamp(190px, 24vw, 330px);
       background: #fff8df;
     }
 
     .practice-card-body .placeholder-art img {
       object-fit: contain;
       padding: 12px;
+    }
+
+    .practice-card-main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .practice-meta {
@@ -1161,7 +1172,8 @@
 
     @media (max-width: 560px) {
       .practice-card-body { grid-template-columns: 1fr; }
-      .practice-card-body .placeholder-art { height: 180px; min-height: 0; aspect-ratio: auto; }
+      .practice-image-wrap { min-height: 220px; }
+      .practice-card-body .placeholder-art { height: 220px; min-height: 0; aspect-ratio: auto; }
     }
   </style>
 </head>
@@ -1257,7 +1269,7 @@
           </div>
           <div class="builder-stage" id="builderStage">
             <div class="builder-object">
-              <div class="placeholder-art has-image" id="builderArt"><img src="dragon-first-day-assets/book.png" alt="baby dragon reading a book" loading="lazy"></div>
+              <div class="placeholder-art has-image" id="builderArt"><img src="dragon-first-day-assets/standalone/book.png" alt="book" loading="lazy"></div>
               <div class="builder-streak" id="builderStreak">Streak: 0</div>
             </div>
             <div class="builder-panel">
@@ -1713,7 +1725,7 @@
         shownItem = others[Math.floor(Math.random() * others.length)];
       }
 
-      $("#builderArt").outerHTML = placeholderArt(shownItem.word, shownItem.emoji, shownItem.image, "builderArt");
+      $("#builderArt").outerHTML = placeholderArt(shownItem.word, shownItem.emoji, shownItem.soloImage, "builderArt");
       $("#builderSentence").textContent = "What is it?";
 
       const correctSentence = isNegative ? `It isn't a ${correctItem.word}.` : `It's a ${correctItem.word}.`;
