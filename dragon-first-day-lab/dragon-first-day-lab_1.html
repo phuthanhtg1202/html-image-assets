@@ -695,6 +695,9 @@
     }
 
     .builder-object .placeholder-art {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
       aspect-ratio: 1 / 1;
       max-width: min(900px, 100%);
@@ -705,6 +708,10 @@
     }
 
     .builder-object .placeholder-art img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
       padding: 10px;
     }
