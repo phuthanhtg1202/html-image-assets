@@ -52,9 +52,17 @@
     button, input { font: inherit; }
 
     .page {
+      width: 100%;
+      margin: 0;
+      padding: 0 0 48px;
+    }
+
+    .top-bar,
+    .tabs,
+    main {
       width: min(1200px, calc(100% - 28px));
-      margin: 0 auto;
-      padding: 14px 0 48px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .top-bar {
@@ -100,15 +108,13 @@
 
     .hero {
       position: relative;
-      min-height: min(760px, calc(100vh - 24px));
+      min-height: 100vh;
       display: grid;
       align-items: end;
-      margin: 6px 0 16px;
-      border: 4px solid var(--ink);
-      border-radius: 14px;
+      margin: 0 0 16px;
       overflow: hidden;
       background:
-        linear-gradient(90deg, rgba(17, 37, 39, .88) 0 35%, rgba(17,37,39,.42) 58%, rgba(17,37,39,.08) 100%),
+        linear-gradient(90deg, rgba(17, 37, 39, .9) 0 31%, rgba(17,37,39,.42) 58%, rgba(17,37,39,.08) 100%),
         url("dragon-first-day-assets/game/dragon-kingdom-hero.png") center / cover no-repeat;
       box-shadow: 0 18px 0 rgba(0,0,0,.22);
     }
@@ -169,23 +175,23 @@
     .flying-dragon {
       position: absolute;
       z-index: 2;
-      top: 18%;
-      left: -14%;
-      font-size: clamp(64px, 9vw, 132px);
-      line-height: 1;
-      filter: drop-shadow(0 10px 6px rgba(0,0,0,.35));
-      opacity: .82;
-      transform: scaleX(-1) rotate(-12deg);
-      animation: dragonFlight 16s ease-in-out infinite;
+      top: 12%;
+      left: -28%;
+      width: clamp(220px, 24vw, 430px);
+      height: auto;
+      filter: drop-shadow(0 14px 10px rgba(0,0,0,.42));
+      opacity: .92;
+      animation: dragonFlight 18s ease-in-out infinite;
       pointer-events: none;
+      transform-origin: 50% 50%;
     }
 
     @keyframes dragonFlight {
-      0% { translate: 0 40px; rotate: -8deg; opacity: 0; }
-      12% { opacity: .85; }
-      50% { translate: 58vw -36px; rotate: 8deg; }
-      88% { opacity: .85; }
-      100% { translate: 118vw 22px; rotate: -6deg; opacity: 0; }
+      0% { translate: 0 42px; rotate: -7deg; opacity: 0; }
+      10% { opacity: .92; }
+      46% { translate: 58vw -28px; rotate: 5deg; }
+      78% { translate: 90vw 24px; rotate: -3deg; opacity: .92; }
+      100% { translate: 128vw -18px; rotate: -8deg; opacity: 0; }
     }
 
     .btn {
@@ -323,7 +329,7 @@
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
     }
 
     .lesson-review {
@@ -361,7 +367,7 @@
     .review-card img {
       display: block;
       width: 100%;
-      height: 104px;
+      height: 138px;
       object-fit: contain;
       margin-bottom: 8px;
     }
@@ -369,7 +375,7 @@
     .review-card.scene img {
       height: auto;
       aspect-ratio: 16 / 10;
-      object-fit: cover;
+      object-fit: contain;
       border-radius: 8px;
       border: 2px solid rgba(22,22,22,.2);
     }
@@ -379,6 +385,35 @@
       margin-top: 3px;
       font-size: 13px;
       color: var(--purple);
+    }
+
+
+    .audio-btn {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      width: 40px;
+      height: 40px;
+      display: inline-grid;
+      place-items: center;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--ink);
+      z-index: 4;
+    }
+
+    .audio-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 var(--ink);
+    }
+
+    .review-card {
+      position: relative;
     }
 
     /* ===== Race to Collect (Lesson 1) ===== */
@@ -402,8 +437,26 @@
 
     .collect-timer.urgent { background: #ffd9d4; color: var(--red); }
 
-    .collect-game-wrap {
+    .collect-game-wrap,
+    .builder-game-wrap {
       margin-bottom: 16px;
+      padding: 12px;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(16, 42, 47, .18);
+    }
+
+    .collect-game-wrap:fullscreen,
+    .builder-game-wrap:fullscreen {
+      width: 100vw;
+      height: 100vh;
+      padding: 14px;
+      border: 0;
+      border-radius: 0;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(240, 162, 74, .28), transparent 230px),
+        linear-gradient(180deg, #102a2f, #20362a);
+      overflow: auto;
     }
 
     .collect-hud {
@@ -473,20 +526,17 @@
       touch-action: none;
     }
 
-    .collect-stage:fullscreen {
-      width: 100vw;
-      height: 100vh;
-      border: 0;
-      border-radius: 0;
-      margin: 0;
+    .collect-game-wrap:fullscreen .collect-stage {
+      height: calc(100vh - 142px);
+      min-height: 520px;
     }
 
-    .collect-stage:fullscreen .collect-backpack {
+    .collect-game-wrap:fullscreen .collect-backpack {
       width: min(440px, 44vw, 56vh);
       top: 56%;
     }
 
-    .collect-stage:fullscreen .collect-item {
+    .collect-game-wrap:fullscreen .collect-item {
       width: 118px;
       height: 118px;
     }
@@ -595,9 +645,24 @@
 
     .builder-stage {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr);
+      grid-template-columns: minmax(0, 1fr) minmax(300px, .82fr);
       gap: 20px;
       align-items: start;
+    }
+
+    .builder-game-wrap:fullscreen .builder-stage {
+      min-height: calc(100vh - 112px);
+      grid-template-columns: minmax(360px, .95fr) minmax(360px, .8fr);
+      align-items: stretch;
+    }
+
+    .builder-game-wrap:fullscreen .builder-object,
+    .builder-game-wrap:fullscreen .builder-panel {
+      min-height: 0;
+    }
+
+    .builder-game-wrap:fullscreen .builder-object .placeholder-art {
+      max-width: min(48vh, 520px);
     }
 
     .builder-object {
@@ -608,7 +673,7 @@
       text-align: center;
     }
 
-    .builder-object .placeholder-art { aspect-ratio: 1/1; max-width: 220px; margin: 0 auto 10px; }
+    .builder-object .placeholder-art { aspect-ratio: 1/1; max-width: 320px; margin: 0 auto 10px; background: #fff8df; }
 
     .builder-sentence {
       margin-top: 14px;
@@ -818,12 +883,21 @@
 
     .practice-card-body {
       display: grid;
-      grid-template-columns: 96px 1fr;
-      gap: 14px;
+      grid-template-columns: minmax(150px, 220px) 1fr;
+      gap: 18px;
       align-items: start;
     }
 
-    .practice-card-body .placeholder-art { width: 96px; aspect-ratio: 1/1; }
+    .practice-image-wrap {
+      position: relative;
+      width: min(220px, 100%);
+    }
+
+    .practice-card-body .placeholder-art {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #fff8df;
+    }
 
     .practice-tag {
       display: inline-block;
@@ -942,7 +1016,7 @@
 
     @media (max-width: 560px) {
       .practice-card-body { grid-template-columns: 1fr; }
-      .practice-card-body .placeholder-art { width: 76px; }
+      .practice-image-wrap { width: min(240px, 100%); }
     }
   </style>
 </head>
@@ -960,7 +1034,7 @@
     </div>
 
     <header class="hero">
-      <div class="flying-dragon" aria-hidden="true">🐉</div>
+      <img class="flying-dragon" src="dragon-first-day-assets/game/flying-dragon-theme.png" alt="" aria-hidden="true">
       <div class="hero-copy">
         <span class="hero-kicker">Dragon Academy Review Quest</span>
         <h1>First Day With Baby Dragons</h1>
@@ -994,11 +1068,12 @@
           <h3>Review First</h3>
           <div class="review-grid" id="suppliesReview"></div>
         </div>
-        <div class="collect-top">
-          <button class="btn primary" id="startCollect" type="button">&#9654; Start Round</button>
-          <div class="collect-timer" id="collectTimer">Time 30s</div>
-        </div>
-        <div class="collect-game-wrap">
+        <div class="collect-game-wrap" id="collectGame">
+          <div class="collect-top">
+            <button class="btn primary" id="startCollect" type="button">&#9654; Start Round</button>
+            <div class="score-pill game-score" id="collectScoreGame">Score 0</div>
+            <div class="collect-timer" id="collectTimer">Time 30s</div>
+          </div>
           <div class="collect-stage" id="collectStage">
             <div class="collect-hud">
               <div class="collect-target" id="collectTarget">
@@ -1011,8 +1086,8 @@
               <img id="collectBackpackImg" src="dragon-first-day-assets/game/backpack-empty.png" alt="open backpack">
             </div>
           </div>
+          <div class="collect-results hidden" id="collectResults"></div>
         </div>
-        <div class="collect-results hidden" id="collectResults"></div>
       </section>
 
       <!-- LESSON 2 -->
@@ -1028,28 +1103,32 @@
           <h3>Review First</h3>
           <div class="review-grid" id="grammarReview"></div>
         </div>
-        <div class="builder-top">
-          <button class="btn primary" id="startBuilder" type="button">▶ Start Round</button>
-          <div class="builder-timer" id="builderTimer">⏱ 30s</div>
-        </div>
-        <div class="builder-stage">
-          <div class="builder-object">
-            <div class="placeholder-art has-image" id="builderArt"><img src="dragon-first-day-assets/book.png" alt="baby dragon reading a book" loading="lazy"></div>
-            <div class="builder-sentence" id="builderSentence">Press Start to begin!</div>
-            <div class="builder-streak" id="builderStreak">Streak: 0</div>
+        <div class="builder-game-wrap" id="builderGame">
+          <div class="builder-top">
+            <button class="btn primary" id="startBuilder" type="button">&#9654; Start Round</button>
+            <div class="score-pill game-score" id="builderScoreGame">Score 0</div>
+            <div class="builder-timer" id="builderTimer">Time 60s</div>
+            <button class="btn collect-fullscreen" id="toggleBuilderFullscreen" type="button" title="Full screen" aria-label="Full screen">&#x26F6;</button>
           </div>
-          <div class="builder-panel">
-            <div class="builder-card">
-              <h3 style="margin:0 0 8px;">Choose the correct sentence</h3>
-              <div class="builder-choices" id="builderChoices"></div>
+          <div class="builder-stage" id="builderStage">
+            <div class="builder-object">
+              <div class="placeholder-art has-image" id="builderArt"><img src="dragon-first-day-assets/book.png" alt="baby dragon reading a book" loading="lazy"></div>
+              <div class="builder-sentence" id="builderSentence">Press Start to begin!</div>
+              <div class="builder-streak" id="builderStreak">Streak: 0</div>
             </div>
-            <div class="builder-card">
-              <h3 style="margin:0 0 8px;">Pattern Reference</h3>
-              <p style="margin:4px 0;font-weight:700;">✅ It's a <b>book</b>.</p>
-              <p style="margin:4px 0;font-weight:700;">❌ It isn't a <b>book</b>.</p>
-              <p style="margin:4px 0;font-weight:700;">❓ What is it? It's a <b>pencil</b>.</p>
+            <div class="builder-panel">
+              <div class="builder-card">
+                <h3 style="margin:0 0 8px;">Choose the correct sentence</h3>
+                <div class="builder-choices" id="builderChoices"></div>
+              </div>
+              <div class="builder-card">
+                <h3 style="margin:0 0 8px;">Pattern Reference</h3>
+                <p style="margin:4px 0;font-weight:700;">It's a <b>book</b>.</p>
+                <p style="margin:4px 0;font-weight:700;">It isn't a <b>book</b>.</p>
+                <p style="margin:4px 0;font-weight:700;">What is it? It's a <b>pencil</b>.</p>
+              </div>
+              <div class="builder-results hidden" id="builderResults"></div>
             </div>
-            <div class="builder-results hidden" id="builderResults"></div>
           </div>
         </div>
       </section>
@@ -1085,8 +1164,8 @@
           <div class="review-grid" id="phonicsReview"></div>
         </div>
         <div class="pop-top">
-          <button class="btn primary" id="startPop" type="button">▶ Start Round</button>
-          <div class="pop-timer" id="popTimer">⏱ 30s</div>
+          <button class="btn primary" id="startPop" type="button">&#9654; Start Round</button>
+          <div class="pop-timer" id="popTimer">Time 30s</div>
         </div>
         <div class="pop-target" id="popTarget">Press Start to begin!</div>
         <div class="pop-stage" id="popStage"></div>
@@ -1172,10 +1251,31 @@
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = "en-US";
-        utterance.rate = .9;
-        utterance.pitch = 1.05;
+        utterance.rate = .86;
+        utterance.pitch = 1.02;
+        utterance.voice = preferredVoice || choosePreferredVoice();
         window.speechSynthesis.speak(utterance);
       }
+    }
+
+    let preferredVoice = null;
+
+    function choosePreferredVoice() {
+      if (!("speechSynthesis" in window)) return null;
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoices = voices.filter(voice => /^en[-_]/i.test(voice.lang || ""));
+      preferredVoice = englishVoices.find(voice => /neural|natural|online/i.test(voice.name))
+        || englishVoices.find(voice => /microsoft|google/i.test(voice.name))
+        || englishVoices.find(voice => /en[-_]US/i.test(voice.lang || ""))
+        || englishVoices[0]
+        || voices[0]
+        || null;
+      return preferredVoice;
+    }
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = choosePreferredVoice;
+      choosePreferredVoice();
     }
 
     function escapeAttr(value) {
@@ -1196,9 +1296,10 @@
       return `<div${idAttr} class="placeholder-art"><b>${emoji || "🐲"}</b>${label}</div>`;
     }
 
-    function reviewCard(image, title, subtitle = "", extraClass = "") {
+    function reviewCard(image, title, subtitle = "", extraClass = "", speakText = title) {
       return `
         <div class="review-card ${extraClass}">
+          <button class="audio-btn" type="button" title="Listen" aria-label="Listen" data-speak="${escapeAttr(speakText)}">&#9654;</button>
           <img src="${escapeAttr(image)}" alt="${escapeAttr(title)}" loading="lazy">
           <span>${title}</span>
           ${subtitle ? `<span class="small">${subtitle}</span>` : ""}
@@ -1211,10 +1312,10 @@
         .join("");
 
       $("#grammarReview").innerHTML = [
-        reviewCard(supplies[2].soloImage, "It's a book.", "Yes sentence"),
-        reviewCard(supplies[1].soloImage, "It isn't a book.", "No sentence"),
-        reviewCard(supplies[0].soloImage, "What is it?", "It's a pen."),
-        reviewCard(supplies[7].soloImage, "It isn't a pencil.", "Negative pattern")
+        reviewCard(supplies[2].soloImage, "It's a book.", "Yes sentence", "", "It's a book."),
+        reviewCard(supplies[1].soloImage, "It isn't a book.", "No sentence", "", "It isn't a book."),
+        reviewCard(supplies[0].soloImage, "What is it?", "It's a pen.", "", "What is it? It's a pen."),
+        reviewCard(supplies[7].soloImage, "It isn't a pencil.", "Negative pattern", "", "It isn't a pencil.")
       ].join("");
 
       $("#valuesReview").innerHTML = firstDayScenes
@@ -1241,9 +1342,13 @@
       setTimeout(() => wrap.remove(), 1300);
     }
 
+    const COLLECT_ROUND_SECONDS = 30;
+    const BUILDER_ROUND_SECONDS = 60;
+    const POP_ROUND_SECONDS = 30;
+
     // ===== Lesson 1: Race to Collect =====
     let collectScore = 0;
-    let collectTimeLeft = 30;
+    let collectTimeLeft = COLLECT_ROUND_SECONDS;
     let collectTimerId = null;
     let collectSpawnId = null;
     let collectTargetWord = null;
@@ -1263,13 +1368,22 @@
         <span class="quest-word">${collectTargetWord.word}</span>`;
     }
 
-    function toggleCollectFullscreen() {
-      const stage = $("#collectStage");
+    function toggleFullscreenFor(selector) {
+      const element = $(selector);
       if (!document.fullscreenElement) {
-        stage.requestFullscreen?.();
+        element.requestFullscreen?.();
       } else {
         document.exitFullscreen?.();
       }
+    }
+
+    function toggleCollectFullscreen() {
+      toggleFullscreenFor("#collectGame");
+    }
+
+    function updateCollectScoreDisplay() {
+      $("#collectScore").textContent = `Score ${collectScore}`;
+      $("#collectScoreGame").textContent = `Score ${collectScore}`;
     }
 
     function collectSpawnItem() {
@@ -1360,14 +1474,14 @@
           if (isCorrect) {
             collectScore += 10;
             collectPackedCount += 1;
-            $("#collectScore").textContent = `Score ${collectScore}`;
+            updateCollectScoreDisplay();
             updateCollectBackpackState();
             collectFloatText(floatX, floatY, "+10", true);
             speak(`This is a ${el.dataset.word}.`);
             collectPickTarget();
           } else {
             collectScore = Math.max(0, collectScore - 3);
-            $("#collectScore").textContent = `Score ${collectScore}`;
+            updateCollectScoreDisplay();
             collectFloatText(floatX, floatY, "-3", false);
           }
           el.remove();
@@ -1380,20 +1494,20 @@
       if (collectRunning) return;
       collectRunning = true;
       collectScore = 0;
+      updateCollectScoreDisplay();
       collectPackedCount = 0;
-      collectTimeLeft = 30;
-      $("#collectScore").textContent = "Score 0";
+      collectTimeLeft = COLLECT_ROUND_SECONDS;
       $("#collectResults").classList.add("hidden");
       $("#collectStage").querySelectorAll(".collect-item").forEach(el => el.remove());
       updateCollectBackpackState();
       collectPickTarget();
-      $("#collectTimer").textContent = `⏱ ${collectTimeLeft}s`;
+      $("#collectTimer").textContent = `Time ${collectTimeLeft}s`;
       $("#collectTimer").classList.remove("urgent");
 
       collectSpawnId = setInterval(collectSpawnItem, 900);
       collectTimerId = setInterval(() => {
         collectTimeLeft -= 1;
-        $("#collectTimer").textContent = `⏱ ${collectTimeLeft}s`;
+        $("#collectTimer").textContent = `Time ${collectTimeLeft}s`;
         if (collectTimeLeft <= 10) $("#collectTimer").classList.add("urgent");
         if (collectTimeLeft <= 0) endCollectRound();
       }, 1000);
@@ -1415,9 +1529,18 @@
     // ===== Lesson 2: It's / It isn't Speed Round =====
     let builderScore = 0;
     let builderStreak = 0;
-    let builderTimeLeft = 30;
+    let builderTimeLeft = BUILDER_ROUND_SECONDS;
     let builderTimerId = null;
     let builderRunning = false;
+
+    function toggleBuilderFullscreen() {
+      toggleFullscreenFor("#builderGame");
+    }
+
+    function updateBuilderScoreDisplay() {
+      $("#builderScore").textContent = `Score ${builderScore}`;
+      $("#builderScoreGame").textContent = `Score ${builderScore}`;
+    }
 
     function builderNewRound() {
       const correctItem = supplies[Math.floor(Math.random() * supplies.length)];
@@ -1452,7 +1575,7 @@
             builderStreak += 1;
             const bonus = Math.min(10, builderStreak * 2);
             builderScore += 5 + bonus;
-            $("#builderScore").textContent = `Score ${builderScore}`;
+            updateBuilderScoreDisplay();
             $("#builderStreak").textContent = `Streak: ${builderStreak}`;
             $("#builderFeedback").textContent = "Correct! " + correctSentence;
             speak(correctSentence);
@@ -1472,17 +1595,17 @@
       builderRunning = true;
       builderScore = 0;
       builderStreak = 0;
-      builderTimeLeft = 30;
-      $("#builderScore").textContent = "Score 0";
+      builderTimeLeft = BUILDER_ROUND_SECONDS;
+      updateBuilderScoreDisplay();
       $("#builderStreak").textContent = "Streak: 0";
       $("#builderResults").classList.add("hidden");
-      $("#builderTimer").textContent = `⏱ ${builderTimeLeft}s`;
+      $("#builderTimer").textContent = `Time ${builderTimeLeft}s`;
       $("#builderTimer").classList.remove("urgent");
       builderNewRound();
 
       builderTimerId = setInterval(() => {
         builderTimeLeft -= 1;
-        $("#builderTimer").textContent = `⏱ ${builderTimeLeft}s`;
+        $("#builderTimer").textContent = `Time ${builderTimeLeft}s`;
         if (builderTimeLeft <= 10) $("#builderTimer").classList.add("urgent");
         if (builderTimeLeft <= 0) endBuilderRound();
       }, 1000);
@@ -1585,7 +1708,7 @@
 
     // ===== Lesson 4: Phonics Pop =====
     let popScore = 0;
-    let popTimeLeft = 30;
+    let popTimeLeft = POP_ROUND_SECONDS;
     let popTimerId = null;
     let popSpawnId = null;
     let popTargetSound = null;
@@ -1621,14 +1744,14 @@
         if (isCorrect) {
           el.classList.add("popped");
           popScore += 10;
-          $("#popScore").textContent = `Score ${popScore}`;
+          $("#phonicsScore").textContent = `Score ${popScore}`;
           $("#phonicsFeedback").textContent = `Pop! ${item.letter} is for ${item.word}.`;
           speak(`${item.sound.replace(/\//g, "")} for ${item.word}`);
           popPickTarget();
         } else {
           el.classList.add("wrong-pop");
           popScore = Math.max(0, popScore - 3);
-          $("#popScore").textContent = `Score ${popScore}`;
+          $("#phonicsScore").textContent = `Score ${popScore}`;
           $("#phonicsFeedback").textContent = "Not that sound - listen again!";
           setTimeout(() => el.remove(), 400);
         }
@@ -1643,18 +1766,19 @@
       if (popRunning) return;
       popRunning = true;
       popScore = 0;
-      popTimeLeft = 30;
-      $("#popScore").textContent = "Score 0";
+      popTimeLeft = POP_ROUND_SECONDS;
+      $("#phonicsScore").textContent = "Score 0";
       $("#popResults").classList.add("hidden");
       $("#popStage").querySelectorAll(".pop-bubble").forEach(el => el.remove());
       popPickTarget();
-      $("#popTimer").textContent = `⏱ ${popTimeLeft}s`;
+      $("#popTimer").textContent = `Time ${popTimeLeft}s`;
       $("#popTimer").classList.remove("urgent");
 
+      popSpawnBubble();
       popSpawnId = setInterval(popSpawnBubble, 850);
       popTimerId = setInterval(() => {
         popTimeLeft -= 1;
-        $("#popTimer").textContent = `⏱ ${popTimeLeft}s`;
+        $("#popTimer").textContent = `Time ${popTimeLeft}s`;
         if (popTimeLeft <= 10) $("#popTimer").classList.add("urgent");
         if (popTimeLeft <= 0) endPopRound();
       }, 1000);
@@ -1818,7 +1942,12 @@
 
     function practiceImageHtml(item) {
       if (!item.image) return "";
-      return placeholderArt(item.answer || item.type, item.emoji, item.image);
+      const speakText = item.answer || item.question || item.type;
+      return `
+        <div class="practice-image-wrap">
+          <button class="audio-btn" type="button" title="Listen" aria-label="Listen" data-speak="${escapeAttr(speakText)}">&#9654;</button>
+          ${placeholderArt(item.answer || item.type, item.emoji, item.image)}
+        </div>`;
     }
 
     function practiceCardMarkup(item) {
@@ -1981,9 +2110,18 @@
       initTabs();
       initPractice();
 
+      document.addEventListener("click", event => {
+        const audioButton = event.target.closest("[data-speak]");
+        if (!audioButton) return;
+        event.preventDefault();
+        event.stopPropagation();
+        speak(audioButton.dataset.speak);
+      });
+
       $("#startCollect").addEventListener("click", startCollectRound);
       $("#toggleCollectFullscreen").addEventListener("click", toggleCollectFullscreen);
       $("#startBuilder").addEventListener("click", startBuilderRound);
+      $("#toggleBuilderFullscreen").addEventListener("click", toggleBuilderFullscreen);
       $("#startPop").addEventListener("click", startPopRound);
       $("#testVoice").addEventListener("click", () => speak("It's a pencil. It isn't a book."));
 
@@ -1995,3 +2133,4 @@
   </script>
 </body>
 </html>
+
