@@ -1,0 +1,2367 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dragon First Day Lab</title>
+  <style>
+    :root {
+      --ink: #21160f;
+      --paper: #f3e5c6;
+      --cave: #102a2f;
+      --cave-2: #173f45;
+      --ember: #f0a24a;
+      --gold: #ffd37a;
+      --copper: #b96d32;
+      --teal: #1c9ca0;
+      --moss: #5c8a59;
+      --ruby: #d94c3d;
+      --amethyst: #7b5ac9;
+      --blue: var(--teal);
+      --green: var(--moss);
+      --pink: #d88474;
+      --orange: var(--ember);
+      --purple: var(--amethyst);
+      --yellow: var(--gold);
+      --red: var(--ruby);
+      --parchment: #f7e6bf;
+      --soft-blue: #d9f1ee;
+      --soft-green: #e2f0d4;
+      --soft-pink: #f6d5c5;
+      --soft-yellow: #f9e4a8;
+      --soft-teal: #d7eeea;
+      --shadow: 0 14px 0 rgba(29, 15, 8, .18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(240, 162, 74, .28) 0 130px, transparent 132px),
+        radial-gradient(circle at 82% 4%, rgba(28, 156, 160, .24) 0 160px, transparent 162px),
+        linear-gradient(180deg, #0d252c 0, #173b3e 420px, #352117 421px, #f3e5c6 680px),
+        var(--paper);
+      background-attachment: fixed;
+      font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    .page {
+      width: 100%;
+      margin: 0;
+      padding: 0 0 48px;
+    }
+
+    .top-bar,
+    .tabs,
+    main {
+      width: min(1200px, calc(100% - 28px));
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 10px 0;
+      color: #fff7df;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      display: inline-grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--ember), var(--teal));
+      font-size: 24px;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: .5px;
+    }
+
+    .brand-sub {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffdca0;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      align-items: end;
+      margin: 0 0 16px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(17, 37, 39, .9) 0 31%, rgba(17,37,39,.42) 58%, rgba(17,37,39,.08) 100%),
+        url("dragon-first-day-assets/game/dragon-kingdom-hero.png") center / cover no-repeat;
+      box-shadow: 0 18px 0 rgba(0,0,0,.22);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 28%;
+      background: linear-gradient(180deg, transparent, rgba(10, 24, 27, .8));
+      pointer-events: none;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      padding: clamp(24px, 5vw, 58px);
+      color: #fff7df;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      padding: 7px 12px;
+      border: 2px solid rgba(255, 211, 122, .82);
+      border-radius: 999px;
+      background: rgba(16, 42, 47, .62);
+      color: #ffd37a;
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 12px 0 10px;
+      font-size: clamp(44px, 7vw, 86px);
+      line-height: .94;
+      text-transform: uppercase;
+      text-shadow: 0 4px 0 rgba(33,22,15,.75), 0 0 28px rgba(240,162,74,.36);
+    }
+
+    .lead {
+      max-width: 650px;
+      margin: 0;
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.4;
+      font-weight: 700;
+      color: #ffe9ba;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .flying-dragon {
+      position: absolute;
+      z-index: 2;
+      top: 12%;
+      left: -28%;
+      width: clamp(220px, 24vw, 430px);
+      height: auto;
+      filter: drop-shadow(0 14px 10px rgba(0,0,0,.42));
+      opacity: .92;
+      animation: dragonFlight 18s ease-in-out infinite;
+      pointer-events: none;
+      transform-origin: 50% 50%;
+    }
+
+    @keyframes dragonFlight {
+      0% { translate: 0 42px; rotate: -7deg; opacity: 0; }
+      10% { opacity: .92; }
+      46% { translate: 58vw -28px; rotate: 5deg; }
+      78% { translate: 90vw 24px; rotate: -3deg; opacity: .92; }
+      100% { translate: 128vw -18px; rotate: -8deg; opacity: 0; }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 8px;
+      background: var(--parchment);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--ink);
+      transition: transform .08s ease;
+    }
+
+    .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+
+    .btn.primary { background: var(--gold); }
+    .btn.blue { background: #cdebe8; }
+    .btn.green { background: #dcecc8; }
+    .btn.pink { background: #f5d0bd; }
+    .btn.orange { background: #f6c37f; }
+    .btn.purple { background: #d9cff3; }
+    .btn.teal { background: var(--soft-teal); }
+    .btn.red { background: #ffd9d4; }
+    .btn[disabled] { opacity: .55; cursor: default; }
+
+    .btn.active { outline: 3px solid var(--ink); outline-offset: -3px; }
+
+    .tabs {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px 0;
+      margin-bottom: 10px;
+      background: rgba(16, 42, 47, .94);
+      border-bottom: 3px solid var(--ink);
+    }
+
+    .tab {
+      padding: 9px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: #f5dfb2;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--ink);
+    }
+
+    .tab.active { background: var(--ember); color: var(--ink); }
+
+    main { display: block; }
+
+    section[data-panel] {
+      padding: 18px;
+      margin-bottom: 22px;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, rgba(247, 230, 191, .96), rgba(217, 130, 62, .18)),
+        radial-gradient(circle at 100% 0, rgba(28, 156, 160, .16), transparent 240px);
+      box-shadow: var(--shadow);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 6px;
+      font-size: clamp(24px, 3.4vw, 36px);
+      text-transform: uppercase;
+    }
+
+    .feedback {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--copper);
+    }
+
+    .score-pill {
+      padding: 8px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--gold);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .placeholder-art {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border: 3px dashed rgba(22,22,22,.35);
+      border-radius: 10px;
+      background: repeating-linear-gradient(45deg, #fff7df, #fff7df 10px, #f1ddb0 10px, #f1ddb0 20px);
+      color: rgba(22,22,22,.45);
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+      padding: 6px;
+    }
+
+    .placeholder-art b {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .placeholder-art.has-image {
+      padding: 0;
+      border-style: solid;
+      background: #f6efe2;
+      overflow: hidden;
+    }
+
+    .placeholder-art img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .lesson-review {
+      margin: 0 0 18px;
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background:
+        linear-gradient(135deg, rgba(255, 243, 207, .95), rgba(240, 162, 74, .18)),
+        var(--parchment);
+      box-shadow: 0 8px 0 rgba(33, 22, 15, .14);
+    }
+
+    .lesson-review h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      text-transform: uppercase;
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+    }
+
+    .review-card {
+      padding: 10px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: #fff4d4;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .review-card img {
+      display: block;
+      width: 100%;
+      height: 138px;
+      object-fit: contain;
+      margin-bottom: 8px;
+    }
+
+    .review-card.scene img {
+      height: auto;
+      aspect-ratio: 16 / 10;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 2px solid rgba(22,22,22,.2);
+    }
+
+    .review-card .small {
+      display: block;
+      margin-top: 3px;
+      font-size: 13px;
+      color: var(--purple);
+    }
+
+
+    .audio-btn {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      width: 40px;
+      height: 40px;
+      display: inline-grid;
+      place-items: center;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--ink);
+      z-index: 4;
+    }
+
+    .audio-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 var(--ink);
+    }
+
+    .review-card {
+      position: relative;
+    }
+
+    /* ===== Race to Collect (Lesson 1) ===== */
+    .collect-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .collect-timer {
+      font-size: 22px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--soft-pink);
+    }
+
+    .collect-timer.urgent { background: #ffd9d4; color: var(--red); }
+
+    .collect-game-wrap,
+    .builder-game-wrap {
+      margin-bottom: 16px;
+      padding: 12px;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(16, 42, 47, .18);
+    }
+
+    .collect-game-wrap:fullscreen,
+    .builder-game-wrap:fullscreen {
+      width: 100vw;
+      height: 100vh;
+      padding: 14px;
+      border: 0;
+      border-radius: 0;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(240, 162, 74, .28), transparent 230px),
+        linear-gradient(180deg, #102a2f, #20362a);
+      overflow: auto;
+    }
+
+    .collect-hud {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 14px;
+      z-index: 22;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .collect-hud .btn,
+    .collect-target {
+      pointer-events: auto;
+    }
+
+    .collect-target {
+      display: grid;
+      gap: 3px;
+      min-width: min(390px, calc(100% - 72px));
+      margin: 0;
+      padding: 10px 14px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: rgba(255, 244, 212, .94);
+      box-shadow: 0 5px 0 rgba(33, 22, 15, .25);
+      text-align: left;
+    }
+
+    .quest-label {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--copper);
+    }
+
+    .quest-word {
+      font-size: clamp(24px, 4vw, 42px);
+      line-height: 1;
+      font-weight: 900;
+      color: var(--cave);
+    }
+
+    .collect-fullscreen {
+      width: 52px;
+      height: 52px;
+      justify-content: center;
+      padding: 0;
+      font-size: 24px;
+      background: var(--gold);
+    }
+
+    .collect-stage {
+      position: relative;
+      height: 480px;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, rgba(7, 33, 40, .18), rgba(255, 196, 104, .1)),
+        url("dragon-first-day-assets/game/classroom-background.png") center / cover no-repeat,
+        var(--soft-teal);
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    .collect-game-wrap:fullscreen .collect-stage {
+      height: calc(100vh - 142px);
+      min-height: 520px;
+    }
+
+    .collect-game-wrap:fullscreen .collect-backpack {
+      width: min(440px, 44vw, 56vh);
+      top: 56%;
+    }
+
+    .collect-game-wrap:fullscreen .collect-item {
+      width: 118px;
+      height: 118px;
+    }
+
+    .collect-item {
+      position: absolute;
+      width: 104px;
+      height: 104px;
+      padding: 4px;
+      border: 0;
+      border-radius: 12px;
+      background: rgba(255,255,255,.08);
+      cursor: grab;
+      user-select: none;
+      z-index: 6;
+      filter: drop-shadow(0 8px 5px rgba(0,0,0,.25));
+    }
+
+    .collect-item.dragging { cursor: grabbing; opacity: .92; z-index: 50; }
+    .collect-item .collect-thumb {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+    .collect-item .collect-emoji { font-size: 30px; }
+
+    .collect-backpack {
+      position: absolute;
+      left: 50%;
+      top: 54%;
+      width: min(360px, 48vw);
+      aspect-ratio: 1 / 1;
+      display: grid;
+      place-items: center;
+      border: 4px dashed rgba(255,255,255,.72);
+      border-radius: 26px;
+      background: rgba(255,255,255,.12);
+      text-align: center;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .collect-backpack img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .collect-backpack.hover {
+      background: rgba(225,247,217,.35);
+      border-color: var(--yellow);
+      transform: translate(-50%, -50%) scale(1.04);
+    }
+
+    .collect-feedback-float {
+      position: absolute;
+      font-size: 20px;
+      font-weight: 900;
+      pointer-events: none;
+      animation: floatUp .7s ease-out forwards;
+    }
+
+    .collect-feedback-float.good { color: var(--green); }
+    .collect-feedback-float.bad { color: var(--red); }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-40px); }
+    }
+
+    .collect-results {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: #fff4d4;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* ===== Speed Round builder (Lesson 2) ===== */
+    .builder-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .builder-timer {
+      font-size: 22px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--soft-pink);
+    }
+
+    .builder-timer.urgent { background: #ffd9d4; color: var(--red); }
+
+    .builder-stage {
+      display: grid;
+      grid-template-columns: minmax(560px, 1.5fr) minmax(300px, .55fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .builder-game-wrap:fullscreen .builder-stage {
+      height: calc(100vh - 122px);
+      min-height: 0;
+      grid-template-columns: minmax(0, 1.35fr) minmax(330px, .65fr);
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    .builder-game-wrap:fullscreen .builder-object,
+    .builder-game-wrap:fullscreen .builder-panel {
+      min-height: 0;
+    }
+
+    .builder-game-wrap:fullscreen .builder-object {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .builder-game-wrap:fullscreen .builder-object .placeholder-art {
+      flex: 1 1 auto;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      max-width: 100%;
+      aspect-ratio: auto;
+      margin-bottom: 10px;
+    }
+
+    .builder-game-wrap:fullscreen .builder-object .placeholder-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 12px;
+    }
+
+    .builder-object {
+      padding: 18px;
+      border: 4px solid var(--ink);
+      border-radius: 10px;
+      background: #fff4d4;
+      text-align: center;
+    }
+
+    .builder-object .placeholder-art {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: min(900px, 100%);
+      min-height: clamp(320px, 40vw, 480px);
+      max-height: 70vh;
+      margin: 0 auto 10px;
+      background: #fff8df;
+    }
+
+    .builder-object .placeholder-art img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      padding: 10px;
+    }
+
+    .builder-sentence {
+      margin-top: 14px;
+      font-size: 22px;
+      font-weight: 900;
+      min-height: 34px;
+    }
+
+    .builder-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .builder-card {
+      padding: 14px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: #fff4d4;
+    }
+
+    .builder-choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .builder-choices .btn { width: 100%; text-align: left; }
+    .builder-choices .btn.correct { background: #dcffd8; }
+    .builder-choices .btn.wrong { background: #ffe1e1; }
+
+    .builder-streak {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--purple);
+      margin-top: 6px;
+    }
+
+    .builder-results {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: #fff4d4;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* ===== Story & Values (Lesson 3) ===== */
+    .scene-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .scene-card {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: #fff4d4;
+    }
+
+    .scene-card .placeholder-art { aspect-ratio: 16/10; margin-bottom: 10px; }
+
+    .scene-card p { margin: 6px 0; font-weight: 700; line-height: 1.4; }
+
+    .scene-choices { display: grid; gap: 8px; margin-top: 10px; }
+    .scene-choices .btn { width: 100%; text-align: left; }
+    .scene-choices .btn.correct { background: #dcffd8; }
+    .scene-choices .btn.wrong { background: #ffe1e1; }
+
+    .value-banner {
+      margin: 18px 0;
+      padding: 16px;
+      border: 4px solid var(--ink);
+      border-radius: 10px;
+      background: var(--soft-pink);
+      text-align: center;
+      font-size: 26px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+
+    .flipbook {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, .75fr);
+      gap: 18px;
+      align-items: stretch;
+      padding: 16px;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(255, 244, 212, .96), rgba(240, 162, 74, .18));
+      box-shadow: 0 10px 0 rgba(33, 22, 15, .14);
+    }
+
+    .flipbook-art {
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      background: #fff8df;
+      overflow: hidden;
+      min-height: 360px;
+      aspect-ratio: 16 / 9;
+    }
+
+    .flipbook-art img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+    }
+
+    .flipbook-page {
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      padding: 18px;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      background: #fff4d4;
+    }
+
+    .flipbook-page h3 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1;
+    }
+
+    .flipbook-page p {
+      margin: 0;
+      font-size: clamp(20px, 2.5vw, 30px);
+      line-height: 1.35;
+      font-weight: 800;
+    }
+
+    .story-page-count {
+      color: var(--copper);
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .flipbook-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    /* ===== Phonics Pop (Lesson 4) ===== */
+    .pop-top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .pop-timer {
+      font-size: 22px;
+      font-weight: 900;
+      padding: 8px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--soft-pink);
+    }
+
+    .pop-timer.urgent { background: #ffd9d4; color: var(--red); }
+
+    .pop-target {
+      margin: 0 0 14px;
+      font-size: 22px;
+      font-weight: 900;
+      text-align: center;
+      padding: 10px;
+      border: 3px dashed var(--ink);
+      border-radius: 10px;
+      background: var(--soft-yellow);
+    }
+
+    .pop-stage {
+      position: relative;
+      height: 520px;
+      border: 4px solid var(--ink);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, rgba(16, 42, 47, .08), rgba(255, 211, 122, .12)),
+        url("dragon-first-day-assets/game/phonics-sky-background.png") center / cover no-repeat,
+        #d7eeea;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .pop-bubble {
+      position: absolute;
+      bottom: -150px;
+      width: 154px;
+      height: 154px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      animation-name: dragonRise;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+      filter: drop-shadow(0 10px 6px rgba(0,0,0,.28));
+    }
+
+    .pop-bubble img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .pop-bubble .dragon-letter {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 56px;
+      height: 56px;
+      transform: translate(-50%, -50%);
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: rgba(255, 244, 212, .94);
+      font-size: 34px;
+      font-weight: 900;
+      box-shadow: 0 3px 0 rgba(33, 22, 15, .34);
+    }
+
+    .pop-bubble.popped {
+      animation: none !important;
+      transform: scale(1.24);
+      opacity: 0;
+      transition: transform .25s ease, opacity .25s ease;
+      pointer-events: none;
+    }
+
+    .pop-bubble.wrong-pop {
+      animation: none !important;
+      filter: drop-shadow(0 0 10px rgba(217, 76, 61, .72));
+    }
+
+    @keyframes dragonRise {
+      from { bottom: -150px; transform: translateX(0) rotate(-4deg); }
+      45% { transform: translateX(28px) rotate(4deg); }
+      to { bottom: 104%; transform: translateX(-18px) rotate(-2deg); }
+    }
+
+    .pop-results {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: #fff4d4;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .project-checklist {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: #fff4d4;
+    }
+
+    .project-checklist label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 10px 0;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .project-checklist input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ===== Practice tab ===== */
+    .practice-list { display: grid; gap: 14px; margin-top: 16px; }
+
+    .practice-card {
+      padding: 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      background: #fff4d4;
+    }
+
+    .practice-card.solved { border-color: var(--green); }
+
+    .practice-card-body {
+      display: grid;
+      grid-template-columns: minmax(260px, 38%) minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .practice-image-wrap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: clamp(300px, 34vw, 520px);
+    }
+
+    .practice-card-body .placeholder-art {
+      width: 100%;
+      height: 100%;
+      min-height: inherit;
+      aspect-ratio: auto;
+      background: #fff8df;
+    }
+
+    .practice-card-body .placeholder-art img {
+      object-fit: contain;
+      padding: 12px;
+    }
+
+    .practice-card-main {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .practice-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .practice-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin-bottom: 8px;
+      border-radius: 999px;
+      background: var(--soft-yellow);
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .practice-mode-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin: 0 0 8px 6px;
+      border-radius: 999px;
+      background: #eaf3ff;
+      border: 2px solid var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      color: #1d5fa8;
+    }
+
+    .practice-question {
+      margin: 0 0 12px;
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1.4;
+    }
+
+    .practice-blank-hint {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      font-family: "Courier New", monospace;
+    }
+
+    .practice-word-count {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: normal;
+    }
+
+    .practice-mc { display: grid; gap: 10px; }
+    .practice-mc .btn { width: 100%; text-align: left; box-shadow: 0 4px 0 var(--ink); }
+    .practice-mc .btn.correct { background: #dcffd8; }
+    .practice-mc .btn.wrong { background: #ffe1e1; }
+
+    .practice-write {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .practice-write input {
+      flex: 1;
+      min-width: 180px;
+      padding: 10px 12px;
+      border: 3px solid var(--ink);
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .practice-write input.correct { background: #dcffd8; border-color: var(--green); }
+    .practice-write input.wrong { background: #ffe1e1; border-color: var(--red); }
+
+    .practice-feedback-line { margin: 10px 0 0; font-size: 15px; font-weight: 800; }
+    .practice-feedback-line.correct { color: #2c6e2f; }
+    .practice-feedback-line.wrong { color: #b0312a; }
+
+    .practice-points {
+      display: inline-block;
+      margin-left: 8px;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--purple);
+    }
+
+    .practice-reveal-btn { margin-top: 10px; font-size: 14px; padding: 8px 14px; }
+
+    .practice-reveal-text {
+      margin: 10px 0 0;
+      padding: 8px 10px;
+      border: 2px dashed var(--ink);
+      border-radius: 6px;
+      background: var(--soft-yellow);
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+
+    .pet-dragon {
+      position: fixed;
+      right: 14px;
+      bottom: 12px;
+      z-index: 80;
+      width: clamp(96px, 13vw, 165px);
+      border: 0;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      filter: drop-shadow(0 12px 10px rgba(0,0,0,.32));
+      animation: petBreathe 3.2s ease-in-out infinite;
+    }
+
+    .pet-dragon img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    @keyframes petBreathe {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-5px) scale(1.025); }
+    }
+
+    .hidden { display: none !important; }
+
+    .confetti { pointer-events: none; position: fixed; inset: 0; z-index: 100; overflow: hidden; }
+    .confetti i {
+      position: absolute;
+      width: 12px;
+      height: 18px;
+      border: 2px solid rgba(22,22,22,.35);
+      animation: fall 900ms ease-out forwards;
+    }
+
+    @keyframes fall {
+      from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      to { transform: translateY(100vh) rotate(240deg); opacity: 0; }
+    }
+
+    @media (max-width: 860px) {
+      .builder-stage { grid-template-columns: 1fr; }
+      .flipbook { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .practice-card-body { grid-template-columns: 1fr; }
+      .practice-image-wrap { min-height: 220px; }
+      .practice-card-body .placeholder-art { height: 220px; min-height: 0; aspect-ratio: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top-bar">
+      <div class="brand">
+        <span class="brand-badge">🐲</span>
+        <div>
+          <p class="brand-title">Dragon First Day Lab</p>
+          <p class="brand-sub">Unit 1 - First Day Review</p>
+        </div>
+      </div>
+      <button class="btn teal" id="testVoice" type="button">🔊 Test Voice</button>
+    </div>
+
+    <header class="hero">
+      <img class="flying-dragon" src="dragon-first-day-assets/game/flying-dragon-theme.png" alt="" aria-hidden="true">
+      <div class="hero-copy">
+        <span class="hero-kicker">Dragon Academy Review Quest</span>
+        <h1>First Day With Baby Dragons</h1>
+        <p class="lead">Pack supplies, speak magic sentences, choose kindness, and pop phonics sounds before the academy bell rings.</p>
+        <div class="hero-actions">
+          <button class="btn primary" type="button" onclick="document.getElementById('lesson1').scrollIntoView({behavior:'smooth'});">Start Review Quest</button>
+          <button class="btn teal" type="button" onclick="document.getElementById('practice').scrollIntoView({behavior:'smooth'});">Practice Cards</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="tabs" aria-label="Lesson tabs">
+      <button class="tab active" data-tab="lesson1">Lesson 1</button>
+      <button class="tab" data-tab="lesson2">Lesson 2</button>
+      <button class="tab" data-tab="lesson3">Lesson 3</button>
+      <button class="tab" data-tab="lesson4">Lesson 4</button>
+      <button class="tab" data-tab="practice">Practice</button>
+    </nav>
+
+    <main>
+      <!-- LESSON 1 -->
+      <section id="lesson1" data-panel>
+        <div class="section-head">
+          <div>
+            <h2>Race to Collect</h2>
+            <div class="feedback" id="collectFeedback">Drag the correct item into the dragon's backpack before time runs out!</div>
+          </div>
+          <div class="score-pill" id="collectScore">Score 0</div>
+        </div>
+        <div class="lesson-review">
+          <h3>Review First</h3>
+          <div class="review-grid" id="suppliesReview"></div>
+        </div>
+        <div class="collect-game-wrap" id="collectGame">
+          <div class="collect-top">
+            <button class="btn primary" id="startCollect" type="button">&#9654; Start Round</button>
+            <div class="score-pill game-score" id="collectScoreGame">Score 0</div>
+            <div class="collect-timer" id="collectTimer">Time 30s</div>
+          </div>
+          <div class="collect-stage" id="collectStage">
+            <div class="collect-hud">
+              <div class="collect-target" id="collectTarget">
+                <span class="quest-label">Quest</span>
+                <span class="quest-word">Press Start</span>
+              </div>
+              <button class="btn collect-fullscreen" id="toggleCollectFullscreen" type="button" title="Full screen" aria-label="Full screen">&#x26F6;</button>
+            </div>
+            <div class="collect-backpack" id="collectBackpack">
+              <img id="collectBackpackImg" src="dragon-first-day-assets/game/backpack-empty.png" alt="open backpack">
+            </div>
+          </div>
+          <div class="collect-results hidden" id="collectResults"></div>
+        </div>
+      </section>
+
+      <!-- LESSON 2 -->
+      <section id="lesson2" data-panel hidden>
+        <div class="section-head">
+          <div>
+            <h2>It's / It Isn't Speed Round</h2>
+            <div class="feedback" id="builderFeedback">Pick the correct sentence as fast as you can!</div>
+          </div>
+          <div class="score-pill" id="builderScore">Score 0</div>
+        </div>
+        <div class="lesson-review">
+          <h3>Review First</h3>
+          <div class="review-grid" id="grammarReview"></div>
+        </div>
+        <div class="builder-game-wrap" id="builderGame">
+          <div class="builder-top">
+            <button class="btn primary" id="startBuilder" type="button">&#9654; Start Round</button>
+            <div class="score-pill game-score" id="builderScoreGame">Score 0</div>
+            <div class="builder-timer" id="builderTimer">Time 60s</div>
+            <button class="btn collect-fullscreen" id="toggleBuilderFullscreen" type="button" title="Full screen" aria-label="Full screen">&#x26F6;</button>
+          </div>
+          <div class="builder-stage" id="builderStage">
+            <div class="builder-object">
+              <div class="placeholder-art has-image" id="builderArt"><img src="dragon-first-day-assets/standalone/book.png" alt="book" loading="lazy"></div>
+              <div class="builder-streak" id="builderStreak">Streak: 0</div>
+            </div>
+            <div class="builder-panel">
+              <div class="builder-card">
+                <h3 style="margin:0 0 8px;">Choose the correct sentence</h3>
+                <div class="builder-sentence" id="builderSentence">Press Start to begin!</div>
+                <div class="builder-choices" id="builderChoices"></div>
+              </div>
+              <div class="builder-card">
+                <h3 style="margin:0 0 8px;">Pattern Reference</h3>
+                <p style="margin:4px 0;font-weight:700;">It's a <b>book</b>.</p>
+                <p style="margin:4px 0;font-weight:700;">It isn't a <b>book</b>.</p>
+                <p style="margin:4px 0;font-weight:700;">What is it? It's a <b>pencil</b>.</p>
+              </div>
+              <div class="builder-results hidden" id="builderResults"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LESSON 3 -->
+      <section id="lesson3" data-panel hidden>
+        <div class="section-head">
+          <div>
+            <h2>First Day Stories</h2>
+            <div class="feedback" id="sceneFeedback">Read the short story, flip the pages, and listen in English.</div>
+          </div>
+          <div class="score-pill" id="sceneScore">Story page 1</div>
+        </div>
+        <div class="lesson-review">
+          <h3>Review First</h3>
+          <div class="review-grid" id="valuesReview"></div>
+        </div>
+        <div class="flipbook" id="storyFlipbook">
+          <div class="flipbook-art">
+            <img id="storyFlipbookImage" src="dragon-first-day-assets/game/story-flipbook-kindness.png" alt="dragon classroom story">
+          </div>
+          <div class="flipbook-page">
+            <div class="story-page-count" id="storyPageCount">Page 1 / 4</div>
+            <h3 id="storyTitle">The First Bell</h3>
+            <p id="storyText">A little dragon comes to class with a big backpack and a shy smile.</p>
+            <div class="flipbook-actions">
+              <button class="btn" id="prevStoryPage" type="button">Back</button>
+              <button class="btn primary" id="listenStoryPage" type="button">Listen</button>
+              <button class="btn teal" id="nextStoryPage" type="button">Next</button>
+            </div>
+          </div>
+        </div>
+        <div class="value-banner">Value of the Day: Be Nice</div>
+      </section>
+
+      <!-- LESSON 4 -->
+      <section id="lesson4" data-panel hidden>
+        <div class="section-head">
+          <div>
+            <h2>Phonics Pop</h2>
+            <div class="feedback" id="phonicsFeedback">Listen for the sound, then pop the bubble with the matching letter before it floats away!</div>
+          </div>
+          <div class="score-pill" id="phonicsScore">Score 0</div>
+        </div>
+        <div class="lesson-review">
+          <h3>Review First</h3>
+          <div class="review-grid" id="phonicsReview"></div>
+        </div>
+        <div class="pop-top">
+          <button class="btn primary" id="startPop" type="button">&#9654; Start Round</button>
+          <div class="pop-timer" id="popTimer">Time 30s</div>
+        </div>
+        <div class="pop-target" id="popTarget">Press Start to begin!</div>
+        <div class="pop-stage" id="popStage"></div>
+        <div class="pop-results hidden" id="popResults"></div>
+
+        <div class="section-head" style="margin-top:30px;">
+          <div>
+            <h2>My Book About Me - Project</h2>
+            <div class="feedback">Check off each page as you finish it.</div>
+          </div>
+        </div>
+        <div class="project-checklist" id="projectChecklist"></div>
+      </section>
+
+      <!-- PRACTICE -->
+      <section id="practice" data-panel hidden>
+        <div class="section-head">
+          <div>
+            <h2>Unit 1 Practice</h2>
+            <div class="feedback" id="practiceFeedback">Answer each question. First try correct = max points.</div>
+          </div>
+          <div class="score-pill" id="practiceScoreDisplay">Score 0</div>
+        </div>
+        <div class="filter-row practice-filter-row" aria-label="Practice filters">
+          <button class="btn active" data-practice-filter="all">All</button>
+          <button class="btn pink" data-practice-filter="Supplies">Supplies</button>
+          <button class="btn purple" data-practice-filter="Grammar">Grammar</button>
+          <button class="btn orange" data-practice-filter="Phonics">Phonics</button>
+          <button class="btn green" data-practice-filter="Values">Values</button>
+          <button class="btn" id="resetPractice" type="button" style="margin-left:auto;">Reset Score</button>
+        </div>
+        <div class="practice-list" id="practiceList"></div>
+      </section>
+    </main>
+  </div>
+
+  <button class="pet-dragon" id="petDragon" type="button" title="Pet dragon helper" aria-label="Pet dragon helper">
+    <img src="dragon-first-day-assets/game/pet-dragon.png" alt="">
+  </button>
+
+  <script>
+    const $ = selector => document.querySelector(selector);
+    const $$ = selector => Array.from(document.querySelectorAll(selector));
+
+    // ===== Data =====
+    const supplies = [
+      {word: "pen", vn: "cái bút mực", emoji: "🖊️", image: "dragon-first-day-assets/pen.png", soloImage: "dragon-first-day-assets/standalone/pen.png"},
+      {word: "pencil", vn: "bút chì", emoji: "✏️", image: "dragon-first-day-assets/pencil.png", soloImage: "dragon-first-day-assets/standalone/pencil.png"},
+      {word: "book", vn: "sách", emoji: "📘", image: "dragon-first-day-assets/book.png", soloImage: "dragon-first-day-assets/standalone/book.png"},
+      {word: "notebook", vn: "vở", emoji: "📓", image: "dragon-first-day-assets/notebook.png", soloImage: "dragon-first-day-assets/standalone/notebook.png"},
+      {word: "desk", vn: "cái bàn", emoji: "🗄️", image: "dragon-first-day-assets/desk.png", soloImage: "dragon-first-day-assets/standalone/desk.png"},
+      {word: "chair", vn: "cái ghế", emoji: "🪑", image: "dragon-first-day-assets/chair.png", soloImage: "dragon-first-day-assets/standalone/chair.png"},
+      {word: "eraser", vn: "cái gôm/tẩy", emoji: "🧽", image: "dragon-first-day-assets/eraser.png", soloImage: "dragon-first-day-assets/standalone/eraser.png"},
+      {word: "ruler", vn: "cây thước", emoji: "📏", image: "dragon-first-day-assets/ruler.png", soloImage: "dragon-first-day-assets/standalone/ruler.png"}
+    ];
+
+    const phonicsSounds = [
+      {letter: "A", sound: "/a/", word: "apple", emoji: "🍎", image: "dragon-first-day-assets/phonics-apple.png"},
+      {letter: "B", sound: "/b/", word: "book", emoji: "📘", image: "dragon-first-day-assets/phonics-book.png"},
+      {letter: "C", sound: "/c/", word: "cat", emoji: "🐱", image: "dragon-first-day-assets/phonics-cat.png"},
+      {letter: "D", sound: "/d/", word: "dog", emoji: "🐶", image: "dragon-first-day-assets/phonics-dog.png"}
+    ];
+
+    const projectPages = [
+      "Draw a picture of you.",
+      "Draw a picture of your family.",
+      "Draw a picture of your toys.",
+      "Write your name on the cover.",
+      "Show your book to a friend."
+    ];
+
+    const backpackStates = [
+      "dragon-first-day-assets/game/backpack-empty.png",
+      "dragon-first-day-assets/game/backpack-low.png",
+      "dragon-first-day-assets/game/backpack-mid.png",
+      "dragon-first-day-assets/game/backpack-full.png"
+    ];
+
+    let currentAudio = null;
+    let practiceQuestions = [];
+    let practiceScore = 0;
+    let practiceAttempts = {};
+
+    // ===== Speech =====
+    async function speak(text) {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-US";
+        utterance.rate = .86;
+        utterance.pitch = 1.02;
+        utterance.voice = preferredVoice || choosePreferredVoice();
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    let preferredVoice = null;
+
+    function choosePreferredVoice() {
+      if (!("speechSynthesis" in window)) return null;
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoices = voices.filter(voice => /^en[-_]/i.test(voice.lang || ""));
+      preferredVoice = englishVoices.find(voice => /neural|natural|online/i.test(voice.name))
+        || englishVoices.find(voice => /microsoft|google/i.test(voice.name))
+        || englishVoices.find(voice => /en[-_]US/i.test(voice.lang || ""))
+        || englishVoices[0]
+        || voices[0]
+        || null;
+      return preferredVoice;
+    }
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = choosePreferredVoice;
+      choosePreferredVoice();
+    }
+
+    function escapeAttr(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function placeholderArt(label, emoji, image, id = "") {
+      const idAttr = id ? ` id="${escapeAttr(id)}"` : "";
+      if (image) {
+        return `<div${idAttr} class="placeholder-art has-image"><img src="${escapeAttr(image)}" alt="${escapeAttr(label)}" loading="lazy"></div>`;
+      }
+      return `<div${idAttr} class="placeholder-art"><b>${emoji || "🐲"}</b>${label}</div>`;
+    }
+
+    function reviewCard(image, title, subtitle = "", extraClass = "", speakText = title) {
+      return `
+        <div class="review-card ${extraClass}">
+          <button class="audio-btn" type="button" title="Listen" aria-label="Listen" data-speak="${escapeAttr(speakText)}">&#9654;</button>
+          <img src="${escapeAttr(image)}" alt="${escapeAttr(title)}" loading="lazy">
+          <span>${title}</span>
+          ${subtitle ? `<span class="small">${subtitle}</span>` : ""}
+        </div>`;
+    }
+
+    function renderLessonReviews() {
+      $("#suppliesReview").innerHTML = supplies
+        .map(item => reviewCard(item.soloImage, item.word, item.vn))
+        .join("");
+
+      $("#grammarReview").innerHTML = [
+        reviewCard(supplies[2].soloImage, "It's a book.", "Yes sentence", "", "It's a book."),
+        reviewCard(supplies[1].soloImage, "It isn't a book.", "No sentence", "", "It isn't a book."),
+        reviewCard(supplies[0].soloImage, "What is it?", "It's a pen.", "", "What is it? It's a pen."),
+        reviewCard(supplies[7].soloImage, "It isn't a pencil.", "Negative pattern", "", "It isn't a pencil.")
+      ].join("");
+
+      $("#valuesReview").innerHTML = firstDayScenes
+        .map(scene => reviewCard(scene.image, scene.title.replace(/^Scene \d+:\s*/, ""), "Be nice", "scene"))
+        .join("");
+
+      $("#phonicsReview").innerHTML = phonicsSounds
+        .map(item => reviewCard(item.image, `${item.letter} ${item.sound}`, item.word, "scene"))
+        .join("");
+    }
+
+    function celebrate() {
+      const wrap = document.createElement("div");
+      wrap.className = "confetti";
+      const colors = ["#1475c9", "#23a73e", "#ef4f91", "#f47c16", "#7a4ac7", "#ffc629"];
+      for (let i = 0; i < 24; i++) {
+        const piece = document.createElement("i");
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.background = colors[i % colors.length];
+        piece.style.animationDelay = `${Math.random() * .3}s`;
+        wrap.appendChild(piece);
+      }
+      document.body.appendChild(wrap);
+      setTimeout(() => wrap.remove(), 1300);
+    }
+
+    const COLLECT_ROUND_SECONDS = 30;
+    const BUILDER_ROUND_SECONDS = 60;
+    const POP_ROUND_SECONDS = 30;
+
+    // ===== Lesson 1: Race to Collect =====
+    let collectScore = 0;
+    let collectTimeLeft = COLLECT_ROUND_SECONDS;
+    let collectTimerId = null;
+    let collectSpawnId = null;
+    let collectTargetWord = null;
+    let collectRunning = false;
+    let collectDrag = null; // {el, offsetX, offsetY}
+    let collectPackedCount = 0;
+
+    function updateCollectBackpackState() {
+      const stateIndex = Math.min(backpackStates.length - 1, Math.floor(collectPackedCount / 2));
+      $("#collectBackpackImg").src = backpackStates[stateIndex];
+    }
+
+    function collectPickTarget() {
+      collectTargetWord = supplies[Math.floor(Math.random() * supplies.length)];
+      $("#collectTarget").innerHTML = `
+        <span class="quest-label">Quest: find and pack</span>
+        <span class="quest-word">${collectTargetWord.word}</span>`;
+    }
+
+    function toggleFullscreenFor(selector) {
+      const element = $(selector);
+      if (!document.fullscreenElement) {
+        element.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+    }
+
+    function toggleCollectFullscreen() {
+      toggleFullscreenFor("#collectGame");
+    }
+
+    function updateCollectScoreDisplay() {
+      $("#collectScore").textContent = `Score ${collectScore}`;
+      $("#collectScoreGame").textContent = `Score ${collectScore}`;
+    }
+
+    function collectSpawnItem() {
+      const stage = $("#collectStage");
+      const isTarget = Math.random() < .45 || !stage.querySelector(`[data-word="${collectTargetWord.word}"]`);
+      const item = isTarget ? collectTargetWord : supplies[Math.floor(Math.random() * supplies.length)];
+      const el = document.createElement("div");
+      el.className = "collect-item";
+      el.dataset.word = item.word;
+      el.setAttribute("aria-label", item.word);
+      const collectArt = item.soloImage
+        ? `<img class="collect-thumb" src="${escapeAttr(item.soloImage)}" alt="${escapeAttr(item.word)}" loading="lazy">`
+        : `<div class="collect-emoji">${item.emoji}</div>`;
+      el.innerHTML = collectArt;
+      const stageRect = stage.getBoundingClientRect();
+      const itemSize = 104;
+      const margin = 14;
+      const zones = [
+        {x1: margin, x2: stageRect.width * .22, y1: margin, y2: stageRect.height - itemSize - margin},
+        {x1: stageRect.width * .78, x2: stageRect.width - itemSize - margin, y1: margin, y2: stageRect.height - itemSize - margin},
+        {x1: stageRect.width * .26, x2: stageRect.width * .66, y1: margin, y2: stageRect.height * .22},
+        {x1: stageRect.width * .26, x2: stageRect.width * .66, y1: stageRect.height * .78, y2: stageRect.height - itemSize - margin}
+      ];
+      const zone = zones[Math.floor(Math.random() * zones.length)];
+      const x1 = Math.min(zone.x1, zone.x2);
+      const x2 = Math.max(zone.x1, zone.x2);
+      const y1 = Math.min(zone.y1, zone.y2);
+      const y2 = Math.max(zone.y1, zone.y2);
+      el.style.left = `${x1 + Math.random() * Math.max(1, x2 - x1)}px`;
+      el.style.top = `${y1 + Math.random() * Math.max(1, y2 - y1)}px`;
+      stage.appendChild(el);
+      wireCollectItem(el);
+      setTimeout(() => { if (el.parentNode) el.remove(); }, 5200);
+    }
+
+    function collectFloatText(x, y, text, good) {
+      const stage = $("#collectStage");
+      const float = document.createElement("div");
+      float.className = `collect-feedback-float ${good ? "good" : "bad"}`;
+      float.textContent = text;
+      float.style.left = `${x}px`;
+      float.style.top = `${y}px`;
+      stage.appendChild(float);
+      setTimeout(() => float.remove(), 700);
+    }
+
+    function wireCollectItem(el) {
+      const startDrag = clientX => clientY => {
+        const rect = el.getBoundingClientRect();
+        collectDrag = {el, offsetX: clientX - rect.left, offsetY: clientY - rect.top};
+        el.classList.add("dragging");
+      };
+
+      el.addEventListener("pointerdown", event => {
+        if (!collectRunning) return;
+        el.setPointerCapture(event.pointerId);
+        startDrag(event.clientX)(event.clientY);
+      });
+
+      el.addEventListener("pointermove", event => {
+        if (!collectDrag || collectDrag.el !== el) return;
+        const stage = $("#collectStage");
+        const stageRect = stage.getBoundingClientRect();
+        const x = event.clientX - stageRect.left - collectDrag.offsetX;
+        const y = event.clientY - stageRect.top - collectDrag.offsetY;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+
+        const backpack = $("#collectBackpack");
+        const bpRect = backpack.getBoundingClientRect();
+        const overBackpack = event.clientX > bpRect.left && event.clientX < bpRect.right && event.clientY > bpRect.top && event.clientY < bpRect.bottom;
+        backpack.classList.toggle("hover", overBackpack);
+      });
+
+      el.addEventListener("pointerup", event => {
+        if (!collectDrag || collectDrag.el !== el) return;
+        el.classList.remove("dragging");
+        const backpack = $("#collectBackpack");
+        const bpRect = backpack.getBoundingClientRect();
+        backpack.classList.remove("hover");
+        const overBackpack = event.clientX > bpRect.left && event.clientX < bpRect.right && event.clientY > bpRect.top && event.clientY < bpRect.bottom;
+        if (overBackpack) {
+          const isCorrect = el.dataset.word === collectTargetWord.word;
+          const stage = $("#collectStage");
+          const stageRect = stage.getBoundingClientRect();
+          const floatX = bpRect.left - stageRect.left;
+          const floatY = bpRect.top - stageRect.top;
+          if (isCorrect) {
+            collectScore += 10;
+            collectPackedCount += 1;
+            updateCollectScoreDisplay();
+            updateCollectBackpackState();
+            collectFloatText(floatX, floatY, "+10", true);
+            collectPickTarget();
+          } else {
+            collectScore = Math.max(0, collectScore - 3);
+            updateCollectScoreDisplay();
+            collectFloatText(floatX, floatY, "-3", false);
+          }
+          el.remove();
+        }
+        collectDrag = null;
+      });
+    }
+
+    function startCollectRound() {
+      if (collectRunning) return;
+      collectRunning = true;
+      collectScore = 0;
+      updateCollectScoreDisplay();
+      collectPackedCount = 0;
+      collectTimeLeft = COLLECT_ROUND_SECONDS;
+      $("#collectResults").classList.add("hidden");
+      $("#collectStage").querySelectorAll(".collect-item").forEach(el => el.remove());
+      updateCollectBackpackState();
+      collectPickTarget();
+      $("#collectTimer").textContent = `Time ${collectTimeLeft}s`;
+      $("#collectTimer").classList.remove("urgent");
+
+      collectSpawnId = setInterval(collectSpawnItem, 900);
+      collectTimerId = setInterval(() => {
+        collectTimeLeft -= 1;
+        $("#collectTimer").textContent = `Time ${collectTimeLeft}s`;
+        if (collectTimeLeft <= 10) $("#collectTimer").classList.add("urgent");
+        if (collectTimeLeft <= 0) endCollectRound();
+      }, 1000);
+    }
+
+    function endCollectRound() {
+      collectRunning = false;
+      clearInterval(collectTimerId);
+      clearInterval(collectSpawnId);
+      $("#collectStage").querySelectorAll(".collect-item").forEach(el => el.remove());
+      $("#collectTarget").innerHTML = `
+        <span class="quest-label">Quest complete</span>
+        <span class="quest-word">Press Start</span>`;
+      $("#collectResults").classList.remove("hidden");
+      $("#collectResults").textContent = `Final score: ${collectScore} points. Great job collecting school supplies!`;
+      if (collectScore >= 50) celebrate();
+    }
+
+    // ===== Lesson 2: It's / It isn't Speed Round =====
+    let builderScore = 0;
+    let builderStreak = 0;
+    let builderTimeLeft = BUILDER_ROUND_SECONDS;
+    let builderTimerId = null;
+    let builderRunning = false;
+
+    function toggleBuilderFullscreen() {
+      toggleFullscreenFor("#builderGame");
+    }
+
+    function updateBuilderScoreDisplay() {
+      $("#builderScore").textContent = `Score ${builderScore}`;
+      $("#builderScoreGame").textContent = `Score ${builderScore}`;
+    }
+
+    function builderNewRound() {
+      const correctItem = supplies[Math.floor(Math.random() * supplies.length)];
+      const isNegative = Math.random() < .4;
+      let shownItem = correctItem;
+      if (isNegative) {
+        const others = supplies.filter(s => s.word !== correctItem.word);
+        shownItem = others[Math.floor(Math.random() * others.length)];
+      }
+
+      $("#builderArt").outerHTML = placeholderArt(shownItem.word, shownItem.emoji, shownItem.soloImage, "builderArt");
+      $("#builderSentence").textContent = "What is it?";
+
+      const correctSentence = isNegative ? `It isn't a ${correctItem.word}.` : `It's a ${correctItem.word}.`;
+      const wrongSentence = isNegative ? `It's a ${correctItem.word}.` : `It isn't a ${correctItem.word}.`;
+      const distractorPool = supplies.filter(s => s.word !== correctItem.word);
+      const distractorWord = distractorPool[Math.floor(Math.random() * distractorPool.length)].word;
+      const distractorSentence = `It's a ${distractorWord}.`;
+
+      const choices = [correctSentence, wrongSentence, distractorSentence].sort(() => Math.random() - .5);
+      $("#builderChoices").innerHTML = choices.map(choice => `
+        <button class="btn blue" type="button" data-choice="${choice.replace(/"/g, "&quot;")}">${choice}</button>`).join("");
+
+      $$("#builderChoices .btn").forEach(button => {
+        button.addEventListener("click", () => {
+          if (!builderRunning) return;
+          const isCorrect = button.dataset.choice === correctSentence;
+          button.classList.toggle("correct", isCorrect);
+          button.classList.toggle("wrong", !isCorrect);
+          $$("#builderChoices .btn").forEach(b => b.disabled = true);
+          if (isCorrect) {
+            builderStreak += 1;
+            const bonus = Math.min(10, builderStreak * 2);
+            builderScore += 5 + bonus;
+            updateBuilderScoreDisplay();
+            $("#builderStreak").textContent = `Streak: ${builderStreak}`;
+            $("#builderFeedback").textContent = "Correct! " + correctSentence;
+            speak(correctSentence);
+            celebrate();
+          } else {
+            builderStreak = 0;
+            $("#builderStreak").textContent = "Streak: 0";
+            $("#builderFeedback").textContent = "Not quite. The answer was: " + correctSentence;
+          }
+          setTimeout(builderNewRound, 700);
+        });
+      });
+    }
+
+    function startBuilderRound() {
+      if (builderRunning) return;
+      builderRunning = true;
+      builderScore = 0;
+      builderStreak = 0;
+      builderTimeLeft = BUILDER_ROUND_SECONDS;
+      updateBuilderScoreDisplay();
+      $("#builderStreak").textContent = "Streak: 0";
+      $("#builderResults").classList.add("hidden");
+      $("#builderTimer").textContent = `Time ${builderTimeLeft}s`;
+      $("#builderTimer").classList.remove("urgent");
+      builderNewRound();
+
+      builderTimerId = setInterval(() => {
+        builderTimeLeft -= 1;
+        $("#builderTimer").textContent = `Time ${builderTimeLeft}s`;
+        if (builderTimeLeft <= 10) $("#builderTimer").classList.add("urgent");
+        if (builderTimeLeft <= 0) endBuilderRound();
+      }, 1000);
+    }
+
+    function endBuilderRound() {
+      builderRunning = false;
+      clearInterval(builderTimerId);
+      $$("#builderChoices .btn").forEach(b => b.disabled = true);
+      $("#builderSentence").textContent = "Round over! Press Start to play again.";
+      $("#builderResults").classList.remove("hidden");
+      $("#builderResults").textContent = `Final score: ${builderScore} points. Best streak counted toward your bonus!`;
+      if (builderScore >= 50) celebrate();
+    }
+
+    // ===== Lesson 3: First Day Stories (Values) =====
+    const firstDayScenes = [
+      {
+        title: "Scene 1: A New Friend",
+        prompt: "A new dragon is standing alone at the door on the first day. What should you do?",
+        emoji: "🚪",
+        image: "dragon-first-day-assets/scene-new-friend.png",
+        choices: [
+          {text: "Say hello and smile.", correct: true},
+          {text: "Look away and say nothing.", correct: false},
+          {text: "Laugh at their backpack.", correct: false}
+        ]
+      },
+      {
+        title: "Scene 2: Dropped Pencils",
+        prompt: "A classmate drops their pencils on the floor. What should you do?",
+        emoji: "✏️",
+        image: "dragon-first-day-assets/scene-dropped-pencils.png",
+        choices: [
+          {text: "Help pick them up.", correct: true},
+          {text: "Step on them.", correct: false},
+          {text: "Walk past quickly.", correct: false}
+        ]
+      },
+      {
+        title: "Scene 3: Sharing a Desk",
+        prompt: "There is only one chair left and a new dragon needs a seat. What should you do?",
+        emoji: "🪑",
+        image: "dragon-first-day-assets/scene-share-desk.png",
+        choices: [
+          {text: "Share the desk and chair.", correct: true},
+          {text: "Say \"This is my chair only.\"", correct: false},
+          {text: "Push the new dragon away.", correct: false}
+        ]
+      },
+      {
+        title: "Scene 4: Asking for Help",
+        prompt: "A friend can't find their notebook. What should you do?",
+        emoji: "📓",
+        image: "dragon-first-day-assets/scene-find-notebook.png",
+        choices: [
+          {text: "Help them look for it.", correct: true},
+          {text: "Tell them it's not your problem.", correct: false},
+          {text: "Hide your own notebook.", correct: false}
+        ]
+      }
+    ];
+
+    const storyPages = [
+      {
+        title: "The First Bell",
+        text: "A little dragon comes to class with a big backpack and a shy smile.",
+        image: "dragon-first-day-assets/game/story-flipbook-kindness.png"
+      },
+      {
+        title: "A Pencil Falls",
+        text: "A friend drops a pencil. The little dragon stops and helps.",
+        image: "dragon-first-day-assets/game/story-flipbook-page-2.png"
+      },
+      {
+        title: "A Kind Seat",
+        text: "There is one chair. The dragons share the desk and say, sit with me.",
+        image: "dragon-first-day-assets/game/story-flipbook-page-3.png"
+      },
+      {
+        title: "Ready to Learn",
+        text: "The bell rings. The class is ready, and every dragon has a friend.",
+        image: "dragon-first-day-assets/game/story-flipbook-page-4.png"
+      }
+    ];
+
+    let storyPageIndex = 0;
+    let sceneKindChoices = 0;
+
+    function renderScenes() {
+      updateStoryPage();
+    }
+
+    function updateStoryPage() {
+      const page = storyPages[storyPageIndex];
+      $("#storyPageCount").textContent = `Page ${storyPageIndex + 1} / ${storyPages.length}`;
+      $("#storyTitle").textContent = page.title;
+      $("#storyText").textContent = page.text;
+      $("#storyFlipbookImage").src = page.image;
+      $("#prevStoryPage").disabled = storyPageIndex === 0;
+      $("#nextStoryPage").disabled = storyPageIndex === storyPages.length - 1;
+      $("#sceneScore").textContent = `Story page ${storyPageIndex + 1}`;
+      $("#sceneFeedback").textContent = "Read the short story, then listen to each page.";
+    }
+
+    function nextStoryPage() {
+      storyPageIndex = Math.min(storyPages.length - 1, storyPageIndex + 1);
+      updateStoryPage();
+    }
+
+    function prevStoryPage() {
+      storyPageIndex = Math.max(0, storyPageIndex - 1);
+      updateStoryPage();
+    }
+
+    function listenStoryPage() {
+      const page = storyPages[storyPageIndex];
+      speak(`${page.title}. ${page.text}`);
+    }
+
+    // ===== Lesson 4: Phonics Pop =====
+    let popScore = 0;
+    let popTimeLeft = POP_ROUND_SECONDS;
+    let popTimerId = null;
+    let popSpawnId = null;
+    let popTargetSound = null;
+    let popRunning = false;
+    let popBubbleSeq = 0;
+
+    function popPickTarget() {
+      popTargetSound = phonicsSounds[Math.floor(Math.random() * phonicsSounds.length)];
+      $("#popTarget").textContent = `Help the dragon fly with: ${popTargetSound.sound} (${popTargetSound.word})`;
+      speak(popTargetSound.sound.replace(/\//g, ""));
+    }
+
+    function popSpawnBubble() {
+      const stage = $("#popStage");
+      const isTarget = Math.random() < .4 || !stage.querySelector(`[data-letter="${popTargetSound.letter}"]`);
+      const item = isTarget ? popTargetSound : phonicsSounds[Math.floor(Math.random() * phonicsSounds.length)];
+      const el = document.createElement("div");
+      popBubbleSeq += 1;
+      el.className = "pop-bubble";
+      el.dataset.letter = item.letter;
+      el.dataset.seq = popBubbleSeq;
+      el.innerHTML = `
+        <img src="dragon-first-day-assets/game/phonics-flying-dragon-v2.png" alt="">
+        <span class="dragon-letter">${item.letter}</span>`;
+      const stageRect = stage.getBoundingClientRect();
+      const maxX = Math.max(10, stageRect.width - 70);
+      el.style.left = `${10 + Math.random() * maxX}px`;
+      const duration = 3.4 + Math.random() * 1.6;
+      el.style.animationDuration = `${duration}s`;
+      stage.appendChild(el);
+
+      el.addEventListener("click", () => {
+        if (!popRunning || el.classList.contains("popped") || el.classList.contains("wrong-pop")) return;
+        const isCorrect = item.letter === popTargetSound.letter;
+        if (isCorrect) {
+          el.classList.add("popped");
+          popScore += 10;
+          $("#phonicsScore").textContent = `Score ${popScore}`;
+          $("#phonicsFeedback").textContent = `Pop! ${item.letter} is for ${item.word}.`;
+          speak(`${item.sound.replace(/\//g, "")} for ${item.word}`);
+          popPickTarget();
+        } else {
+          el.classList.add("wrong-pop");
+          popScore = Math.max(0, popScore - 3);
+          $("#phonicsScore").textContent = `Score ${popScore}`;
+          $("#phonicsFeedback").textContent = "Not that sound - listen again!";
+          setTimeout(() => el.remove(), 400);
+        }
+      });
+
+      el.addEventListener("animationend", () => {
+        if (el.parentNode && !el.classList.contains("popped")) el.remove();
+      });
+    }
+
+    function startPopRound() {
+      if (popRunning) return;
+      popRunning = true;
+      popScore = 0;
+      popTimeLeft = POP_ROUND_SECONDS;
+      $("#phonicsScore").textContent = "Score 0";
+      $("#popResults").classList.add("hidden");
+      $("#popStage").querySelectorAll(".pop-bubble").forEach(el => el.remove());
+      popPickTarget();
+      $("#popTimer").textContent = `Time ${popTimeLeft}s`;
+      $("#popTimer").classList.remove("urgent");
+
+      popSpawnBubble();
+      popSpawnId = setInterval(popSpawnBubble, 850);
+      popTimerId = setInterval(() => {
+        popTimeLeft -= 1;
+        $("#popTimer").textContent = `Time ${popTimeLeft}s`;
+        if (popTimeLeft <= 10) $("#popTimer").classList.add("urgent");
+        if (popTimeLeft <= 0) endPopRound();
+      }, 1000);
+    }
+
+    function endPopRound() {
+      popRunning = false;
+      clearInterval(popTimerId);
+      clearInterval(popSpawnId);
+      $("#popStage").querySelectorAll(".pop-bubble").forEach(el => el.remove());
+      $("#popTarget").textContent = "Round over! Press Start to play again.";
+      $("#popResults").classList.remove("hidden");
+      $("#popResults").textContent = `Final score: ${popScore} points. Nice phonics ears!`;
+      if (popScore >= 50) celebrate();
+    }
+
+    function renderProjectChecklist() {
+      $("#projectChecklist").innerHTML = projectPages.map((page, index) => `
+        <label>
+          <input type="checkbox" id="project${index}">
+          <span>${page}</span>
+        </label>`).join("");
+    }
+
+    // ===== Tabs =====
+    function showPanel(id) {
+      const panel = document.getElementById(id);
+      if (!panel || !panel.matches("[data-panel]")) return;
+      $$(".tab").forEach(item => item.classList.toggle("active", item.dataset.tab === id));
+      $$("[data-panel]").forEach(item => item.hidden = item.id !== id);
+      window.scrollTo(0, panel.offsetTop);
+    }
+
+    function initTabs() {
+      $$(".tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          showPanel(tab.dataset.tab);
+          history.replaceState(null, "", `#${tab.dataset.tab}`);
+        });
+      });
+    }
+
+    // ===== Practice tab =====
+    function normalizeAnswer(text) {
+      return text.trim().toLowerCase().replace(/[.!?]+$/g, "").replace(/\s+/g, " ");
+    }
+
+    function isWrittenAnswerCorrect(item, raw) {
+      const normalized = normalizeAnswer(raw);
+      if (!normalized) return false;
+      return item.accept.some(accepted => {
+        const cleanAccepted = normalizeAnswer(accepted);
+        return normalized === cleanAccepted || (cleanAccepted.includes(normalized) && normalized.length > 3);
+      });
+    }
+
+    function pointsForAttempt(attempts) {
+      if (attempts === 1) return 10;
+      if (attempts === 2) return 5;
+      return 2;
+    }
+
+    function wordBlankHint(text) {
+      const words = text.trim().split(/\s+/).map(w => w.replace(/[.,!?]+$/, ""));
+      return words.map(w => "_".repeat(Math.max(2, w.length))).join(" ") + (/[.!?]$/.test(text.trim()) ? text.trim().slice(-1) : "");
+    }
+
+    function buildPracticeQuestions() {
+      const items = [];
+
+      // Supplies: multiple choice translation
+      supplies.forEach((item, index) => {
+        const wrongs = supplies.filter(s => s.word !== item.word).map(s => s.vn);
+        const wrongPicks = wrongs.sort(() => Math.random() - .5).slice(0, 2);
+        const options = [item.vn, ...wrongPicks].sort(() => Math.random() - .5);
+        items.push({
+          id: `supplies${index}`,
+          type: "Supplies",
+          mode: "mc",
+          image: item.soloImage,
+          emoji: item.emoji,
+          question: `"${item.word}" là gì?`,
+          options,
+          correct: item.vn,
+          answer: item.vn,
+          speak: item.word
+        });
+      });
+
+      // Grammar: It's / It isn't fill-in-blank
+      supplies.forEach((item, index) => {
+        const correct = `It's a ${item.word}.`;
+        items.push({
+          id: `grammarPos${index}`,
+          type: "Grammar",
+          mode: "blank",
+          image: item.soloImage,
+          emoji: item.emoji,
+          question: `Affirmative: This is a ${item.word}. Write the sentence using "It's".`,
+          correct,
+          accept: [correct.toLowerCase()],
+          wordCount: correct.trim().split(/\s+/).length,
+          blankHint: wordBlankHint(correct),
+          answer: correct
+        });
+      });
+      const negativeSample = supplies.slice(0, 4);
+      negativeSample.forEach((item, index) => {
+        const wrongWord = supplies.find(s => s.word !== item.word).word;
+        const correct = `It isn't a ${wrongWord}.`;
+        items.push({
+          id: `grammarNeg${index}`,
+          type: "Grammar",
+          mode: "blank",
+          image: item.soloImage,
+          emoji: item.emoji,
+          question: `This is a ${item.word}, not a ${wrongWord}. Write the negative sentence using "It isn't".`,
+          correct,
+          accept: [correct.toLowerCase()],
+          wordCount: correct.trim().split(/\s+/).length,
+          blankHint: wordBlankHint(correct),
+          answer: correct
+        });
+      });
+
+      // Phonics: written answer
+      phonicsSounds.forEach((item, index) => {
+        items.push({
+          id: `phonics${index}`,
+          type: "Phonics",
+          mode: "write",
+          image: item.image,
+          emoji: item.emoji,
+          question: `Which word starts with the sound ${item.sound}?`,
+          correct: item.word,
+          accept: [item.word.toLowerCase()],
+          wordCount: 1,
+          blankHint: wordBlankHint(item.word),
+          answer: item.word,
+          speak: item.word
+        });
+      });
+
+      // Values: multiple choice from scenes
+      firstDayScenes.forEach((scene, index) => {
+        const correctChoice = scene.choices.find(c => c.correct).text;
+        const options = scene.choices.map(c => c.text).sort(() => Math.random() - .5);
+        items.push({
+          id: `values${index}`,
+          type: "Values",
+          mode: "mc",
+          image: scene.image,
+          emoji: scene.emoji,
+          question: scene.prompt,
+          options,
+          correct: correctChoice,
+          answer: correctChoice,
+          speak: correctChoice
+        });
+      });
+
+      return items;
+    }
+
+    function practiceImageHtml(item) {
+      if (!item.image) return "";
+      const speakText = item.speak || item.correct || item.answer || item.question || item.type;
+      return `
+        <div class="practice-image-wrap">
+          <button class="audio-btn" type="button" title="Listen" aria-label="Listen" data-speak="${escapeAttr(speakText)}">&#9654;</button>
+          ${placeholderArt(item.answer || item.type, item.emoji, item.image)}
+        </div>`;
+    }
+
+    function practiceCardMarkup(item) {
+      const tagHtml = `<span class="practice-tag">${item.type}</span>`;
+      const imageHtml = practiceImageHtml(item);
+      const wrapOpen = imageHtml ? `<div class="practice-card-body">` : "";
+      const wrapClose = imageHtml ? `</div>` : "";
+      const revealBtn = `<button class="btn orange practice-reveal-btn" type="button" data-reveal>Reveal Answer</button>`;
+      const revealSlot = `<p class="practice-reveal-text" data-reveal-text hidden></p>`;
+
+      if (item.mode === "mc") {
+        const modeTag = `<span class="practice-mode-tag">Multiple choice</span>`;
+        const optionsHtml = item.options.map(option => `
+          <button class="btn blue" type="button" data-mc-option="${option.replace(/"/g, "&quot;")}">${option}</button>`).join("");
+        return `
+          <div class="practice-card" data-id="${item.id}">
+            ${wrapOpen}${imageHtml}<div class="practice-card-main">
+              <div class="practice-meta">${tagHtml}${modeTag}</div>
+              <p class="practice-question">${item.question}</p>
+              <div class="practice-mc">${optionsHtml}</div>
+              <p class="practice-feedback-line" data-feedback></p>
+              ${revealSlot}
+              ${revealBtn}
+            </div>${wrapClose}
+          </div>`;
+      }
+      // blank / write share the same markup shape
+      const modeLabel = item.mode === "blank" ? "Fill in the blank" : "Written answer";
+      return `
+        <div class="practice-card" data-id="${item.id}">
+          ${wrapOpen}${imageHtml}<div class="practice-card-main">
+            <div class="practice-meta">${tagHtml}<span class="practice-mode-tag">${modeLabel}</span></div>
+            <p class="practice-question">${item.question}</p>
+            <p class="practice-blank-hint">${item.blankHint} <span class="practice-word-count">(${item.wordCount} ${item.wordCount === 1 ? "word" : "words"})</span></p>
+            <div class="practice-write">
+              <input type="text" placeholder="Type your answer..." data-blank-input>
+              <button class="btn primary" type="button" data-check-blank>Check</button>
+            </div>
+            <p class="practice-feedback-line" data-feedback></p>
+            ${revealSlot}
+            ${revealBtn}
+          </div>${wrapClose}
+        </div>`;
+    }
+
+    function updatePracticeScoreDisplay() {
+      $("#practiceScoreDisplay").textContent = `Score ${practiceScore}`;
+    }
+
+    function markCardSolved(card, points) {
+      card.classList.add("solved");
+      const feedback = card.querySelector("[data-feedback]");
+      feedback.classList.remove("wrong");
+      feedback.classList.add("correct");
+      feedback.innerHTML = `Correct! <span class="practice-points">+${points} pts</span>`;
+    }
+
+    function handlePracticeAnswer(item, card, isCorrect, attempts, revealed) {
+      const feedback = card.querySelector("[data-feedback]");
+      if (isCorrect) {
+        const points = revealed ? 2 : pointsForAttempt(attempts);
+        practiceScore += points;
+        updatePracticeScoreDisplay();
+        markCardSolved(card, points);
+        speak(item.speak || item.correct || item.answer);
+        if (!revealed) celebrate();
+      } else {
+        feedback.classList.remove("correct");
+        feedback.classList.add("wrong");
+        feedback.textContent = attempts === 1 ? "Not quite, try again." : "Still not it - try once more.";
+      }
+    }
+
+    function wireUpPracticeCard(card, item) {
+      practiceAttempts[item.id] = 0;
+      let revealed = false;
+      const revealBtn = card.querySelector("[data-reveal]");
+      const revealText = card.querySelector("[data-reveal-text]");
+
+      revealBtn.addEventListener("click", () => {
+        if (card.classList.contains("solved")) return;
+        revealed = true;
+        revealText.hidden = false;
+        revealText.textContent = `Answer: ${item.answer}`;
+        revealBtn.disabled = true;
+        speak(item.speak || item.correct || item.answer);
+      });
+
+      if (item.mode === "mc") {
+        card.querySelectorAll("[data-mc-option]").forEach(button => {
+          button.addEventListener("click", () => {
+            if (card.classList.contains("solved")) return;
+            practiceAttempts[item.id] += 1;
+            const isCorrect = button.dataset.mcOption === item.correct;
+            button.classList.toggle("correct", isCorrect);
+            button.classList.toggle("wrong", !isCorrect);
+            if (!isCorrect) {
+              setTimeout(() => button.classList.remove("wrong"), 900);
+            } else {
+              card.querySelectorAll("[data-mc-option]").forEach(other => other.disabled = true);
+            }
+            handlePracticeAnswer(item, card, isCorrect, practiceAttempts[item.id], revealed);
+          });
+        });
+      } else {
+        const input = card.querySelector("[data-blank-input]");
+        const checkButton = card.querySelector("[data-check-blank]");
+        const submit = () => {
+          if (card.classList.contains("solved")) return;
+          practiceAttempts[item.id] += 1;
+          const isCorrect = isWrittenAnswerCorrect(item, input.value);
+          input.classList.toggle("correct", isCorrect);
+          input.classList.toggle("wrong", !isCorrect);
+          if (isCorrect) input.disabled = true;
+          handlePracticeAnswer(item, card, isCorrect, practiceAttempts[item.id], revealed);
+        };
+        checkButton.addEventListener("click", submit);
+        input.addEventListener("keydown", event => {
+          if (event.key === "Enter") submit();
+        });
+      }
+    }
+
+    function renderPracticeList(filter = "all") {
+      const list = $("#practiceList");
+      const items = practiceQuestions.filter(item => filter === "all" || item.type === filter);
+      list.innerHTML = items.map(practiceCardMarkup).join("");
+      Array.from(list.querySelectorAll(".practice-card")).forEach((card, index) => {
+        wireUpPracticeCard(card, items[index]);
+      });
+    }
+
+    function initPractice() {
+      practiceQuestions = buildPracticeQuestions();
+      practiceScore = 0;
+      practiceAttempts = {};
+      updatePracticeScoreDisplay();
+      renderPracticeList("all");
+      $$(".practice-filter-row .btn[data-practice-filter]").forEach(button => {
+        button.addEventListener("click", () => {
+          $$(".practice-filter-row .btn[data-practice-filter]").forEach(item => item.classList.remove("active"));
+          button.classList.add("active");
+          renderPracticeList(button.dataset.practiceFilter);
+        });
+      });
+      $("#resetPractice").addEventListener("click", () => {
+        const activeFilter = $(".practice-filter-row .btn.active")?.dataset.practiceFilter || "all";
+        practiceScore = 0;
+        practiceAttempts = {};
+        updatePracticeScoreDisplay();
+        renderPracticeList(activeFilter);
+      });
+    }
+
+    function init() {
+      renderLessonReviews();
+      renderScenes();
+      renderProjectChecklist();
+      updateCollectBackpackState();
+      initTabs();
+      initPractice();
+
+      document.addEventListener("click", event => {
+        const audioButton = event.target.closest("[data-speak]");
+        if (!audioButton) return;
+        event.preventDefault();
+        event.stopPropagation();
+        speak(audioButton.dataset.speak);
+      });
+
+      $("#startCollect").addEventListener("click", startCollectRound);
+      $("#toggleCollectFullscreen").addEventListener("click", toggleCollectFullscreen);
+      $("#startBuilder").addEventListener("click", startBuilderRound);
+      $("#toggleBuilderFullscreen").addEventListener("click", toggleBuilderFullscreen);
+      $("#startPop").addEventListener("click", startPopRound);
+      $("#prevStoryPage").addEventListener("click", prevStoryPage);
+      $("#nextStoryPage").addEventListener("click", nextStoryPage);
+      $("#listenStoryPage").addEventListener("click", listenStoryPage);
+      $("#petDragon").addEventListener("click", () => speak("Ready, little dragon? Let's learn English!"));
+      $("#testVoice").addEventListener("click", () => speak("It's a pencil. It isn't a book."));
+
+      const hashPanel = location.hash.replace("#", "");
+      if (hashPanel) showPanel(hashPanel);
+    }
+
+    init();
+  </script>
+</body>
+</html>
+
