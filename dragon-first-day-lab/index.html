@@ -645,7 +645,7 @@
 
     .builder-stage {
       display: grid;
-      grid-template-columns: minmax(360px, .95fr) minmax(360px, .85fr);
+      grid-template-columns: minmax(520px, 1.35fr) minmax(320px, .65fr);
       gap: 20px;
       align-items: start;
     }
@@ -662,7 +662,8 @@
     }
 
     .builder-game-wrap:fullscreen .builder-object .placeholder-art {
-      max-width: min(66vh, 720px);
+      max-width: min(78vh, 900px);
+      min-height: min(68vh, 720px);
     }
 
     .builder-object {
@@ -673,7 +674,18 @@
       text-align: center;
     }
 
-    .builder-object .placeholder-art { aspect-ratio: 1/1; max-width: min(560px, 100%); margin: 0 auto 10px; background: #fff8df; }
+    .builder-object .placeholder-art {
+      aspect-ratio: 4 / 3;
+      max-width: min(820px, 100%);
+      min-height: 430px;
+      margin: 0 auto 10px;
+      background: #fff8df;
+    }
+
+    .builder-object .placeholder-art img {
+      object-fit: contain;
+      padding: 10px;
+    }
 
     .builder-sentence {
       margin-top: 14px;
@@ -775,6 +787,7 @@
       background: #fff8df;
       overflow: hidden;
       min-height: 360px;
+      aspect-ratio: 16 / 9;
     }
 
     .flipbook-art img {
@@ -869,10 +882,11 @@
     .pop-bubble {
       position: absolute;
       bottom: -150px;
-      width: 132px;
-      height: 132px;
-      display: grid;
-      place-items: center;
+      width: 154px;
+      height: 154px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       animation-name: dragonRise;
       animation-timing-function: linear;
@@ -890,16 +904,19 @@
     }
 
     .pop-bubble .dragon-letter {
-      position: relative;
+      position: absolute;
+      left: 50%;
+      top: 50%;
       z-index: 2;
       display: grid;
       place-items: center;
-      width: 48px;
-      height: 48px;
+      width: 56px;
+      height: 56px;
+      transform: translate(-50%, -50%);
       border: 3px solid var(--ink);
       border-radius: 999px;
       background: rgba(255, 244, 212, .94);
-      font-size: 28px;
+      font-size: 34px;
       font-weight: 900;
       box-shadow: 0 3px 0 rgba(33, 22, 15, .34);
     }
@@ -982,14 +999,14 @@
 
     .practice-card-body .placeholder-art {
       width: 100%;
-      aspect-ratio: 16 / 9;
-      min-height: 260px;
+      aspect-ratio: auto;
+      height: clamp(190px, 24vw, 330px);
       background: #fff8df;
     }
 
     .practice-card-body .placeholder-art img {
       object-fit: contain;
-      padding: 8px;
+      padding: 12px;
     }
 
     .practice-meta {
@@ -1144,7 +1161,7 @@
 
     @media (max-width: 560px) {
       .practice-card-body { grid-template-columns: 1fr; }
-      .practice-card-body .placeholder-art { min-height: 190px; }
+      .practice-card-body .placeholder-art { height: 180px; min-height: 0; aspect-ratio: auto; }
     }
   </style>
 </head>
@@ -1817,19 +1834,23 @@
     const storyPages = [
       {
         title: "The First Bell",
-        text: "A little dragon comes to class with a big backpack and a shy smile."
+        text: "A little dragon comes to class with a big backpack and a shy smile.",
+        image: "dragon-first-day-assets/game/story-flipbook-kindness.png"
       },
       {
         title: "A Pencil Falls",
-        text: "A friend drops a pencil. The little dragon stops and helps."
+        text: "A friend drops a pencil. The little dragon stops and helps.",
+        image: "dragon-first-day-assets/game/story-flipbook-page-2.png"
       },
       {
         title: "A Kind Seat",
-        text: "There is one chair. The dragons share the desk and say, sit with me."
+        text: "There is one chair. The dragons share the desk and say, sit with me.",
+        image: "dragon-first-day-assets/game/story-flipbook-page-3.png"
       },
       {
         title: "Ready to Learn",
-        text: "The bell rings. The class is ready, and every dragon has a friend."
+        text: "The bell rings. The class is ready, and every dragon has a friend.",
+        image: "dragon-first-day-assets/game/story-flipbook-page-4.png"
       }
     ];
 
@@ -1845,6 +1866,7 @@
       $("#storyPageCount").textContent = `Page ${storyPageIndex + 1} / ${storyPages.length}`;
       $("#storyTitle").textContent = page.title;
       $("#storyText").textContent = page.text;
+      $("#storyFlipbookImage").src = page.image;
       $("#prevStoryPage").disabled = storyPageIndex === 0;
       $("#nextStoryPage").disabled = storyPageIndex === storyPages.length - 1;
       $("#sceneScore").textContent = `Story page ${storyPageIndex + 1}`;
@@ -1891,7 +1913,7 @@
       el.dataset.letter = item.letter;
       el.dataset.seq = popBubbleSeq;
       el.innerHTML = `
-        <img src="dragon-first-day-assets/game/phonics-flying-dragon.png" alt="">
+        <img src="dragon-first-day-assets/game/phonics-flying-dragon-v2.png" alt="">
         <span class="dragon-letter">${item.letter}</span>`;
       const stageRect = stage.getBoundingClientRect();
       const maxX = Math.max(10, stageRect.width - 70);
